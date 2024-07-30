@@ -1,5 +1,7 @@
 # Walacor Template
 
+This template is designed to embellish the process of integrating with the Walacor Data Platform.
+
 ## About Walacor
 
 An Enterprise level secure data platform with a database look and feel while integrating industry best practices, including blockchain, to provide a quantum resistant tamper-proof data repository.
