@@ -1,5 +1,7 @@
 # walacor-template
 
+[Official Walacor Documentation](https://admindoc.walacor.com/admin-documentation/latest/the-platform-application-an-introduction)
+
 ## Getting Started
 
 To create a new Walacor project, use the following command:
@@ -41,5 +43,3 @@ However, there is a lot going on under the hood and it is important to gain some
 Because the platform integrates blockchain, an important difference that one must be aware of is immutability. EVERYTHING (Data, Schema, Users, etc.) submitted to the platform is part of a never changing audit log that can never be deleted.
 
 The Platform handles the heavy lifting of this for the user and, in general, allows the user to interact with it as one does with most databases. However, it is best to keep this in mind when doing things like Schema design.
-
-Let's say, the user has a data structure, I.E. schema, that is added to The Platform. Internally this gets a SV (Schema Version) of 1. Then, the user makes changes to it and it gets a SV of 2. SV = 1 still exists, and potentially can be used, so it is best to not do prototyping in The Platform, especially on a production system.
