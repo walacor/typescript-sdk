@@ -58,7 +58,7 @@ jobs:
 
   lint-fix:
     runs-on: ubuntu-latest
-    needs: [type-check, lint]
+    needs: [type-check, lint, test]
 
     steps:
       - name: Checkout repository
