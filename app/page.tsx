@@ -1,5 +1,5 @@
-import Image from "next/image";
+import DefaultLayout from "@/layout/default.layout";
 
 export default function Home() {
-  return <div>Walacor App</div>;
+  return <DefaultLayout>Walacor App</DefaultLayout>;
 }

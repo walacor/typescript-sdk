@@ -1,6 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# walacor-template
 
 ## Getting Started
+
+To create a new Walacor project, use the following command:
+
+```bash
+npx create-walacor-app <project-name>
+```
 
 First, run the development server:
 
@@ -20,18 +26,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## About Walacor
 
-To learn more about Next.js, take a look at the following resources:
+An Enterprise level secure data platform with a database look and feel while integrating industry best practices, including blockchain, to provide a quantum resistant tamper-proof data repository.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Introduction
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+The primary design goal of the document is to assist users with their knowledge of the Platform application.
 
-## Deploy on Vercel
+However, there is a lot going on under the hood and it is important to gain some knowledge to make best use of The Platform.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Immutability
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# walacor-template
+Because the platform integrates blockchain, an important difference that one must be aware of is immutability. EVERYTHING (Data, Schema, Users, etc.) submitted to the platform is part of a never changing audit log that can never be deleted.
+
+The Platform handles the heavy lifting of this for the user and, in general, allows the user to interact with it as one does with most databases. However, it is best to keep this in mind when doing things like Schema design.
+
+Let's say, the user has a data structure, I.E. schema, that is added to The Platform. Internally this gets a SV (Schema Version) of 1. Then, the user makes changes to it and it gets a SV of 2. SV = 1 still exists, and potentially can be used, so it is best to not do prototyping in The Platform, especially on a production system.
