@@ -1,6 +1,6 @@
 # Walacor Template
 
-This template is designed to embellish the process of integrating with the Walacor Data Platform.
+This template is designed to embellish the process of integrating with the Walacor data platform.
 
 ## About Walacor
 
