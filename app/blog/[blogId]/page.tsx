@@ -16,7 +16,7 @@ const BlogPost = () => {
   if (!blog) {
     return (
       <BlogLayout>
-        <div className="w-full text-center flex flex-col justify-center items-center gap-4 py-12">
+        <div className="w-full text-center flex flex-col justify-center items-center py-12">
           <h1 className="text-2xl font-bold mb-4">Blog Not Found</h1>
           <p className="text-gray-600 mb-6">
             Sorry, the blog post you're looking for doesn't exist or has been
