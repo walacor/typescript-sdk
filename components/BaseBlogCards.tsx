@@ -7,7 +7,7 @@ interface BaseBlogCardsProps {
 }
 
 const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
-  const blogsToShow = limit ? blogData.slice(0, limit) : blogData;
+  const blogsToShow = limit ? blogData.slice(1, limit + 1) : blogData;
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">

@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import { blogData } from "../data/blogData";
+import Image from "next/image";
+import { formatDate } from "@/lib/utils";
 
 export default function BaseBanner() {
   const featuredBlog = blogData[0];
@@ -33,19 +35,25 @@ export default function BaseBanner() {
               Featured Posts
             </div>
             <div className="flex flex-col items-center justify-center">
-              <BaseBlogCard
-                id={featuredBlog.id}
-                key={featuredBlog.id}
-                href={featuredBlog.href}
-                imageSrc={featuredBlog.imageSrc}
-                imageAlt={featuredBlog.imageAlt}
-                title={featuredBlog.title}
-                description={featuredBlog.description}
-                authorName={featuredBlog.authorName}
-                authorImage={featuredBlog.authorImage}
-                authorFallback={featuredBlog.authorFallback}
-                date={featuredBlog.date}
-              />
+              <Link
+                href={`/blog/${featuredBlog.id}`}
+                className="group grid gap-2 overflow-hidden hover:shadow-md transition-shadow border"
+                prefetch={false}
+              >
+                <Image src={featuredBlog.imageSrc} alt={""} />
+                <div className="p-4 space-y-2">
+                  <h3 className="text-xl font-semibold group-hover:underline">
+                    {featuredBlog.title}
+                  </h3>
+                  <h3 className="text-sm">{formatDate(featuredBlog.date)}</h3>
+                  <p className="text-muted-foreground line-clamp-2">
+                    {featuredBlog.description}
+                  </p>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <span>{featuredBlog.authorName}</span>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
