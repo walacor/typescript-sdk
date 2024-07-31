@@ -17,7 +17,7 @@ const BaseMoreStories: React.FC<BaseMoreStoriesProps> = ({ currentBlogId }) => {
   return (
     <div className="mt-12">
       <h2 className="text-2xl font-bold mb-4">More Stories</h2>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-3">
         {nextBlogs.map((blog) => (
           <BaseBlogCard
             key={blog.id}

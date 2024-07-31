@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useParams } from "next/navigation";
 import { blogData } from "../../../data/blogData";
-import DefaultLayout from "@/layout/default.layout";
-import Image from "next/image";
 import BaseMoreStories from "@/components/BaseMoreStories";
+import BaseBlog from "@/components/BaseBlog";
+import BlogLayout from "@/layout/blog.layout";
+import Link from "next/link";
 
 const BlogPost = () => {
   const params = useParams();
@@ -13,51 +13,47 @@ const BlogPost = () => {
 
   const blog = blogData.find((blog) => blog.id === blogId);
 
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
-
   if (!blog) {
-    return <div>Blog not found</div>;
+    return (
+      <BlogLayout>
+        <div className="w-full text-center flex flex-col justify-center items-center gap-4 py-12">
+          <h1 className="text-2xl font-bold mb-4">Blog Not Found</h1>
+          <p className="text-gray-600 mb-6">
+            Sorry, the blog post you're looking for doesn't exist or has been
+            removed.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            prefetch={false}
+          >
+            Go to Homepage
+          </Link>
+          <Link
+            href="/read-the-blog"
+            className="inline-flex h-9 items-center justify-center rounded-md bg-muted px-4 py-2 text-sm font-medium text-muted-foreground shadow transition-colors hover:bg-muted/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 mt-4"
+            prefetch={false}
+          >
+            View All Blogs
+          </Link>
+        </div>
+      </BlogLayout>
+    );
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const options = { year: "numeric", month: "long", day: "numeric" } as const;
-    return date.toLocaleDateString("en-US", options);
-  };
-
   return (
-    <DefaultLayout>
-      <div className="container mx-auto py-12 min-h-screen">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-bold mb-4 text-center">{blog.title}</h1>
-          <p className="text-gray-600 mb-6 text-center">{blog.description}</p>
-
-          {!isImageLoaded && (
-            <div className="w-full h-96 bg-muted animate-pulse rounded-md my-8" />
-          )}
-
-          <Image
-            className={`my-8 transition-opacity duration-500 ${
-              isImageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            src={blog.imageSrc}
-            alt={blog.title}
-            width={800}
-            height={500}
-            onLoadingComplete={() => setIsImageLoaded(true)}
-          />
-          <div
-            className="prose prose-lg dark:prose-invert flex flex-col gap-1 mx-auto"
-            dangerouslySetInnerHTML={{ __html: blog.content }}
-          />
-          <div className="mt-8 text-sm text-gray-600 text-center">
-            <p>By {blog.authorName}</p>
-            <p>{formatDate(blog.date)}</p>
-          </div>
-        </div>
-        <BaseMoreStories currentBlogId={blogId} />
-      </div>
-    </DefaultLayout>
+    <BlogLayout>
+      <BaseBlog
+        title={blog.title}
+        description={blog.description}
+        imageSrc={blog.imageSrc}
+        imageAlt={blog.imageAlt}
+        content={blog.content}
+        authorName={blog.authorName}
+        date={blog.date}
+      />
+      <BaseMoreStories currentBlogId={blogId} />
+    </BlogLayout>
   );
 };
 

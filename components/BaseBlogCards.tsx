@@ -27,7 +27,7 @@ const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-6 justify-center items-start">
+        <div className="flex flex-wrap gap-7 justify-center items-start">
           {blogsToShow.map((blog) => (
             <BaseBlogCard
               id={blog.id}

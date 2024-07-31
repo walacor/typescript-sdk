@@ -2,8 +2,6 @@ import Link from "next/link";
 import { blogData } from "../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
-import BlogImage1 from "@/assets/blog-post-1.jpg";
-import Image from "next/image";
 
 export default function ReadTheBlog() {
   return (
@@ -36,7 +34,7 @@ export default function ReadTheBlog() {
             </div>
           </section>
           <section className="py-12 md:py-16 lg:py-24">
-            <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-2 md:gap-8 md:px-6 lg:grid-cols-3 lg:gap-8">
+            <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-2 md:gap-7 md:px-6 lg:grid-cols-3 lg:gap-7">
               {blogData.map((blog) => (
                 <BaseBlogCard
                   key={blog.id}
