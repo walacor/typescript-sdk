@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Walacor App",
+  title: "Walacor App | Blog + CMS",
   description: "The data platform that hadles hashing for you.",
 };
 

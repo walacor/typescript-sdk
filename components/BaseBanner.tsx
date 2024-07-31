@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import BlogPicture1 from "../assets/blog-post-1.jpg";
 import BaseBlogCard from "@/components/BaseBlogCard";
+import blogData from "../data/blogs.json";
 
 export default function BaseBanner() {
   return (
@@ -31,16 +32,23 @@ export default function BaseBanner() {
               Featured Posts
             </div>
             <div className="flex flex-col items-center justify-center">
-              <BaseBlogCard
-                href="#"
-                imageSrc={BlogPicture1}
-                imageAlt="Post 1"
-                title="Introducing the Ultimate Blog Starter Kit"
-                description="Discover the powerful features and customizable components that will take your blog to the next level."
-                authorName="Michael Johnson"
-                authorImage="/placeholder-user.jpg"
-                authorFallback="MJ"
-              />
+              {
+                blogData.map((blog) => (
+                  <BaseBlogCard
+                    id={blog.id}
+                    key={blog.id}
+                    href={blog.href}
+                    imageSrc={blog.imageSrc}
+                    imageAlt={blog.imageAlt}
+                    title={blog.title}
+                    description={blog.description}
+                    authorName={blog.authorName}
+                    authorImage={blog.authorImage}
+                    authorFallback={blog.authorFallback}
+                    date={blog.date}
+                  />
+                ))[0]
+              }
             </div>
           </div>
         </div>

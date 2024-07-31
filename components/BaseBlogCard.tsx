@@ -1,20 +1,22 @@
 import Link from "next/link";
-import Image, { StaticImageData } from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { formatDate } from "@/lib/utils";
 
 interface BaseBlogCardProps {
+  id: string;
   href: string;
-  imageSrc: StaticImageData;
+  imageSrc: string;
   imageAlt: string;
   title: string;
   description: string;
   authorName: string;
   authorImage: string;
   authorFallback: string;
+  date: string;
 }
 
 const BaseBlogCard: React.FC<BaseBlogCardProps> = ({
-  href,
+  id,
   imageSrc,
   imageAlt,
   title,
@@ -22,14 +24,15 @@ const BaseBlogCard: React.FC<BaseBlogCardProps> = ({
   authorName,
   authorImage,
   authorFallback,
+  date,
 }) => {
   return (
     <Link
-      href={href}
+      href={`/blog/${id}`}
       className="bg-muted group grid gap-2 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow max-w-[400px]"
       prefetch={false}
     >
-      <Image
+      <img
         src={imageSrc}
         width={400}
         height={225}
@@ -38,6 +41,7 @@ const BaseBlogCard: React.FC<BaseBlogCardProps> = ({
       />
       <div className="p-4 space-y-2">
         <h3 className="text-lg font-semibold group-hover:underline">{title}</h3>
+        <h3 className="text-sm">{formatDate(date)}</h3>
         <p className="text-muted-foreground line-clamp-2">{description}</p>
         <div className="flex items-center text-sm text-muted-foreground">
           <Avatar className="w-6 h-6 mr-2">

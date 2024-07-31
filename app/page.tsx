@@ -1,4 +1,3 @@
-import BaseFooter from "@/components/BaseFooter";
 import BaseBanner from "@/components/BaseBanner";
 import BaseBlogCards from "@/components/BaseBlogCards";
 import DefaultLayout from "@/layout/default.layout";
@@ -8,7 +7,6 @@ export default function Home() {
     <DefaultLayout>
       <BaseBanner />
       <BaseBlogCards />
-      <BaseFooter />
     </DefaultLayout>
   );
 }
