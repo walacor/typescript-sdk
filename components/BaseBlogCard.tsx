@@ -40,7 +40,7 @@ const BaseBlogCard: React.FC<BaseBlogCardProps> = ({
         className="aspect-video object-cover"
       />
       <div className="p-4 space-y-2">
-        <h3 className="text-lg font-semibold group-hover:underline">{title}</h3>
+        <h3 className="text-xl font-semibold group-hover:underline">{title}</h3>
         <h3 className="text-sm">{formatDate(date)}</h3>
         <p className="text-muted-foreground line-clamp-2">{description}</p>
         <div className="flex items-center text-sm text-muted-foreground">
