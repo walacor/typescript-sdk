@@ -10,20 +10,11 @@ export default function ReadTheBlog() {
     <DefaultLayout>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
         <main className="flex-1">
-          <section className="border-b">
-            <div className="container flex flex-col gap-8 px-4 py-12 md:flex-row md:items-center md:gap-16 md:px-6 md:py-16 lg:py-24">
-              <div className="flex-1">
-                <Image
-                  src={BlogImage1}
-                  width={800}
-                  height={500}
-                  alt="Featured Post"
-                  className="aspect-[16/10] w-full rounded-lg object-cover"
-                />
-              </div>
+          <section className="bg-muted">
+            <div className="container flex flex-col gap-8 px-4 py-12 items-center md:gap-16 md:px-6 md:py-16 lg:py-24">
               <div className="flex flex-col gap-4">
                 <div className="space-y-2">
-                  <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
+                  <div className="inline-block rounded-lg bg-white px-3 py-1 text-sm">
                     Featured
                   </div>
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -35,7 +26,7 @@ export default function ReadTheBlog() {
                   that will take your blog to the next level.
                 </p>
                 <Link
-                  href="/blog/1"
+                  href={`blog/${blogData[0].id}`}
                   className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                   prefetch={false}
                 >
