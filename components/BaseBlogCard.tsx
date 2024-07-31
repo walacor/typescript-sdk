@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatDate } from "@/lib/utils";
+import Image, { StaticImageData } from "next/image";
 
 interface BaseBlogCardProps {
   id: string;
   href: string;
-  imageSrc: string;
+  imageSrc: StaticImageData;
   imageAlt: string;
   title: string;
   description: string;
@@ -32,7 +33,7 @@ const BaseBlogCard: React.FC<BaseBlogCardProps> = ({
       className="bg-muted group grid gap-2 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow max-w-[400px]"
       prefetch={false}
     >
-      <img
+      <Image
         src={imageSrc}
         width={400}
         height={225}

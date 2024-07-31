@@ -1,6 +1,6 @@
 import React from "react";
 import BaseBlogCard from "@/components/BaseBlogCard";
-import blogData from "../data/blogs.json";
+import { blogData } from "../data/blogData";
 
 interface BaseBlogCardsProps {
   limit?: number;

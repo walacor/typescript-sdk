@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import BaseBlogCard from "@/components/BaseBlogCard";
-import blogData from "../data/blogs.json";
+import { blogData } from "../data/blogData";
 
 export default function BaseBanner() {
   const featuredBlog = blogData[0];

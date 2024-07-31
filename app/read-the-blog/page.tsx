@@ -1,7 +1,9 @@
 import Link from "next/link";
-import blogData from "../../data/blogs.json";
+import { blogData } from "../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
+import BlogImage1 from "@/assets/blog-post-1.jpg";
+import Image from "next/image";
 
 export default function ReadTheBlog() {
   return (
@@ -11,8 +13,8 @@ export default function ReadTheBlog() {
           <section className="border-b">
             <div className="container flex flex-col gap-8 px-4 py-12 md:flex-row md:items-center md:gap-16 md:px-6 md:py-16 lg:py-24">
               <div className="flex-1">
-                <img
-                  src="https://images-walacor.s3.us-west-2.amazonaws.com/blog-post-1.jpg"
+                <Image
+                  src={BlogImage1}
                   width={800}
                   height={500}
                   alt="Featured Post"

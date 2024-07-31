@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
-import blogData from "../../../data/blogs.json";
+import { blogData } from "../../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
 import BaseMoreStories from "@/components/BaseMoreStories";
+import Image from "next/image";
 
 const BlogPost = () => {
   const params = useParams();
   const blogId = String(params && params.blogId);
 
   const blog = blogData.find((blog) => blog.id === blogId);
+
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   if (!blog) {
     return <div>Blog not found</div>;
@@ -27,6 +31,21 @@ const BlogPost = () => {
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-4 text-center">{blog.title}</h1>
           <p className="text-gray-600 mb-6 text-center">{blog.description}</p>
+
+          {!isImageLoaded && (
+            <div className="w-full h-96 bg-muted animate-pulse rounded-md my-8" />
+          )}
+
+          <Image
+            className={`my-8 transition-opacity duration-500 ${
+              isImageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            src={blog.imageSrc}
+            alt={blog.title}
+            width={800}
+            height={500}
+            onLoadingComplete={() => setIsImageLoaded(true)}
+          />
           <div
             className="prose prose-lg dark:prose-invert flex flex-col gap-1 mx-auto"
             dangerouslySetInnerHTML={{ __html: blog.content }}

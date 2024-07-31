@@ -1,5 +1,5 @@
 import React from "react";
-import blogData from "../data/blogs.json";
+import { blogData } from "../data/blogData";
 import BaseBlogCard from "@/components/BaseBlogCard";
 
 interface BaseMoreStoriesProps {
@@ -9,7 +9,6 @@ interface BaseMoreStoriesProps {
 const BaseMoreStories: React.FC<BaseMoreStoriesProps> = ({ currentBlogId }) => {
   const currentIndex = blogData.findIndex((blog) => blog.id === currentBlogId);
 
-  // Handle circular slicing
   const nextBlogs = [];
   for (let i = 1; i <= 3; i++) {
     nextBlogs.push(blogData[(currentIndex + i) % blogData.length]);
