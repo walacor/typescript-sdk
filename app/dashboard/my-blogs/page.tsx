@@ -25,11 +25,17 @@ const MyBlogs = () => {
               <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
               <p className="text-gray-600 mb-4">{blog.description}</p>
               <div className="flex justify-between items-center">
-                <Link className="hover:underline" href={`/blog/${blog.id}`}>
-                  Read Blog
-                </Link>
-                <div className="flex space-x-2">
-                  <Button className="bg-blue-500 text-white">Edit</Button>
+                <div />
+                <div className="flex space-x-2 items-center">
+                  <Link
+                    className="hover:underline transition-all mr-2"
+                    href={`/blog/${blog.id}`}
+                  >
+                    Read Blog
+                  </Link>
+                  <Button className="bg-primary text-primary-foreground">
+                    Edit
+                  </Button>
                   <Button
                     className="bg-red-500 text-white"
                     onClick={() => handleDelete(blog.id)}
