@@ -5,12 +5,13 @@ import React, { ReactNode } from "react";
 export default function DefaultLayout({ children }: { children?: ReactNode }) {
   return (
     <div className="flex flex-col min-h-dvh">
-      <BaseHeader />
-      <div className="bg-primary text-primary-foreground p-4 text-center">
-        Welcome to your Dashboard! Here you can manage your blog posts, profile,
-        and settings.
+      <div className="bg-primary text-primary-foreground p-4 text-center text-sm">
+        Welcome to Walacor! Here you can interface with our data platform via
+        your blog posts, profile, and settings.
       </div>
+      <BaseHeader />
       <main className="flex-1">{children}</main>
+      <BaseFooter />
     </div>
   );
 }
