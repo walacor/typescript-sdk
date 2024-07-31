@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { blogData } from "../../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
-import BaseMoreStories from "@/components/BaseMoreStories";
 import Image from "next/image";
+import BaseMoreStories from "@/components/BaseMoreStories";
 
 const BlogPost = () => {
   const params = useParams();
