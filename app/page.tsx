@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <DefaultLayout>
       <BaseBanner />
-      <BaseBlogCards />
+      <BaseBlogCards limit={3} />
     </DefaultLayout>
   );
 }

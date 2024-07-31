@@ -2,8 +2,12 @@ import React from "react";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import blogData from "../data/blogs.json";
 
-export default function BaseBlogCards() {
-  const [, ...otherBlogs] = blogData;
+interface BaseBlogCardsProps {
+  limit?: number;
+}
+
+const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
+  const blogsToShow = limit ? blogData.slice(0, limit) : blogData;
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
@@ -24,7 +28,7 @@ export default function BaseBlogCards() {
         </div>
 
         <div className="flex flex-wrap gap-6 justify-center items-start">
-          {otherBlogs.map((blog) => (
+          {blogsToShow.map((blog) => (
             <BaseBlogCard
               id={blog.id}
               key={blog.id}
@@ -43,4 +47,6 @@ export default function BaseBlogCards() {
       </div>
     </section>
   );
-}
+};
+
+export default BaseBlogCards;

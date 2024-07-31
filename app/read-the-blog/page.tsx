@@ -1,7 +1,4 @@
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import blogData from "../../data/blogs.json";
 import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
@@ -46,7 +43,7 @@ export default function ReadTheBlog() {
             </div>
           </section>
           <section className="py-12 md:py-16 lg:py-24">
-            <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-2 md:gap-12 md:px-6 lg:grid-cols-3 lg:gap-16">
+            <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-2 md:gap-8 md:px-6 lg:grid-cols-3 lg:gap-8">
               {blogData.map((blog) => (
                 <BaseBlogCard
                   key={blog.id}

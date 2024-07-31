@@ -1,10 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import BlogPicture1 from "../assets/blog-post-1.jpg";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import blogData from "../data/blogs.json";
 
 export default function BaseBanner() {
+  const featuredBlog = blogData[0];
+
   return (
     <section className="w-full pt-12 md:pt-24 lg:pt-32 p-8">
       <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
@@ -32,23 +33,19 @@ export default function BaseBanner() {
               Featured Posts
             </div>
             <div className="flex flex-col items-center justify-center">
-              {
-                blogData.map((blog) => (
-                  <BaseBlogCard
-                    id={blog.id}
-                    key={blog.id}
-                    href={blog.href}
-                    imageSrc={blog.imageSrc}
-                    imageAlt={blog.imageAlt}
-                    title={blog.title}
-                    description={blog.description}
-                    authorName={blog.authorName}
-                    authorImage={blog.authorImage}
-                    authorFallback={blog.authorFallback}
-                    date={blog.date}
-                  />
-                ))[0]
-              }
+              <BaseBlogCard
+                id={featuredBlog.id}
+                key={featuredBlog.id}
+                href={featuredBlog.href}
+                imageSrc={featuredBlog.imageSrc}
+                imageAlt={featuredBlog.imageAlt}
+                title={featuredBlog.title}
+                description={featuredBlog.description}
+                authorName={featuredBlog.authorName}
+                authorImage={featuredBlog.authorImage}
+                authorFallback={featuredBlog.authorFallback}
+                date={featuredBlog.date}
+              />
             </div>
           </div>
         </div>
