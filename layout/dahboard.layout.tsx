@@ -1,0 +1,66 @@
+import React, { ReactNode } from "react";
+import Link from "next/link";
+import DefaultLayout from "./default.layout";
+import { FaHome, FaPlus, FaBlog, FaUser } from "react-icons/fa";
+
+const sidebarItems = [
+  {
+    name: "Home",
+    href: "/dashboard",
+    icon: <FaHome />,
+    description: "Dashboard overview",
+  },
+  {
+    name: "Create",
+    href: "/dashboard/create",
+    icon: <FaPlus />,
+    description: "Create new content",
+  },
+  {
+    name: "My Blogs",
+    href: "/dashboard/my-blogs",
+    icon: <FaBlog />,
+    description: "View your blogs",
+  },
+  {
+    name: "Profile",
+    href: "/dashboard/profile",
+    icon: <FaUser />,
+    description: "Edit your profile",
+  },
+];
+
+export default function DashboardLayout({
+  children,
+}: {
+  children?: ReactNode;
+}) {
+  return (
+    <DefaultLayout>
+      <div className="flex">
+        <div className="min-h-screen w-full flex flex-col border-r bg-muted-foreground">
+          {sidebarItems.map((item, index) => (
+            <Link
+              className="flex items-center justify-start border-b p-4 cursor-pointer transition-all hover:bg-muted"
+              key={index}
+              href={item.href}
+            >
+              <div className="flex items-center space-x-2 gap-4">
+                {item.icon}
+                <div className="flex flex-col">
+                  <span className="font-bold">{item.name}</span>
+                  <span className="text-sm text-gray-500">
+                    {item.description}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="bg-muted mx-auto py-12 min-h-screen w-full">
+          {children}
+        </div>
+      </div>
+    </DefaultLayout>
+  );
+}
