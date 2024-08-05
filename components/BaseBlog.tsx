@@ -4,7 +4,7 @@ import Image, { StaticImageData } from "next/image";
 interface BaseBlogProps {
   title: string;
   description: string;
-  imageSrc: StaticImageData;
+  imageSrc: StaticImageData | string;
   imageAlt: string;
   content: string;
   authorName: string;

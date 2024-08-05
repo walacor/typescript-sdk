@@ -6,12 +6,24 @@ import BaseMoreStories from "@/components/BaseMoreStories";
 import BaseBlog from "@/components/BaseBlog";
 import BlogLayout from "@/layout/blog.layout";
 import Link from "next/link";
+import useReadOneSchema from "@/hooks/useReadOneSchema";
+import { useEffect, useState } from "react";
 
 const BlogPost = () => {
   const params = useParams();
   const blogId = String(params && params.blogId);
 
-  const blog = blogData.find((blog) => blog.id === blogId);
+  const [blog, setBlog] = useState<any>(null);
+
+  const { response, readOneSchema } = useReadOneSchema(blogId);
+
+  useEffect(() => {
+    readOneSchema();
+  }, []);
+
+  useEffect(() => {
+    setBlog(response && response.data);
+  }, [response]);
 
   if (!blog) {
     return (

@@ -1,3 +1,5 @@
+"use client";
+
 import BaseBanner from "@/components/BaseBanner";
 import BaseBlogCards from "@/components/BaseBlogCards";
 import DefaultLayout from "@/layout/default.layout";

@@ -7,6 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import Button from "@/components/single/Button";
 import Textarea from "@/components/single/Textarea";
 import DashboardLayout from "@/layout/dahboard.layout";
+import usePostSchema from "@/hooks/usePostSchema";
 
 const ContentManagement = () => {
   const [blog, setBlog] = useState({
@@ -22,7 +23,10 @@ const ContentManagement = () => {
     authorFallback: "",
     date: "",
     content: "",
+    IsDeleted: false,
   });
+
+  const { postSchema, response, error, loading } = usePostSchema();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,10 +39,14 @@ const ContentManagement = () => {
     setBlog((prevBlog) => ({ ...prevBlog, content }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Blog Data:", blog);
-    // window.location.href = "/read-the-blog";
+    try {
+      await postSchema(blog);
+      console.log("Schema created:", response);
+    } catch (error) {
+      console.error("Error creating schema:", error);
+    }
   };
 
   return (
@@ -113,7 +121,7 @@ const ContentManagement = () => {
             name="date"
             type="date"
             placeholder="Publication Date"
-            value={blog.date}
+            value={blog.date as unknown as string}
             onChange={handleChange}
             required
           />
@@ -152,8 +160,10 @@ const ContentManagement = () => {
             type="submit"
             className="w-full bg-primary text-primary-foreground"
           >
-            Save Blog Post
+            {loading ? "Saving..." : "Save Blog Post"}
           </Button>
+          {response && <div>Response: {JSON.stringify(response)}</div>}
+          {error && <div>Error: {error.message}</div>}
         </form>
       </div>
     </DashboardLayout>
