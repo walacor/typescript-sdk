@@ -3,7 +3,7 @@ import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
 import { BlogData } from "@/types/BlogData";
 
-const useReadOneSchema = (id: string) => {
+const useReadOneSchema = (id: string, etid: number) => {
   const [response, setResponse] = useState<BlogData | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ const useReadOneSchema = (id: string) => {
         { id },
         {
           headers: {
-            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+            ETId: etid,
             Authorization: `${token}`,
             "Content-Type": "application/json",
           },

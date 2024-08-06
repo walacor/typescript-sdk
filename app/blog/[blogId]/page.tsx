@@ -8,7 +8,7 @@ import Link from "next/link";
 import useReadOneSchema from "@/hooks/useReadOneSchema";
 import { useEffect, useState } from "react";
 import { blogData } from "@/data/blogData";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 
 const BlogPost = () => {
   const params = useParams();
@@ -19,7 +19,10 @@ const BlogPost = () => {
     return defaultBlog || null;
   });
 
-  const { response, error, loading, readOneSchema } = useReadOneSchema(blogId);
+  const { response, error, loading, readOneSchema } = useReadOneSchema(
+    blogId,
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
 
   useEffect(() => {
     if (!response && !loading && !error) {

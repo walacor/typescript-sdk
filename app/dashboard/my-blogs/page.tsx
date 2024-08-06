@@ -5,11 +5,13 @@ import Link from "next/link";
 import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
 import useReadSchema from "@/hooks/useReadSchema";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 
 const MyBlogs = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const { readSchema, response, error, loading } = useReadSchema();
+  const { readSchema, response, error, loading } = useReadSchema(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
 
   useEffect(() => {
     readSchema();

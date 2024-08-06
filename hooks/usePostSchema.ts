@@ -3,7 +3,7 @@ import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
 import { BlogData } from "@/types/BlogData";
 
-const usePostSchema = () => {
+const usePostSchema = (etid: number) => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const usePostSchema = () => {
           { Data: [data] },
           {
             headers: {
-              ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+              ETId: etid,
               Authorization: `${token}`,
               "Content-Type": "application/json",
             },

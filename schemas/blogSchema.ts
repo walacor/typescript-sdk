@@ -1,4 +1,30 @@
-export const blogSchema = {
+import { StaticImageData } from "next/image";
+
+type FieldType = {
+  FieldName: string;
+  DataType: string;
+  MaxLength?: number;
+  Required?: boolean;
+  Default?: any;
+};
+
+type IndexType = {
+  Fields: string[];
+  IndexValue: string;
+  ForceUpdate: boolean;
+  Delete: boolean;
+};
+
+interface BlogSchemaType {
+  ETId: number;
+  TableName: string;
+  Family: string;
+  DoSummary: boolean;
+  Fields: FieldType[];
+  Indexes: IndexType[];
+}
+
+export const blogSchema: BlogSchemaType = {
   ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
   TableName: "blogs",
   Family: "blog-family",
@@ -81,3 +107,18 @@ export const blogSchema = {
     },
   ],
 };
+
+export interface BlogData {
+  id: string;
+  userId: string;
+  imageSrc: string | StaticImageData;
+  imageAlt: string;
+  title: string;
+  description: string;
+  authorName: string;
+  authorImage?: string;
+  authorFallback: string;
+  date: string;
+  content: string;
+  IsDeleted?: boolean;
+}

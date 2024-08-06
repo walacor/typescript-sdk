@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
 
-export function useGetSchemaDetails() {
+export function useGetSchemaDetails(etid: number) {
   const token = useAuthenticatedToken();
 
   const [schemaDetails, setSchemaDetails] = useState(null);
@@ -22,7 +22,7 @@ export function useGetSchemaDetails() {
         )}/details`,
         {
           headers: {
-            ETid: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+            ETid: etid,
             Authorization: `${token}`,
           },
         }

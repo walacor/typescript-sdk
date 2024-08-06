@@ -1,4 +1,28 @@
-export const profileSchema = {
+type FieldType = {
+  FieldName: string;
+  DataType: string;
+  MaxLength?: number;
+  Required?: boolean;
+  Default?: any;
+};
+
+type IndexType = {
+  Fields: string[];
+  IndexValue: string;
+  ForceUpdate: boolean;
+  Delete: boolean;
+};
+
+interface ProfileSchemaType {
+  ETId: number;
+  TableName: string;
+  Family: string;
+  DoSummary: boolean;
+  Fields: FieldType[];
+  Indexes: IndexType[];
+}
+
+export const profileSchema: ProfileSchemaType = {
   ETId: Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID),
   TableName: "profiles",
   Family: "profile-family",
@@ -57,3 +81,14 @@ export const profileSchema = {
     },
   ],
 };
+
+export interface ProfileData {
+  userId: string;
+  userName: string;
+  email: string;
+  bio?: string;
+  profileImage?: string;
+  website?: string;
+  dateJoined: string;
+  IsDeleted?: boolean;
+}

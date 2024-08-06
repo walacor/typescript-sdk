@@ -4,13 +4,15 @@ import Link from "next/link";
 import { blogData } from "../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 import { useEffect, useState } from "react";
 import useReadSchema from "@/hooks/useReadSchema";
 
 export default function ReadTheBlog() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const { readSchema, response, error, loading } = useReadSchema();
+  const { readSchema, response, error, loading } = useReadSchema(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
 
   useEffect(() => {
     readSchema();

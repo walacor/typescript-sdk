@@ -25,7 +25,9 @@ const ContentManagement = () => {
     IsDeleted: false,
   });
 
-  const { postSchema, response, error, loading } = usePostSchema();
+  const { postSchema, response, error, loading } = usePostSchema(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
