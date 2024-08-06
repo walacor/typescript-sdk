@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 
 const useReadOneSchema = (id: string, etid: number) => {
   const [response, setResponse] = useState<BlogData | null>(null);

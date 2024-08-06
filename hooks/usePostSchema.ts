@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 
 const usePostSchema = (etid: number) => {
   const [response, setResponse] = useState(null);
