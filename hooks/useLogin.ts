@@ -10,8 +10,8 @@ export function useLogin() {
       const res = await axios.post(
         `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/auth/login`,
         {
-          userName: "Admin",
-          password: "password",
+          userName: String(process.env.NEXT_PUBLIC_WALACOR_USERNAME),
+          password: String(process.env.NEXT_PUBLIC_WALACOR_PASSWORD),
         },
         {
           headers: {
