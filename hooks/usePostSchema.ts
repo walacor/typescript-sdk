@@ -1,29 +1,10 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
-
-interface BlogData {
-  id: string;
-  userId: string;
-  href: string;
-  imageSrc: string;
-  imageAlt: string;
-  title: string;
-  description: string;
-  authorName: string;
-  authorImage: string;
-  authorFallback: string;
-  date: string;
-  content: string;
-  IsDeleted?: boolean;
-}
-
-interface ResponseData {
-  [key: string]: any;
-}
+import { BlogData } from "@/types/BlogData";
 
 const usePostSchema = () => {
-  const [response, setResponse] = useState<ResponseData | null>(null);
+  const [response, setResponse] = useState(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +21,6 @@ const usePostSchema = () => {
             headers: {
               ETId: Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA),
               Authorization: `${token}`,
-              SV: 1,
               "Content-Type": "application/json",
             },
           }

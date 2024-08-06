@@ -16,7 +16,7 @@ const DashboardHome = () => {
           <p className="text-gray-700 mb-4">
             Walacor is your ultimate blogging companion. Our platform provides
             powerful features and customizable components to enhance your
-            blogging experience. Whether you're a beginner or an experienced
+            blogging experience. Whether you are a beginner or an experienced
             blogger, Walacor offers the tools you need to create, manage, and
             grow your blog.
           </p>
@@ -37,7 +37,7 @@ const DashboardHome = () => {
             </li>
           </ul>
           <p className="text-gray-700">
-            Explore the dashboard to get started and make the most of Walacor's
+            Explore the dashboard to get started and make the most of Walacors
             features!
           </p>
         </div>

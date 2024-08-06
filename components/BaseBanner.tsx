@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import BaseBlogCard from "@/components/BaseBlogCard";
 import { blogData } from "../data/blogData";
 import Image from "next/image";
 import { formatDate } from "@/lib/utils";

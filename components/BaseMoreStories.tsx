@@ -22,7 +22,6 @@ const BaseMoreStories: React.FC<BaseMoreStoriesProps> = ({ currentBlogId }) => {
           <BaseBlogCard
             key={blog.id}
             id={blog.id}
-            href={blog.href}
             imageSrc={blog.imageSrc}
             imageAlt={blog.imageAlt}
             title={blog.title}

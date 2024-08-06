@@ -9,7 +9,6 @@ export const blogData = [
   {
     id: "1",
     userId: "1",
-    href: "/blog/1",
     imageSrc: BlogImage1,
     imageAlt: "Post 1",
     title: "Introducing the Ultimate Blog Starter Kit",
@@ -25,7 +24,6 @@ export const blogData = [
   {
     id: "2",
     userId: "2",
-    href: "/blog/2",
     imageSrc: BlogImage2,
     imageAlt: "Post 2",
     title: "The Art of Crafting Compelling Blog Titles",
@@ -41,7 +39,6 @@ export const blogData = [
   {
     id: "3",
     userId: "3",
-    href: "/blog/3",
     imageSrc: BlogImage3,
     imageAlt: "Post 3",
     title: "Unlocking the Power of SEO for Bloggers",
@@ -57,7 +54,6 @@ export const blogData = [
   {
     id: "4",
     userId: "1",
-    href: "/blog/4",
     imageSrc: BlogImage4,
     imageAlt: "Post 4",
     title: "Mastering the Art of Guest Blogging",
@@ -73,7 +69,6 @@ export const blogData = [
   {
     id: "5",
     userId: "4",
-    href: "/blog/5",
     imageSrc: BlogImage5,
     imageAlt: "Post 5",
     title: "Understanding JavaScript Closures",
@@ -88,7 +83,6 @@ export const blogData = [
   {
     id: "6",
     userId: "5",
-    href: "/blog/6",
     imageSrc: BlogImage6,
     imageAlt: "Post 6",
     title: "A Guide to Modern CSS Layouts",

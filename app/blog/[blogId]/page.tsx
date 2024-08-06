@@ -1,28 +1,36 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { blogData } from "../../../data/blogData";
 import BaseMoreStories from "@/components/BaseMoreStories";
 import BaseBlog from "@/components/BaseBlog";
 import BlogLayout from "@/layout/blog.layout";
 import Link from "next/link";
 import useReadOneSchema from "@/hooks/useReadOneSchema";
 import { useEffect, useState } from "react";
+import { blogData } from "@/data/blogData";
+import { BlogData } from "@/types/BlogData";
 
 const BlogPost = () => {
   const params = useParams();
-  const blogId = String(params && params.blogId);
+  const blogId = String(params?.blogId);
 
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<BlogData | any>(() => {
+    const defaultBlog = blogData.find((b) => b.id === blogId);
+    return defaultBlog || null;
+  });
 
-  const { response, readOneSchema } = useReadOneSchema(blogId);
+  const { response, error, loading, readOneSchema } = useReadOneSchema(blogId);
 
   useEffect(() => {
-    readOneSchema();
-  }, []);
+    if (!response && !loading && !error) {
+      readOneSchema();
+    }
+  }, [readOneSchema, response, loading, error]);
 
   useEffect(() => {
-    setBlog(response && response.data);
+    if (response) {
+      setBlog(response);
+    }
   }, [response]);
 
   if (!blog) {
@@ -31,7 +39,7 @@ const BlogPost = () => {
         <div className="w-full text-center flex flex-col justify-center items-center">
           <h1 className="text-2xl font-bold mb-4">Blog Not Found</h1>
           <p className="text-gray-600 mb-6">
-            Sorry, the blog post you're looking for doesn't exist or has been
+            Sorry, the blog post you are looking for does not exist or has been
             removed.
           </p>
           <Link

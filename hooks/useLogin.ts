@@ -2,16 +2,12 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/recoil/atoms";
 
-interface LoginResponse {
-  api_token: string;
-}
-
 export function useLogin() {
   const [token, setToken] = useRecoilState(tokenState);
 
   async function login() {
     try {
-      const res = await axios.post<LoginResponse>(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/auth/login`,
         {
           userName: "Admin",

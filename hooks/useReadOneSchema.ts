@@ -1,43 +1,23 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
-
-interface BlogData {
-  id: string;
-  userId: string;
-  href: string;
-  imageSrc: string;
-  imageAlt: string;
-  title: string;
-  description: string;
-  authorName: string;
-  authorImage: string;
-  authorFallback: string;
-  date: string;
-  content: string;
-  IsDeleted?: boolean;
-}
-
-interface ResponseData {
-  Data: BlogData[];
-  [key: string]: any;
-}
+import { BlogData } from "@/types/BlogData";
 
 const useReadOneSchema = (id: string) => {
-  const [response, setResponse] = useState<ResponseData | null>(null);
+  const [response, setResponse] = useState<BlogData | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
   const token = useAuthenticatedToken();
 
   const readOneSchema = useCallback(async () => {
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/query/get?fromSummary=true`,
-        {
-          id: String(id),
-        },
+        { id },
         {
           headers: {
             ETId: Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA),
@@ -46,14 +26,22 @@ const useReadOneSchema = (id: string) => {
           },
         }
       );
+
       setError(null);
-      setResponse(res.data[0] || []);
+      setResponse(res.data || null);
     } catch (err) {
       setError(err as Error);
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, id]);
+
+  useEffect(() => {
+    if (token) {
+      readOneSchema();
+    }
+  }, [readOneSchema, token]);
+
   return { response, error, loading, readOneSchema };
 };
 

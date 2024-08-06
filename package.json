@@ -10,8 +10,7 @@
     "lint:fix": "next lint --fix",
     "test:e2e": "playwright test",
     "type-check": "tsc --noEmit",
-    "push": "next lint --fix && next lint && npm run test:e2e && tsc --noEmit && next build && git add . && git commit -m 'walacor-commit' && git push && next dev",
-    "deploy-walacor": "aws cloudformation create-stack --stack-name walacor-instance --template-body file://infra/ec2-walacor-instance.yml --parameters ParameterKey=KeyName,ParameterValue=YOUR_KEY_NAME ParameterKey=S3BucketName,ParameterValue=YOUR_S3_BUCKET_NAME"
+    "push": "next lint --fix && next lint && npm run test:e2e && tsc --noEmit && next build && git add . && git commit -m 'walacor-commit' && git push && next dev"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",

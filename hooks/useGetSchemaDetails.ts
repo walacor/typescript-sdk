@@ -24,7 +24,6 @@ export function useGetSchemaDetails() {
         }
       );
 
-      console.log("Data fetched:", res.data);
       setSchemaDetails(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);

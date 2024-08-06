@@ -5,7 +5,6 @@ import Image, { StaticImageData } from "next/image";
 
 interface BaseBlogCardProps {
   id: string;
-  href: string;
   imageSrc: StaticImageData;
   imageAlt: string;
   title: string;

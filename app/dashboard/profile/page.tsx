@@ -25,7 +25,6 @@ const Profile = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Profile Data:", profile);
     // Save profile data logic here
   };
 

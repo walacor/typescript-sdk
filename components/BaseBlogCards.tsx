@@ -32,7 +32,6 @@ const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
             <BaseBlogCard
               id={blog.id}
               key={blog.id}
-              href={blog.href}
               imageSrc={blog.imageSrc}
               imageAlt={blog.imageAlt}
               title={blog.title}

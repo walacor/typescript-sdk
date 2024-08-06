@@ -11,9 +11,8 @@ import usePostSchema from "@/hooks/usePostSchema";
 
 const ContentManagement = () => {
   const [blog, setBlog] = useState({
-    id: "",
+    id: String(new Date().getTime()),
     userId: "",
-    href: "",
     imageSrc: "",
     imageAlt: "",
     title: "",
@@ -43,7 +42,6 @@ const ContentManagement = () => {
     e.preventDefault();
     try {
       await postSchema(blog);
-      console.log("Schema created:", response);
     } catch (error) {
       console.error("Error creating schema:", error);
     }
@@ -54,41 +52,6 @@ const ContentManagement = () => {
       <div className="container mx-auto py-12">
         <h1 className="text-3xl font-bold mb-6">Content Management</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <Input
-            name="id"
-            placeholder="ID"
-            value={blog.id}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="userId"
-            placeholder="User ID"
-            value={blog.userId}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="href"
-            placeholder="URL Slug"
-            value={blog.href}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="imageSrc"
-            placeholder="Image Source URL"
-            value={blog.imageSrc}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="imageAlt"
-            placeholder="Image Alt Text"
-            value={blog.imageAlt}
-            onChange={handleChange}
-            required
-          />
           <Input
             name="title"
             placeholder="Title"
@@ -122,6 +85,20 @@ const ContentManagement = () => {
             type="date"
             placeholder="Publication Date"
             value={blog.date as unknown as string}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            name="imageSrc"
+            placeholder="Image Source URL"
+            value={blog.imageSrc}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            name="imageAlt"
+            placeholder="Image Alt Text"
+            value={blog.imageAlt}
             onChange={handleChange}
             required
           />
