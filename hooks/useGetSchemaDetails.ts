@@ -18,11 +18,11 @@ export function useGetSchemaDetails() {
         `${String(
           process.env.NEXT_PUBLIC_EC2_WALACOR
         )}/api/schemas/envelopeTypes/${Number(
-          process.env.NEXT_PUBLIC_WALACOR_ETID
+          process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID
         )}/details`,
         {
           headers: {
-            ETid: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
+            ETid: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
             Authorization: `${token}`,
           },
         }

@@ -22,7 +22,7 @@ const useReadOneSchema = (id: string) => {
         { id },
         {
           headers: {
-            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
+            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
             Authorization: `${token}`,
             "Content-Type": "application/json",
           },

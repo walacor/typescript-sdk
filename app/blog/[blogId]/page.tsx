@@ -14,7 +14,7 @@ const BlogPost = () => {
   const params = useParams();
   const blogId = String(params?.blogId);
 
-  const [blog, setBlog] = useState<BlogData | any>(() => {
+  const [blog, setBlog] = useState<BlogData | null>(() => {
     const defaultBlog = blogData.find((b) => b.id === blogId);
     return defaultBlog || null;
   });

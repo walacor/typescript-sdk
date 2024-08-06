@@ -19,7 +19,7 @@ const usePostSchema = () => {
           { Data: [data] },
           {
             headers: {
-              ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
+              ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
               Authorization: `${token}`,
               "Content-Type": "application/json",
             },

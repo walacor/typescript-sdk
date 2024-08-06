@@ -1,5 +1,5 @@
 export const blogSchema = {
-  ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
+  ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
   TableName: "blogs",
   Family: "blog-family",
   DoSummary: true,

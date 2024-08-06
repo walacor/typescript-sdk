@@ -38,7 +38,7 @@ export default function DashboardLayout({
   return (
     <DefaultLayout>
       <div className="flex flex-col sm:flex-row">
-        <div className="md:min-h-screen w-full flex flex-col border-r bg-muted-foreground">
+        <div className="md:min-h-screen w-full sm:flex flex-col border-r bg-muted-foreground hidden">
           {sidebarItems.map((item, index) => (
             <Link
               className="flex items-center justify-start border-b p-4 cursor-pointer transition-all hover:bg-muted"
@@ -57,7 +57,7 @@ export default function DashboardLayout({
             </Link>
           ))}
         </div>
-        <div className="bg-muted mx-auto py-12 min-h-screen w-full">
+        <div className="bg-muted mx-auto sm:py-12 min-h-screen w-full">
           {children}
         </div>
       </div>

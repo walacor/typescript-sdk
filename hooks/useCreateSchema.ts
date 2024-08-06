@@ -1,6 +1,6 @@
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
-import { blogSchema } from "@/data/blogSchema";
+import { blogSchema } from "@/schemas/blogSchema";
 
 export function useCreateSchema() {
   const token = useAuthenticatedToken();
@@ -19,7 +19,7 @@ export function useCreateSchema() {
         {
           headers: {
             Authorization: `${token}`,
-            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
+            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
             SV: 1,
           },
         }
