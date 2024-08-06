@@ -2,11 +2,7 @@ import React from "react";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import { blogData } from "../data/blogData";
 
-interface BaseBlogCardsProps {
-  limit?: number;
-}
-
-const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
+const BaseBlogCards: React.FC = ({ limit }: { limit?: number }) => {
   const blogsToShow = limit ? blogData.slice(1, limit + 1) : blogData;
 
   return (

@@ -15,11 +15,11 @@ const usePostSchema = () => {
       setLoading(true);
       try {
         const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/envelopes/submit`,
+          `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/envelopes/submit`,
           { Data: [data] },
           {
             headers: {
-              ETId: Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA),
+              ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
               Authorization: `${token}`,
               "Content-Type": "application/json",
             },

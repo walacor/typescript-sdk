@@ -8,7 +8,7 @@ export function useLogin() {
   async function login() {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/auth/login`,
+        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/auth/login`,
         {
           userName: "Admin",
           password: "password",

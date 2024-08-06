@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function BaseFooter() {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">

@@ -15,10 +15,14 @@ export function useGetSchemaDetails() {
 
     try {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/schemas/envelopeTypes/Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA)/details`,
+        `${String(
+          process.env.NEXT_PUBLIC_EC2_WALACOR
+        )}/api/schemas/envelopeTypes/${Number(
+          process.env.NEXT_PUBLIC_WALACOR_ETID
+        )}/details`,
         {
           headers: {
-            ETid: Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA),
+            ETid: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
             Authorization: `${token}`,
           },
         }

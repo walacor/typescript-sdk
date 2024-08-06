@@ -14,12 +14,12 @@ export function useCreateSchema() {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/schemas/`,
+        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/schemas/`,
         schema,
         {
           headers: {
             Authorization: `${token}`,
-            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA),
+            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
             SV: 1,
           },
         }

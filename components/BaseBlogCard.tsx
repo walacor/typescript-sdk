@@ -1,21 +1,10 @@
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatDate } from "@/lib/utils";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
+import { BlogData } from "@/types/BlogData";
 
-interface BaseBlogCardProps {
-  id: string;
-  imageSrc: StaticImageData;
-  imageAlt: string;
-  title: string;
-  description: string;
-  authorName: string;
-  authorImage: string;
-  authorFallback: string;
-  date: string;
-}
-
-const BaseBlogCard: React.FC<BaseBlogCardProps> = ({
+const BaseBlogCard: React.FC<BlogData> = ({
   id,
   imageSrc,
   imageAlt,

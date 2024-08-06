@@ -37,7 +37,6 @@ const ContentManagement = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // window.location.href = "/read-the-blog";
   };
 
   return (

@@ -16,11 +16,13 @@ const useReadOneSchema = (id: string) => {
     setLoading(true);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/query/get?fromSummary=true`,
+        `${String(
+          process.env.NEXT_PUBLIC_EC2_WALACOR
+        )}/api/query/get?fromSummary=true`,
         { id },
         {
           headers: {
-            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_SCHEMA),
+            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ETID),
             Authorization: `${token}`,
             "Content-Type": "application/json",
           },

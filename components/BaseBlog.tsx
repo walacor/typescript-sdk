@@ -1,17 +1,8 @@
 import React, { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
+import { BlogData } from "@/types/BlogData";
 
-interface BaseBlogProps {
-  title: string;
-  description: string;
-  imageSrc: StaticImageData | string;
-  imageAlt: string;
-  content: string;
-  authorName: string;
-  date: string;
-}
-
-const BaseBlog: React.FC<BaseBlogProps> = ({
+const BaseBlog: React.FC<BlogData> = ({
   title,
   description,
   imageSrc,
@@ -47,10 +38,12 @@ const BaseBlog: React.FC<BaseBlogProps> = ({
         height={500}
         onLoadingComplete={() => setIsImageLoaded(true)}
       />
-      <div
-        className="prose prose-lg dark:prose-invert flex flex-col gap-1 mx-auto"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+      {content && (
+        <div
+          className="prose prose-lg dark:prose-invert flex flex-col gap-1 mx-auto"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      )}
       <div className="mt-8 text-sm text-gray-600 text-center">
         <p>By {authorName}</p>
         <p>{formatDate(date)}</p>
