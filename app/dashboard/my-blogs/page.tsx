@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import DashboardLayout from "@/layout/dahboard.layout";
+import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
 import useReadSchema from "@/hooks/useReadSchema";
 import { BlogData } from "@/types/BlogData";

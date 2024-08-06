@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Input from "@/components/single/Input";
 import Textarea from "@/components/single/Textarea";
 import Button from "@/components/single/Button";
-import DashboardLayout from "@/layout/dahboard.layout";
+import DashboardLayout from "@/layout/dashboard.layout";
 
 const Profile = () => {
   const [profile, setProfile] = useState({

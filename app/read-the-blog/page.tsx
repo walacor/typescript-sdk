@@ -1,9 +1,26 @@
+"use client";
+
 import Link from "next/link";
 import { blogData } from "../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
+import { BlogData } from "@/types/BlogData";
+import { useEffect, useState } from "react";
+import useReadSchema from "@/hooks/useReadSchema";
 
 export default function ReadTheBlog() {
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
+  const { readSchema, response, error, loading } = useReadSchema();
+
+  useEffect(() => {
+    readSchema();
+  }, [readSchema]);
+
+  useEffect(() => {
+    if (response) {
+      setBlogs(response);
+    }
+  }, [response]);
   return (
     <DefaultLayout>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -35,7 +52,7 @@ export default function ReadTheBlog() {
           </section>
           <section className="py-12 md:py-16 lg:py-24">
             <div className="container grid grid-cols-1 gap-8 px-4 md:grid-cols-2 md:gap-7 md:px-6 lg:grid-cols-3 lg:gap-7">
-              {blogData.map((blog) => (
+              {blogs.map((blog) => (
                 <BaseBlogCard
                   key={blog.id}
                   id={blog.id}

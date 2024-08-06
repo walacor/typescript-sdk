@@ -30,7 +30,7 @@ const useReadOneSchema = (id: string) => {
       );
 
       setError(null);
-      setResponse(res.data || null);
+      setResponse(res.data.data[0] || null);
     } catch (err) {
       setError(err as Error);
     } finally {

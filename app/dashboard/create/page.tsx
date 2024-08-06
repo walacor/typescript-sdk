@@ -6,7 +6,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Button from "@/components/single/Button";
 import Textarea from "@/components/single/Textarea";
-import DashboardLayout from "@/layout/dahboard.layout";
+import DashboardLayout from "@/layout/dashboard.layout";
 import usePostSchema from "@/hooks/usePostSchema";
 
 const ContentManagement = () => {
