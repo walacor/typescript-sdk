@@ -1,6 +1,6 @@
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
-import { profileSchema } from "@/schemas/profileSchema";
+import { blogSchema } from "@/schemas/blogSchema";
 
 export function useCreateSchema(etid: number) {
   const token = useAuthenticatedToken();
@@ -9,7 +9,7 @@ export function useCreateSchema(etid: number) {
     const schema = {
       ETId: 50,
       SV: 1,
-      Schema: profileSchema,
+      Schema: blogSchema,
     };
 
     try {
@@ -24,8 +24,6 @@ export function useCreateSchema(etid: number) {
           },
         }
       );
-
-      console.log("Schema created:", response.data);
 
       return response.data;
     } catch (error) {

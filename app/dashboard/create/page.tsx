@@ -8,6 +8,7 @@ import Button from "@/components/single/Button";
 import Textarea from "@/components/single/Textarea";
 import DashboardLayout from "@/layout/dashboard.layout";
 import usePostSchema from "@/hooks/usePostSchema";
+import BaseUploadImage from "@/components/BaseUploadImage"; // Ensure the path is correct
 
 const ContentManagement = () => {
   const [blog, setBlog] = useState({
@@ -38,6 +39,10 @@ const ContentManagement = () => {
 
   const handleEditorChange = (content: string) => {
     setBlog((prevBlog) => ({ ...prevBlog, content }));
+  };
+
+  const handleImageUpload = (url: string) => {
+    setBlog((prevBlog) => ({ ...prevBlog, imageSrc: url }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,13 +95,17 @@ const ContentManagement = () => {
             onChange={handleChange}
             required
           />
-          <Input
-            name="imageSrc"
-            placeholder="Image Source URL"
-            value={blog.imageSrc}
-            onChange={handleChange}
-            required
-          />
+          <BaseUploadImage onUpload={handleImageUpload} />
+          {blog.imageSrc && (
+            <div>
+              <p>Image URL: {blog.imageSrc}</p>
+              <img
+                src={blog.imageSrc}
+                alt="Uploaded Image"
+                style={{ maxWidth: "100%", height: "auto" }}
+              />
+            </div>
+          )}
           <Input
             name="imageAlt"
             placeholder="Image Alt Text"

@@ -111,14 +111,16 @@ export const blogSchema: BlogSchemaType = {
 export interface BlogData {
   id: string;
   userId: string;
-  imageSrc: string | StaticImageData;
+  imageSrc: string;
   imageAlt: string;
   title: string;
   description: string;
   authorName: string;
-  authorImage?: string;
+  authorImage: string;
   authorFallback: string;
   date: string;
   content: string;
-  IsDeleted?: boolean;
+  IsDeleted: boolean;
+  CreatedAt: number;
+  UpdatedAt: number;
 }
