@@ -195,29 +195,29 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
             "background",
           ]}
         />
-        <div className="flex space-x-4">
-          <Button
-            type="submit"
-            className="w-full bg-primary text-primary-foreground"
-          >
-            {postLoading || updateLoading ? "Saving..." : "Save Blog Post"}
-          </Button>
-          <Button
-            type="button"
-            className="w-full bg-secondary text-secondary-foreground"
-            onClick={handlePublish}
-          >
-            {postLoading || updateLoading ? "Publishing..." : "Save & Publish"}
-          </Button>
+        <div className="flex flex-col gap-4">
           {initialBlog && (
             <Button
               type="button"
-              className="w-full bg-gray-500 text-white"
+              className="w-full bg-gray-500 text-white hover:bg-black hover:text-white transition-all"
               onClick={handleCancelEdit}
             >
               Cancel Edit
             </Button>
           )}
+          <Button
+            type="submit"
+            className="w-full bg-primary text-primary-foreground hover:bg-black hover:text-white transition-all"
+          >
+            {postLoading || updateLoading ? "Saving..." : "Save Blog Post"}
+          </Button>
+          <Button
+            type="button"
+            className="w-full bg-secondary text-secondary-foreground hover:bg-black hover:text-white transition-all"
+            onClick={handlePublish}
+          >
+            {postLoading || updateLoading ? "Publishing..." : "Save & Publish"}
+          </Button>
         </div>
         {(postResponse || updateResponse) && (
           <div>Response: {JSON.stringify(postResponse || updateResponse)}</div>

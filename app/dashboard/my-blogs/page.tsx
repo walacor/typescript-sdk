@@ -8,7 +8,9 @@ import useReadSchema from "@/hooks/useReadSchema";
 import { BlogData } from "@/schemas/blogSchema";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import ContentManagement from "@/components/ContentManagement";
-import { formatTimestampToDateTime } from "@/lib/utils";
+import { formatDate, formatTimestampToDateTime } from "@/lib/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
@@ -69,29 +71,24 @@ const MyBlogs: React.FC = () => {
               initialBlog={editBlog}
               setEditBlog={setEditBlog}
             />
-            <Button
-              type="button"
-              className="w-full bg-gray-500 text-white"
-              onClick={() => setEditBlog(null)}
-            >
-              Cancel Edit
-            </Button>
           </div>
         ) : (
           <div className="space-y-6">
             {blogs.map((blog) => (
-              <div key={blog.id} className="bg-white shadow p-4 rounded-lg">
+              <div key={blog.id} className="bg-white p-4 rounded-lg">
                 <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
+                <Link
+                  target="_blank"
+                  className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2"
+                  href={`/blog/${blog.id}`}
+                >
+                  <span>Read Blog</span>
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                </Link>
                 <p className="text-gray-600 mb-4">{blog.description}</p>
                 <div className="flex justify-between items-center">
                   <div />
                   <div className="flex space-x-2 items-center">
-                    <Link
-                      className="hover:underline transition-all mr-2"
-                      href={`/blog/${blog.id}`}
-                    >
-                      Read Blog
-                    </Link>
                     <Button
                       className="bg-primary text-primary-foreground"
                       onClick={() => handleEdit(blog)}
@@ -120,6 +117,17 @@ const MyBlogs: React.FC = () => {
                   <div />
                   <span className="opacity-50 text-xs mt-4">
                     Created: {formatTimestampToDateTime(blog.CreatedAt)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div />
+                  <span className="opacity-50 text-xs mt-2">
+                    Published:{" "}
+                    {blog.isPublished
+                      ? formatTimestampToDateTime(
+                          Number(blog.publishedDate && blog.publishedDate)
+                        )
+                      : "Not Published"}
                   </span>
                 </div>
               </div>

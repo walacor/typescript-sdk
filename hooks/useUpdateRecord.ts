@@ -14,7 +14,10 @@ export function useUpdateRecord(etid: number) {
   const filterValidFields = (data: Partial<BlogData>): Partial<BlogData> => {
     const validFields = blogSchema.Fields.map((field) => field.FieldName);
     const filteredData = Object.keys(data)
-      .filter((key): key is keyof BlogData => validFields.includes(key))
+      .filter(
+        (key): key is keyof BlogData =>
+          validFields.includes(key) || key === "UID"
+      )
       .reduce((obj, key) => {
         obj[key] = data[key as keyof BlogData] as undefined;
         return obj;

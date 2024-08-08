@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { blogData } from "../data/blogData";
-import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 
 export default function BaseBanner() {
@@ -39,7 +38,7 @@ export default function BaseBanner() {
                 className="group grid gap-2 overflow-hidden hover:shadow-md transition-shadow border"
                 prefetch={false}
               >
-                <Image src={featuredBlog.imageSrc} alt={""} />
+                <img src={featuredBlog.imageSrc} alt={""} />
                 <div className="p-4 space-y-2">
                   <h3 className="text-xl font-semibold group-hover:underline">
                     {featuredBlog.title}
