@@ -4,7 +4,7 @@ import useAuthenticatedToken from "./useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
 
-const useReadSchema = (etid: number) => {
+const useReadSchema = (etid: number, onlyPublished: boolean = false) => {
   const [response, setResponse] = useState<BlogData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -31,9 +31,9 @@ const useReadSchema = (etid: number) => {
 
       console.log(res.data.data);
 
-      const filteredData = (res.data?.data || []).filter(
-        (blog: BlogData) => !blog.IsDeleted
-      );
+      const filteredData = (res.data?.data || []).filter((blog: BlogData) => {
+        return !blog.IsDeleted && (!onlyPublished || blog.isPublished);
+      });
 
       const latestData = filteredData.reduce(
         (acc: BlogData[], current: BlogData) => {
@@ -51,13 +51,13 @@ const useReadSchema = (etid: number) => {
       );
 
       setError(null);
-      setResponse(res.data.data);
+      setResponse(latestData);
     } catch (err) {
       setError(err as Error);
     } finally {
       setLoading(false);
     }
-  }, [token, etid]);
+  }, [token, etid, onlyPublished]);
 
   useEffect(() => {
     readSchema();

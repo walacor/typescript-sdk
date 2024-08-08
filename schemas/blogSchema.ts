@@ -95,6 +95,13 @@ export const blogSchema: BlogSchemaType = {
       Required: true,
     },
     { FieldName: "IsDeleted", DataType: "BOOLEAN", Default: false },
+    { FieldName: "isPublished", DataType: "BOOLEAN", Default: false },
+    {
+      FieldName: "publishedDate",
+      DataType: "TEXT",
+      MaxLength: 2048,
+      Required: false,
+    },
   ],
   Indexes: [
     {
@@ -119,6 +126,8 @@ export interface BlogData {
   date: string;
   content: string;
   IsDeleted: boolean;
+  isPublished: boolean;
+  publishedDate: string | null;
   CreatedAt: number;
   UpdatedAt: number;
 }

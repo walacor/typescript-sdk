@@ -81,6 +81,8 @@ const BlogPost = () => {
         IsDeleted={false}
         CreatedAt={0}
         UpdatedAt={0}
+        isPublished={false}
+        publishedDate={null}
       />
       <BaseMoreStories currentBlogId={blogId} />
     </BlogLayout>

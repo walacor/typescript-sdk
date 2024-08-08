@@ -44,6 +44,19 @@ const MyBlogs: React.FC = () => {
     setEditBlog(blog);
   };
 
+  const handleTogglePublish = async (blog: BlogData) => {
+    let updatedBlog = {
+      ...blog,
+      isPublished: !blog.isPublished,
+      publishedDate: blog.isPublished ? null : new Date().toISOString(),
+    };
+    try {
+      await updateRecord(updatedBlog);
+    } catch (error) {
+      console.error("Error toggling publish state:", error);
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
@@ -56,46 +69,61 @@ const MyBlogs: React.FC = () => {
               initialBlog={editBlog}
               setEditBlog={setEditBlog}
             />
+            <Button
+              type="button"
+              className="w-full bg-gray-500 text-white"
+              onClick={() => setEditBlog(null)}
+            >
+              Cancel Edit
+            </Button>
           </div>
         ) : (
           <div className="space-y-6">
-            {blogs
-              .filter((blog) => !blog.IsDeleted)
-              .map((blog) => (
-                <div key={blog.id} className="bg-white shadow p-4 rounded-lg">
-                  <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
-                  <p className="text-gray-600 mb-4">{blog.description}</p>
-                  <div className="flex justify-between items-center">
-                    <div />
-                    <div className="flex space-x-2 items-center">
-                      <Link
-                        className="hover:underline transition-all mr-2"
-                        href={`/blog/${blog.id}`}
-                      >
-                        Read Blog
-                      </Link>
-                      <Button
-                        className="bg-primary text-primary-foreground"
-                        onClick={() => handleEdit(blog)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        className="bg-red-500 text-white"
-                        onClick={() => handleDelete(blog)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div />
-                    <span className="opacity-50 text-xs mt-4">
-                      Created: {formatTimestampToDateTime(blog.CreatedAt)}
-                    </span>
+            {blogs.map((blog) => (
+              <div key={blog.id} className="bg-white shadow p-4 rounded-lg">
+                <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
+                <p className="text-gray-600 mb-4">{blog.description}</p>
+                <div className="flex justify-between items-center">
+                  <div />
+                  <div className="flex space-x-2 items-center">
+                    <Link
+                      className="hover:underline transition-all mr-2"
+                      href={`/blog/${blog.id}`}
+                    >
+                      Read Blog
+                    </Link>
+                    <Button
+                      className="bg-primary text-primary-foreground"
+                      onClick={() => handleEdit(blog)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      className="bg-red-500 text-white"
+                      onClick={() => handleDelete(blog)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      className={`${
+                        blog.isPublished
+                          ? "bg-gray-500 text-white"
+                          : "bg-green-500 text-white"
+                      }`}
+                      onClick={() => handleTogglePublish(blog)}
+                    >
+                      {blog.isPublished ? "Unpublish" : "Publish"}
+                    </Button>
                   </div>
                 </div>
-              ))}
+                <div className="flex justify-between items-center">
+                  <div />
+                  <span className="opacity-50 text-xs mt-4">
+                    Created: {formatTimestampToDateTime(blog.CreatedAt)}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

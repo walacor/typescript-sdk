@@ -1,15 +1,8 @@
-import BlogImage1 from "@/assets/blog-post-1.jpg";
-import BlogImage2 from "@/assets/blog-post-2.jpg";
-import BlogImage3 from "@/assets/blog-post-3.jpg";
-import BlogImage4 from "@/assets/blog-post-4.jpg";
-import BlogImage5 from "@/assets/blog-post-5.jpg";
-import BlogImage6 from "@/assets/blog-post-6.jpg";
-
 export const blogData = [
   {
     id: "1",
     userId: "1",
-    imageSrc: BlogImage1,
+    imageSrc: "/assets/blog-post-1.jpg",
     imageAlt: "Post 1",
     title: "Introducing the Ultimate Blog Starter Kit",
     description:
@@ -24,7 +17,7 @@ export const blogData = [
   {
     id: "2",
     userId: "2",
-    imageSrc: BlogImage2,
+    imageSrc: "/assets/blog-post-2.jpg",
     imageAlt: "Post 2",
     title: "The Art of Crafting Compelling Blog Titles",
     description:
@@ -39,7 +32,7 @@ export const blogData = [
   {
     id: "3",
     userId: "3",
-    imageSrc: BlogImage3,
+    imageSrc: "/assets/blog-post-3.jpg",
     imageAlt: "Post 3",
     title: "Unlocking the Power of SEO for Bloggers",
     description:
@@ -54,7 +47,7 @@ export const blogData = [
   {
     id: "4",
     userId: "1",
-    imageSrc: BlogImage4,
+    imageSrc: "/assets/blog-post-4.jpg",
     imageAlt: "Post 4",
     title: "Mastering the Art of Guest Blogging",
     description:
@@ -69,7 +62,7 @@ export const blogData = [
   {
     id: "5",
     userId: "4",
-    imageSrc: BlogImage5,
+    imageSrc: "/assets/blog-post-5.jpg",
     imageAlt: "Post 5",
     title: "Understanding JavaScript Closures",
     description: "A deep dive into JavaScript closures and how they work.",
@@ -83,7 +76,7 @@ export const blogData = [
   {
     id: "6",
     userId: "5",
-    imageSrc: BlogImage6,
+    imageSrc: "/assets/blog-post-6.jpg",
     imageAlt: "Post 6",
     title: "A Guide to Modern CSS Layouts",
     description:

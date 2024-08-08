@@ -45,6 +45,8 @@ const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
               IsDeleted={false}
               CreatedAt={0}
               UpdatedAt={0}
+              isPublished={false}
+              publishedDate={null}
             />
           ))}
         </div>

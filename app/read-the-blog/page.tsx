@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { blogData } from "../../data/blogData";
 import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import { BlogData } from "@/schemas/blogSchema";
@@ -11,7 +10,8 @@ import useReadSchema from "@/hooks/useReadSchema";
 export default function ReadTheBlog() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const { readSchema, response, error, loading } = useReadSchema(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+    true
   );
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export default function ReadTheBlog() {
       setBlogs(response);
     }
   }, [response]);
+
   return (
     <DefaultLayout>
       <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -43,7 +44,7 @@ export default function ReadTheBlog() {
                   that will take your blog to the next level.
                 </p>
                 <Link
-                  href={`blog/${blogData[0].id}`}
+                  href={`blog/${blogs[0]?.id}`}
                   className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                   prefetch={false}
                 >
@@ -69,8 +70,10 @@ export default function ReadTheBlog() {
                   userId={""}
                   content={""}
                   IsDeleted={false}
-                  CreatedAt={0}
-                  UpdatedAt={0}
+                  CreatedAt={blog.CreatedAt}
+                  UpdatedAt={blog.UpdatedAt}
+                  isPublished={blog.isPublished}
+                  publishedDate={blog.publishedDate}
                 />
               ))}
             </div>

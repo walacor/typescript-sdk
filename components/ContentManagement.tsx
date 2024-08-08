@@ -6,12 +6,10 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Button from "@/components/single/Button";
 import Textarea from "@/components/single/Textarea";
-import DashboardLayout from "@/layout/dashboard.layout";
 import usePostSchema from "@/hooks/usePostSchema";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import BaseUploadImage from "@/components/BaseUploadImage";
 import { BlogData } from "@/schemas/blogSchema";
-import { usePathname } from "next/navigation";
 
 interface ContentManagementProps {
   initialBlog?: BlogData | null;
@@ -39,6 +37,8 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     IsDeleted: initialBlog?.IsDeleted || false,
     CreatedAt: initialBlog?.CreatedAt || Date.now(),
     UpdatedAt: initialBlog?.UpdatedAt || Date.now(),
+    isPublished: initialBlog?.isPublished || false,
+    publishedDate: initialBlog?.publishedDate || null,
   });
 
   const {
@@ -78,6 +78,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Submitting blog:", blog);
     try {
       if (initialBlog) {
         await updateRecord(blog);
@@ -87,6 +88,25 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
       }
     } catch (error) {
       console.error("Error saving blog:", error);
+    }
+  };
+
+  const handlePublish = async () => {
+    const updatedBlog = {
+      ...blog,
+      isPublished: true,
+      publishedDate: new Date().toISOString(),
+    };
+    console.log("Publishing blog:", updatedBlog);
+    try {
+      if (initialBlog) {
+        await updateRecord(updatedBlog);
+        if (setEditBlog) setEditBlog(null);
+      } else {
+        await postSchema(updatedBlog);
+      }
+    } catch (error) {
+      console.error("Error publishing blog:", error);
     }
   };
 
@@ -181,6 +201,13 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
             className="w-full bg-primary text-primary-foreground"
           >
             {postLoading || updateLoading ? "Saving..." : "Save Blog Post"}
+          </Button>
+          <Button
+            type="button"
+            className="w-full bg-secondary text-secondary-foreground"
+            onClick={handlePublish}
+          >
+            {postLoading || updateLoading ? "Publishing..." : "Save & Publish"}
           </Button>
           {initialBlog && (
             <Button

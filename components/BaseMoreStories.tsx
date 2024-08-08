@@ -22,7 +22,7 @@ const BaseMoreStories: React.FC<BaseMoreStoriesProps> = ({ currentBlogId }) => {
           <BaseBlogCard
             key={blog.id}
             id={blog.id}
-            imageSrc={blog.imageSrc}
+            imageSrc={blog.imageSrc.toString()}
             imageAlt={blog.imageAlt}
             title={blog.title}
             description={blog.description}
@@ -30,6 +30,13 @@ const BaseMoreStories: React.FC<BaseMoreStoriesProps> = ({ currentBlogId }) => {
             authorImage={blog.authorImage}
             authorFallback={blog.authorFallback}
             date={blog.date}
+            userId={""}
+            content={""}
+            IsDeleted={false}
+            CreatedAt={0}
+            UpdatedAt={0}
+            isPublished={false}
+            publishedDate={null}
           />
         ))}
       </div>

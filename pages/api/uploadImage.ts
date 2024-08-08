@@ -20,38 +20,25 @@ export default async function handler(
 
   const { imageName, image } = req.body;
 
-  console.log("imageName", imageName);
-
   if (!imageName || !image) {
     return res.status(400).json({ error: "Image name and image are required" });
   }
-  console.log("imageName", imageName);
 
   const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
   const fileType = image.split(";")[0].split(":")[1];
-
-  console.log("fileType", fileType);
 
   if (!allowedFileTypes.includes(fileType)) {
     return res.status(400).json({ error: "Unsupported file type" });
   }
 
-  console.log("fileType", fileType);
-
   const imageBuffer = Buffer.from(image.split(",")[1], "base64");
-
-  console.log("imageBuffer", imageBuffer);
 
   try {
     const resizedImageBuffer = await sharp(imageBuffer)
       .resize({ width: 1024 })
       .toBuffer();
 
-    console.log("resizedImageBuffer", resizedImageBuffer);
-
     const key = `${imageName}-${Date.now()}`;
-
-    console.log("JEre");
 
     const params = {
       Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET,
@@ -60,15 +47,9 @@ export default async function handler(
       ContentType: fileType,
     };
 
-    console.log("params", params);
-
     await s3.upload(params as AWS.S3.Types.PutObjectRequest).promise();
 
-    console.log("key", key);
-
     const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
-
-    console.log(imageUrl);
 
     res.status(200).json({ message: "Image uploaded successfully", imageUrl });
   } catch (error: any) {
