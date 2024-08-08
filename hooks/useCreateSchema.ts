@@ -1,3 +1,5 @@
+"use client";
+
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
 import { blogSchema } from "@/schemas/blogSchema";

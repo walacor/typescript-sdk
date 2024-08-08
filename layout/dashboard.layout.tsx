@@ -2,8 +2,6 @@ import React, { ReactNode } from "react";
 import Link from "next/link";
 import DefaultLayout from "./default.layout";
 import { FaHome, FaPlus, FaBlog, FaUser } from "react-icons/fa";
-import ConnectWallet from "@/components/ConnectWallet";
-import BaseUploadImage from "@/components/BaseUploadImage";
 
 const sidebarItems = [
   {
@@ -60,16 +58,7 @@ export default function DashboardLayout({
           ))}
         </div>
         <div className="bg-muted mx-auto sm:py-12 min-h-screen w-full">
-          {true ? (
-            children
-          ) : (
-            <div className="w-full flex justify-center items-center p-4 flex-col">
-              <h1 className="text-2xl font-bold text-center mt-8 mb-8">
-                Please sign in to access this page.{" "}
-              </h1>
-              <ConnectWallet />
-            </div>
-          )}
+          {children}
         </div>
       </div>
     </DefaultLayout>

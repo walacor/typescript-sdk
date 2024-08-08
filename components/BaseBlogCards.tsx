@@ -1,9 +1,13 @@
 import React from "react";
 import BaseBlogCard from "@/components/BaseBlogCard";
-import { blogData } from "../data/blogData";
+import { blogData } from "@/data/blogData";
 
-const BaseBlogCards: React.FC = ({ limit }: { limit?: number }) => {
-  const blogsToShow = limit ? blogData.slice(1, limit + 1) : blogData;
+interface BaseBlogCardsProps {
+  limit?: number;
+}
+
+const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
+  const blogsToShow = limit ? blogData.slice(0, limit) : blogData;
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
@@ -28,7 +32,7 @@ const BaseBlogCards: React.FC = ({ limit }: { limit?: number }) => {
             <BaseBlogCard
               id={blog.id}
               key={blog.id}
-              imageSrc={blog.imageSrc}
+              imageSrc={blog.imageSrc.toString()}
               imageAlt={blog.imageAlt}
               title={blog.title}
               description={blog.description}
@@ -36,6 +40,11 @@ const BaseBlogCards: React.FC = ({ limit }: { limit?: number }) => {
               authorImage={blog.authorImage}
               authorFallback={blog.authorFallback}
               date={blog.date}
+              userId={""}
+              content={""}
+              IsDeleted={false}
+              CreatedAt={0}
+              UpdatedAt={0}
             />
           ))}
         </div>

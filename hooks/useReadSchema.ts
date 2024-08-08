@@ -1,4 +1,3 @@
-// useReadSchema.ts
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
@@ -30,6 +29,8 @@ const useReadSchema = (etid: number) => {
         }
       );
 
+      console.log(res.data.data);
+
       const filteredData = (res.data?.data || []).filter(
         (blog: BlogData) => !blog.IsDeleted
       );
@@ -39,7 +40,7 @@ const useReadSchema = (etid: number) => {
           const existing = acc.find((item) => item.id === current.id);
           if (
             !existing ||
-            new Date(current.UpdatedAt) > new Date(existing.UpdatedAt)
+            new Date(current.CreatedAt) > new Date(existing.CreatedAt)
           ) {
             acc = acc.filter((item) => item.id !== current.id);
             acc.push(current);
@@ -49,10 +50,8 @@ const useReadSchema = (etid: number) => {
         [] as BlogData[]
       );
 
-      console.log(res);
-
       setError(null);
-      setResponse(latestData);
+      setResponse(res.data.data);
     } catch (err) {
       setError(err as Error);
     } finally {

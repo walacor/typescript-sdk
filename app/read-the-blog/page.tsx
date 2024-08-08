@@ -66,6 +66,11 @@ export default function ReadTheBlog() {
                   authorImage={blog.authorImage}
                   authorFallback={blog.authorFallback}
                   date={blog.date}
+                  userId={""}
+                  content={""}
+                  IsDeleted={false}
+                  CreatedAt={0}
+                  UpdatedAt={0}
                 />
               ))}
             </div>

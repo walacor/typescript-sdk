@@ -6,35 +6,40 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Button from "@/components/single/Button";
 import Textarea from "@/components/single/Textarea";
+import DashboardLayout from "@/layout/dashboard.layout";
 import usePostSchema from "@/hooks/usePostSchema";
-import { BlogData } from "@/schemas/blogSchema";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
+import BaseUploadImage from "@/components/BaseUploadImage";
+import { BlogData } from "@/schemas/blogSchema";
+import { usePathname } from "next/navigation";
 
 interface ContentManagementProps {
-  initialBlog?: BlogData;
+  initialBlog?: BlogData | null;
   setEditBlog?: React.Dispatch<React.SetStateAction<BlogData | null>>;
 }
 
 const ContentManagement: React.FC<ContentManagementProps> = ({
-  initialBlog,
+  initialBlog = null,
   setEditBlog,
 }) => {
-  const initialBlogState: BlogData = initialBlog || {
-    id: String(new Date().getTime()),
-    userId: "",
-    imageSrc: "",
-    imageAlt: "",
-    title: "",
-    description: "",
-    authorName: "",
-    authorImage: "/placeholder-user.jpg",
-    authorFallback: "",
-    date: "",
-    content: "",
-    IsDeleted: false,
-  };
+  const today = new Date().toISOString().split("T")[0];
 
-  const [blog, setBlog] = useState<BlogData>(initialBlogState);
+  const [blog, setBlog] = useState<BlogData>({
+    id: initialBlog?.id || String(new Date().getTime()),
+    userId: initialBlog?.userId || "",
+    imageSrc: initialBlog?.imageSrc || "",
+    imageAlt: initialBlog?.imageAlt || "",
+    title: initialBlog?.title || "",
+    description: initialBlog?.description || "",
+    authorName: initialBlog?.authorName || "",
+    authorImage: initialBlog?.authorImage || "/placeholder-user.jpg",
+    authorFallback: initialBlog?.authorFallback || "",
+    date: initialBlog?.date || today,
+    content: initialBlog?.content || "",
+    IsDeleted: initialBlog?.IsDeleted || false,
+    CreatedAt: initialBlog?.CreatedAt || Date.now(),
+    UpdatedAt: initialBlog?.UpdatedAt || Date.now(),
+  });
 
   const {
     postSchema,
@@ -45,9 +50,9 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
 
   const {
     updateRecord,
-    loading: updateLoading,
     response: updateResponse,
     error: updateError,
+    loading: updateLoading,
   } = useUpdateRecord(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
@@ -67,29 +72,33 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     setBlog((prevBlog) => ({ ...prevBlog, content }));
   };
 
+  const handleImageUpload = (url: string) => {
+    setBlog((prevBlog) => ({ ...prevBlog, imageSrc: String(url) }));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (initialBlog) {
         await updateRecord(blog);
+        if (setEditBlog) setEditBlog(null);
       } else {
         await postSchema(blog);
       }
-      if (setEditBlog) {
-        setEditBlog(null);
-      }
     } catch (error) {
-      console.error("Error submitting schema:", error);
+      console.error("Error saving blog:", error);
     }
   };
 
-  const isLoading = postLoading || updateLoading;
-  const response = postResponse || updateResponse;
-  const error = postError || updateError;
+  const handleCancelEdit = () => {
+    if (setEditBlog) setEditBlog(null);
+  };
 
   return (
     <div className="container mx-auto py-12">
-      <h1 className="text-3xl font-bold mb-6">Content Management</h1>
+      <h1 className={`${initialBlog ? "" : "mb-6"} text-3xl font-bold`}>
+        {initialBlog ? "" : "Create Blog"}
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <Input
           name="title"
@@ -127,13 +136,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
           onChange={handleChange}
           required
         />
-        <Input
-          name="imageSrc"
-          placeholder="Image Source URL"
-          value={blog.imageSrc.toString()}
-          onChange={handleChange}
-          required
-        />
+        <BaseUploadImage onUpload={handleImageUpload} />
         <Input
           name="imageAlt"
           placeholder="Image Alt Text"
@@ -172,14 +175,29 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
             "background",
           ]}
         />
-        <Button
-          type="submit"
-          className="w-full bg-primary text-primary-foreground"
-        >
-          {isLoading ? "Saving..." : "Save Blog Post"}
-        </Button>
-        {response && <div>Response: {JSON.stringify(response)}</div>}
-        {error && <div>Error: {error.message}</div>}
+        <div className="flex space-x-4">
+          <Button
+            type="submit"
+            className="w-full bg-primary text-primary-foreground"
+          >
+            {postLoading || updateLoading ? "Saving..." : "Save Blog Post"}
+          </Button>
+          {initialBlog && (
+            <Button
+              type="button"
+              className="w-full bg-gray-500 text-white"
+              onClick={handleCancelEdit}
+            >
+              Cancel Edit
+            </Button>
+          )}
+        </div>
+        {(postResponse || updateResponse) && (
+          <div>Response: {JSON.stringify(postResponse || updateResponse)}</div>
+        )}
+        {(postError || updateError) && (
+          <div>Error: {(postError || updateError)?.message}</div>
+        )}
       </form>
     </div>
   );

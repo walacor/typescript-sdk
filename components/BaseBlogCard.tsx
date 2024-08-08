@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatDate } from "@/lib/utils";
-import Image from "next/image";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 
 const BaseBlogCard: React.FC<BlogData> = ({
   id,
@@ -21,7 +20,7 @@ const BaseBlogCard: React.FC<BlogData> = ({
       className="bg-muted group grid gap-2 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow max-w-[400px]"
       prefetch={false}
     >
-      <Image
+      <img
         src={imageSrc}
         width={400}
         height={225}

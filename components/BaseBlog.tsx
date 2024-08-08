@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { BlogData } from "@/types/BlogData";
+import { BlogData } from "@/schemas/blogSchema";
 
 const BaseBlog: React.FC<BlogData> = ({
   title,

@@ -75,6 +75,12 @@ const BlogPost = () => {
         authorName={blog.authorName}
         date={blog.date}
         id={""}
+        userId={""}
+        authorImage={""}
+        authorFallback={""}
+        IsDeleted={false}
+        CreatedAt={0}
+        UpdatedAt={0}
       />
       <BaseMoreStories currentBlogId={blogId} />
     </BlogLayout>

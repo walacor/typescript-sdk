@@ -8,6 +8,7 @@ import useReadSchema from "@/hooks/useReadSchema";
 import { BlogData } from "@/schemas/blogSchema";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import ContentManagement from "@/components/ContentManagement";
+import { formatTimestampToDateTime } from "@/lib/utils";
 
 const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
@@ -48,9 +49,14 @@ const MyBlogs: React.FC = () => {
       <div className="container mx-auto py-12">
         <h1 className="text-3xl font-bold mb-6">My Blogs</h1>
         {loading && <p>Loading...</p>}
-        {!loading && response && error && <p>Error: {error.message}</p>}
+        {error && <p>Error: {error.message}</p>}
         {editBlog ? (
-          <ContentManagement initialBlog={editBlog} setEditBlog={setEditBlog} />
+          <div>
+            <ContentManagement
+              initialBlog={editBlog}
+              setEditBlog={setEditBlog}
+            />
+          </div>
         ) : (
           <div className="space-y-6">
             {blogs
@@ -81,6 +87,12 @@ const MyBlogs: React.FC = () => {
                         Delete
                       </Button>
                     </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div />
+                    <span className="opacity-50 text-xs mt-4">
+                      Created: {formatTimestampToDateTime(blog.CreatedAt)}
+                    </span>
                   </div>
                 </div>
               ))}

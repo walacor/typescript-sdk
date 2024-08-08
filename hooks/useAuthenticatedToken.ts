@@ -1,3 +1,5 @@
+"use client";
+
 import { useRecoilValue } from "recoil";
 import { tokenState } from "@/recoil/atoms";
 import { useLogin } from "./useLogin";

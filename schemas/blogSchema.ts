@@ -1,5 +1,3 @@
-import { StaticImageData } from "next/image";
-
 type FieldType = {
   FieldName: string;
   DataType: string;

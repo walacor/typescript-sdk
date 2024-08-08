@@ -1,4 +1,3 @@
-// useUpdateRecord.ts
 import { useState } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
@@ -50,9 +49,8 @@ export function useUpdateRecord(etid: number) {
         }
       );
 
-      console.log("Record updated:", response.data);
       setResponse(response.data);
-      triggerRefetch(); // Trigger refetch
+      triggerRefetch();
 
       return response.data;
     } catch (error) {

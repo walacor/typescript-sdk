@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import ConnectWallet from "./ConnectWallet";
 
 export default function BaseHeader() {
   const [scrolled, setScrolled] = useState(false);

@@ -25,6 +25,7 @@ const usePostSchema = (etid: number) => {
             },
           }
         );
+        console.log("HERE");
         setResponse(res.data);
       } catch (err) {
         setError(err as Error);
