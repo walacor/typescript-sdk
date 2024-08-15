@@ -24,6 +24,7 @@ The Platform handles the heavy lifting of this for the user and, in general, all
 
 To make this work, you will need to add an .env file with these variables. Here is a video tutorial explaining these.
 
+```bash
 #### From Walacor
 
 NEXT_PUBLIC_EC2_WALACOR="YOUR_EC2"
@@ -44,6 +45,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="YOUR_CLERK_PUBLISHABLE_KEY"
 CLERK_SECRET_KEY="YOUR_CLERK_SECRET_KEY"
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
 NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+```
 
 ## Getting Started
 
