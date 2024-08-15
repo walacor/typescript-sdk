@@ -9,7 +9,7 @@ export default function Providers({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ThirdwebProvider>
-      <RecoilRoot>{children}</RecoilRoot>;
+      <RecoilRoot>{children}</RecoilRoot>
     </ThirdwebProvider>
   );
 }

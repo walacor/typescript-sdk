@@ -31,6 +31,7 @@ export default function ConnectWallet({ className }: { className?: string }) {
             "https://api.surveyjs.io/private/Surveys/files?name=883a9b4f-bc58-4fd5-af08-4fa6a6ead940",
           showThirdwebBranding: false,
         }}
+        onConnect={(user) => console.log("Connected user:", user)}
       />
     </div>
   );

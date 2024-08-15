@@ -10,6 +10,8 @@ import usePostSchema from "@/hooks/usePostSchema";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import BaseUploadImage from "@/components/BaseUploadImage";
 import { BlogData } from "@/schemas/blogSchema";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { formatDate } from "@/lib/utils";
 
 interface ContentManagementProps {
   initialBlog?: BlogData | null;
@@ -21,17 +23,25 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
   setEditBlog,
 }) => {
   const today = new Date().toISOString().split("T")[0];
+  const { userId } = useAuth();
+  const { user } = useUser();
 
   const [blog, setBlog] = useState<BlogData>({
     id: initialBlog?.id || String(new Date().getTime()),
-    userId: initialBlog?.userId || "",
+    userId: userId || "",
     imageSrc: initialBlog?.imageSrc || "",
     imageAlt: initialBlog?.imageAlt || "",
     title: initialBlog?.title || "",
     description: initialBlog?.description || "",
-    authorName: initialBlog?.authorName || "",
-    authorImage: initialBlog?.authorImage || "/placeholder-user.jpg",
-    authorFallback: initialBlog?.authorFallback || "",
+    authorName:
+      String(user?.firstName) + " " + String(user?.lastName) ||
+      String(user?.fullName) ||
+      "Anonymous",
+    authorImage: String(user?.imageUrl) || "/placeholder-user.jpg",
+    authorFallback:
+      String(user?.firstName).slice(0, 1).toUpperCase() +
+        " " +
+        String(user?.lastName).slice(0, 1).toUpperCase() || "",
     date: initialBlog?.date || today,
     content: initialBlog?.content || "",
     IsDeleted: initialBlog?.IsDeleted || false,
@@ -120,6 +130,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
         {initialBlog ? "" : "Create Blog"}
       </h1>
       <form onSubmit={handleSubmit} className="space-y-6">
+        <h2>Title of Blog</h2>
         <Input
           name="title"
           placeholder="Title"
@@ -127,6 +138,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
           onChange={handleChange}
           required
         />
+        <h2>Brief Description of Blog</h2>
         <Textarea
           name="description"
           placeholder="Description"
@@ -134,37 +146,11 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
           onChange={handleChange}
           required
         />
-        <Input
-          name="authorName"
-          placeholder="Author Name"
-          value={blog.authorName}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          name="authorFallback"
-          placeholder="Author Fallback Initials"
-          value={blog.authorFallback}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          name="date"
-          type="date"
-          placeholder="Publication Date"
-          value={blog.date}
-          onChange={handleChange}
-          required
-        />
         <BaseUploadImage onUpload={handleImageUpload} />
-        <Input
-          name="imageAlt"
-          placeholder="Image Alt Text"
-          value={blog.imageAlt}
-          onChange={handleChange}
-          required
-        />
+
+        <h2>Blog Content & Structure</h2>
         <ReactQuill
+          className="bg-white"
           value={blog.content}
           onChange={handleEditorChange}
           modules={{
@@ -195,30 +181,41 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
             "background",
           ]}
         />
+
         <div className="flex flex-col gap-4">
-          {initialBlog && (
-            <Button
-              type="button"
-              className="w-full bg-gray-500 text-white hover:bg-black hover:text-white transition-all"
-              onClick={handleCancelEdit}
-            >
-              Cancel Edit
-            </Button>
-          )}
           <Button
             type="submit"
-            className="w-full bg-primary text-primary-foreground hover:bg-black hover:text-white transition-all"
+            className="w-full bg-secondary text-secondary-foreground border-2 border-black hover:bg-black hover:text-white transition-all"
           >
             {postLoading || updateLoading ? "Saving..." : "Save Blog Post"}
           </Button>
           <Button
             type="button"
-            className="w-full bg-secondary text-secondary-foreground hover:bg-black hover:text-white transition-all"
+            className="w-full bg-secondary text-secondary-foreground border-2 border-black hover:bg-black hover:text-white transition-all"
             onClick={handlePublish}
           >
             {postLoading || updateLoading ? "Publishing..." : "Save & Publish"}
           </Button>
+          {initialBlog && (
+            <Button
+              type="button"
+              className="w-full bg-none text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition-all"
+              onClick={handleCancelEdit}
+            >
+              Cancel Edit
+            </Button>
+          )}
         </div>
+
+        <div className="flex justify-between gap-2 w-full">
+          <span className="text-xs opacity-50">
+            Author:{" "}
+            {String(user?.firstName) + " " + String(user?.lastName) ||
+              "Anonymous"}
+          </span>
+          <span className="text-xs opacity-50">Date: {formatDate(today)}</span>
+        </div>
+
         {(postResponse || updateResponse) && (
           <div>Response: {JSON.stringify(postResponse || updateResponse)}</div>
         )}

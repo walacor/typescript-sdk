@@ -17,7 +17,7 @@ const BaseBlogCard: React.FC<BlogData> = ({
   return (
     <Link
       href={`/blog/${id}`}
-      className="bg-muted group grid gap-2 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow max-w-[400px]"
+      className="bg-muted group grid gap-2 rounded-lg overflow-hidden shadow-sm hover:shadow transition-shadow max-w-[400px]"
       prefetch={false}
     >
       <img

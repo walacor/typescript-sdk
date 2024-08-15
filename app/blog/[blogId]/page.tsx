@@ -69,7 +69,7 @@ const BlogPost = () => {
       <BaseBlog
         title={blog.title}
         description={blog.description}
-        imageSrc={blog.imageSrc}
+        imageSrc={blog.imageSrc.toString()}
         imageAlt={blog.imageAlt}
         content={blog.content}
         authorName={blog.authorName}

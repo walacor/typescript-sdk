@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "./useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
+import { useRefetch } from "@/context/RefetchContext";
 
 const usePostSchema = (etid: number) => {
   const [response, setResponse] = useState(null);
@@ -9,6 +10,7 @@ const usePostSchema = (etid: number) => {
   const [loading, setLoading] = useState(false);
 
   const token = useAuthenticatedToken();
+  const { triggerRefetch } = useRefetch();
 
   const postSchema = useCallback(
     async (data: BlogData) => {
@@ -25,15 +27,15 @@ const usePostSchema = (etid: number) => {
             },
           }
         );
-        console.log("HERE");
         setResponse(res.data);
+        triggerRefetch();
       } catch (err) {
         setError(err as Error);
       } finally {
         setLoading(false);
       }
     },
-    [token]
+    [token, etid, triggerRefetch]
   );
 
   return { response, error, loading, postSchema };

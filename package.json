@@ -13,6 +13,7 @@
     "push": "next lint --fix && next lint && npm run test:e2e && tsc --noEmit && next build && git add . && git commit -m 'walacor-commit' && git push && next dev"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.3.1",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@radix-ui/react-avatar": "^1.1.0",

@@ -11,7 +11,7 @@ const DashboardHome = () => {
         <p className="text-gray-600 mb-6 text-center">
           Manage your blog posts, profile, and settings all in one place.
         </p>
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-6">
           <h2 className="text-2xl font-bold mb-4">About Walacor</h2>
           <p className="text-gray-700 mb-4">
             Walacor is your ultimate blogging companion. Our platform provides

@@ -21,7 +21,7 @@ export default function BaseBanner() {
             <div className="space-x-4 mt-6">
               <Link
                 href="/read-the-blog"
-                className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                className="inline-flex h-9 items-center justify-center bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                 prefetch={false}
               >
                 Read the Blog
@@ -35,7 +35,7 @@ export default function BaseBanner() {
             <div className="flex flex-col items-center justify-center">
               <Link
                 href={`/blog/${featuredBlog.id}`}
-                className="group grid gap-2 overflow-hidden hover:shadow-md transition-shadow border"
+                className="group grid gap-2 overflow-hidden hover:shadow transition-shadow border"
                 prefetch={false}
               >
                 <img src={featuredBlog.imageSrc} alt={""} />
