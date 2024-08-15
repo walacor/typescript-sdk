@@ -1,28 +1,3 @@
-# IMPORTANT
-
-To make this work, you will need to add an .env file with these variables. Here is a video tutorial explaining these.
-
-### Walacor
-
-NEXT_PUBLIC_EC2_WALACOR="YOUR_EC2"
-NEXT_PUBLIC_WALACOR_BLOG_ETID="YOUR_BLOG_ETID"
-NEXT_PUBLIC_WALACOR_USERNAME="YOUR_USERNAME"
-NEXT_PUBLIC_WALACOR_PASSWORD="YOUR_PASSWORD"
-
-### AWS
-
-NEXT_PUBLIC_AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
-NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
-NEXT_PUBLIC_AWS_REGION="YOUR_AWS_REGION"
-NEXT_PUBLIC_AWS_S3_BUCKET="YOUR_S3_BUCKET"
-
-### Auth
-
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="YOUR_CLERK_PUBLISHABLE_KEY"
-CLERK_SECRET_KEY="YOUR_CLERK_SECRET_KEY"
-NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
-NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
-
 # Walacor Template
 
 This template is designed to embellish the process of integrating with the Walacor data platform.
@@ -44,6 +19,31 @@ Because the platform integrates blockchain, an important difference that one mus
 The Platform handles the heavy lifting of this for the user and, in general, allows the user to interact with it as one does with most databases. However, it is best to keep this in mind when doing things like Schema design.
 
 [Official Walacor Documentation](https://admindoc.walacor.com/admin-documentation/latest/the-platform-application-an-introduction)
+
+# Important
+
+To make this work, you will need to add an .env file with these variables. Here is a video tutorial explaining these.
+
+#### Walacor
+
+NEXT_PUBLIC_EC2_WALACOR="YOUR_EC2"
+NEXT_PUBLIC_WALACOR_BLOG_ETID="YOUR_BLOG_ETID"
+NEXT_PUBLIC_WALACOR_USERNAME="YOUR_USERNAME"
+NEXT_PUBLIC_WALACOR_PASSWORD="YOUR_PASSWORD"
+
+#### AWS
+
+NEXT_PUBLIC_AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
+NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
+NEXT_PUBLIC_AWS_REGION="YOUR_AWS_REGION"
+NEXT_PUBLIC_AWS_S3_BUCKET="YOUR_S3_BUCKET"
+
+#### Auth
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="YOUR_CLERK_PUBLISHABLE_KEY"
+CLERK_SECRET_KEY="YOUR_CLERK_SECRET_KEY"
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
 
 ## Getting Started
 
