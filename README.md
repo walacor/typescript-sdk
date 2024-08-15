@@ -25,8 +25,6 @@ The Platform handles the heavy lifting of this for the user and, in general, all
 To make this work, you will need to add an .env file with these variables. Here is a video tutorial explaining these.
 
 ```bash
-.env
-
 # From Walacor
 NEXT_PUBLIC_EC2_WALACOR="YOUR_EC2"
 NEXT_PUBLIC_WALACOR_BLOG_ETID="YOUR_BLOG_ETID"
