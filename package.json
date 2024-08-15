@@ -36,8 +36,7 @@
     "recoil": "^0.7.7",
     "sharp": "^0.33.4",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7",
-    "thirdweb": "^5.44.1"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.3",
