@@ -8,7 +8,7 @@ import useReadSchema from "@/hooks/useReadSchema";
 import { BlogData } from "@/schemas/blogSchema";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import ContentManagement from "@/components/ContentManagement";
-import { formatTimestampToDateTime } from "@/lib/utils";
+import { formatDate, formatTimestampToDateTime } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
@@ -134,8 +134,8 @@ const MyBlogs: React.FC = () => {
                   <span className="opacity-50 text-xs mt-2">
                     Published:{" "}
                     {blog.isPublished
-                      ? formatTimestampToDateTime(
-                          Number(blog.publishedDate && blog.publishedDate)
+                      ? formatDate(
+                          String(blog.publishedDate && blog.publishedDate)
                         )
                       : "Not Published"}
                   </span>

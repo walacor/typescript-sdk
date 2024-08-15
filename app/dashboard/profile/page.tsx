@@ -6,7 +6,7 @@ import { useClerk } from "@clerk/nextjs";
 import Button from "@/components/single/Button";
 import { useUser } from "@clerk/nextjs";
 import Input from "@/components/single/Input";
-import Dropdown from "@/components/single/Dropdown"; // Import the Dropdown component
+import Dropdown from "@/components/single/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -53,7 +53,7 @@ const Profile = () => {
 
   return (
     <DashboardLayout>
-      <div className="w-full max-w-lg mx-auto mt-12">
+      <div className="w-full mx-auto p-8">
         <h1 className="text-3xl font-bold mb-6">Profile</h1>
         <div className="space-y-4">
           <div>
@@ -106,7 +106,7 @@ const Profile = () => {
           <div className="mt-6">
             <Button
               className={`bg-primary text-white w-full ${
-                isUpdated ? "" : "opacity-50 cursor-not-allowed"
+                isUpdated ? "" : "opacity-75 cursor-not-allowed"
               }`}
               onClick={handleUpdate}
               disabled={!isUpdated}
