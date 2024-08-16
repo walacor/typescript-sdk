@@ -5,6 +5,7 @@ import DashboardLayout from "@/layout/dashboard.layout";
 import SchemaDetails from "@/components/SchemaDetails";
 import { blogSchema } from "@/schemas/blogSchema";
 import { profileSchema } from "@/schemas/profileSchema";
+import Button from "@/components/single/Button";
 
 export const schemas = [
   { schema: blogSchema, name: "Blog Schema" },
@@ -20,28 +21,28 @@ const SchemasPage = () => {
         <h1 className="text-4xl font-bold mb-6 text-center">Schemas</h1>
 
         <div className="flex justify-center mb-8">
-          <button
+          <Button
             onClick={() => setSelectedTab("about")}
-            className={`px-4 py-2 mx-2 text-white rounded-lg ${
+            className={`px-4 py-2 mx-2 text-white ${
               selectedTab === "about"
                 ? "bg-primary"
                 : "bg-gray-400 hover:bg-gray-500"
             }`}
           >
             About
-          </button>
+          </Button>
           {schemas.map((schemaObj, index) => (
-            <button
+            <Button
               key={index}
               onClick={() => setSelectedTab(schemaObj.name)}
-              className={`px-4 py-2 mx-2 text-white rounded-lg ${
+              className={`px-4 py-2 mx-2 text-white ${
                 selectedTab === schemaObj.name
                   ? "bg-primary"
                   : "bg-gray-400 hover:bg-gray-500"
               }`}
             >
               {schemaObj.name}
-            </button>
+            </Button>
           ))}
         </div>
 

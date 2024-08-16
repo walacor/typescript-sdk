@@ -4,9 +4,9 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
-import useReadSchema from "@/hooks/useReadSchema";
+import useReadSchemas from "@/hooks/useReadSchemas";
 import { BlogData } from "@/schemas/blogSchema";
-import { useUpdateRecord } from "@/hooks/useUpdateRecord";
+import { useUpdateSchema } from "@/hooks/useUpdateSchema";
 import ContentManagement from "@/components/ContentManagement";
 import { formatDate, formatTimestampToDateTime } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,11 +18,11 @@ const MyBlogs: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState<BlogData | null>(null);
 
-  const { readSchema, response, error, loading } = useReadSchema(
+  const { readSchema, response, error, loading } = useReadSchemas(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
 
-  const { updateRecord } = useUpdateRecord(
+  const { updateRecord } = useUpdateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
 

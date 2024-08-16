@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import { tokenState } from "@/recoil/atoms";
 
-export function useLogin() {
+export function useAuthentication() {
   const [token, setToken] = useRecoilState(tokenState);
 
   async function login() {

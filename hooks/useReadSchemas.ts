@@ -4,7 +4,7 @@ import useAuthenticatedToken from "./useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
 
-const useReadSchema = (etid: number, onlyPublished: boolean = false) => {
+const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
   const [response, setResponse] = useState<BlogData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -70,4 +70,4 @@ const useReadSchema = (etid: number, onlyPublished: boolean = false) => {
   return { response, error, loading, readSchema };
 };
 
-export default useReadSchema;
+export default useReadSchemas;

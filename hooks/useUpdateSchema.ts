@@ -4,7 +4,7 @@ import useAuthenticatedToken from "./useAuthenticatedToken";
 import { BlogData, blogSchema } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
 
-export function useUpdateRecord(etid: number) {
+export function useUpdateSchema(etid: number) {
   const token = useAuthenticatedToken();
   const { triggerRefetch } = useRefetch();
   const [loading, setLoading] = useState<boolean>(false);

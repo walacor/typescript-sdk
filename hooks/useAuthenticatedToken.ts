@@ -2,11 +2,11 @@
 
 import { useRecoilValue } from "recoil";
 import { tokenState } from "@/recoil/atoms";
-import { useLogin } from "./useLogin";
+import { useAuthentication } from "./useAuthentication";
 import { useEffect } from "react";
 
 const useAuthenticatedToken = () => {
-  const { login } = useLogin();
+  const { login } = useAuthentication();
   const token = useRecoilValue(tokenState);
 
   useEffect(() => {

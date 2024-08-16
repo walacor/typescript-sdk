@@ -7,7 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import Button from "@/components/single/Button";
 import Textarea from "@/components/single/Textarea";
 import usePostSchema from "@/hooks/usePostSchema";
-import { useUpdateRecord } from "@/hooks/useUpdateRecord";
+import { useUpdateSchema } from "@/hooks/useUpdateSchema";
 import BaseUploadImage from "@/components/BaseUploadImage";
 import { BlogData } from "@/schemas/blogSchema";
 import { useAuth, useUser } from "@clerk/nextjs";
@@ -63,7 +63,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     response: updateResponse,
     error: updateError,
     loading: updateLoading,
-  } = useUpdateRecord(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+  } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     if (initialBlog) {
