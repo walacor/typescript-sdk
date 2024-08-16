@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import Link from "next/link";
 import DefaultLayout from "./default.layout";
-import { FaHome, FaPlus, FaBlog, FaUser } from "react-icons/fa";
+import { FaHome, FaPlus, FaBlog, FaUser, FaDatabase } from "react-icons/fa";
 
 const sidebarItems = [
   {
@@ -27,6 +27,12 @@ const sidebarItems = [
     href: "/dashboard/profile",
     icon: <FaUser />,
     description: "Edit your profile",
+  },
+  {
+    name: "Schemas",
+    href: "/dashboard/schemas",
+    icon: <FaDatabase />,
+    description: "View Schemas",
   },
 ];
 
