@@ -32,25 +32,44 @@ export const profileSchema: ProfileSchemaType = {
       FieldName: "id",
       DataType: "TEXT",
       MaxLength: 256,
-      Required: true,
+      Required: false,
     },
     {
       FieldName: "userId",
       DataType: "TEXT",
       MaxLength: 256,
-      Required: true,
+      Required: false,
+    },
+    {
+      FieldName: "firstName",
+      DataType: "TEXT",
+      MaxLength: 256,
+      Required: false,
+    },
+    {
+      FieldName: "lastName",
+      DataType: "TEXT",
+      MaxLength: 256,
+      Required: false,
     },
     {
       FieldName: "email",
       DataType: "TEXT",
       MaxLength: 256,
-      Required: true,
+      Required: false,
+    },
+    {
+      FieldName: "role",
+      DataType: "TEXT",
+      MaxLength: 256,
+      Required: false,
+      Default: "Viewer",
     },
     {
       FieldName: "isVerified",
       DataType: "BOOLEAN",
       Default: false,
-      Required: true,
+      Required: false,
     },
   ],
   Indexes: [
@@ -66,12 +85,21 @@ export const profileSchema: ProfileSchemaType = {
       ForceUpdate: false,
       Delete: false,
     },
+    {
+      Fields: ["email"],
+      IndexValue: "email",
+      ForceUpdate: false,
+      Delete: false,
+    },
   ],
 };
 
 export interface ProfileData {
   id: string;
   userId: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  role: string;
   isVerified: boolean;
 }

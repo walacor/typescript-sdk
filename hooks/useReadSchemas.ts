@@ -29,6 +29,8 @@ const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
         }
       );
 
+      console.log(res);
+
       const filteredData = (res.data?.data || []).filter((blog: BlogData) => {
         return !blog.IsDeleted && (!onlyPublished || blog.isPublished);
       });

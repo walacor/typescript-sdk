@@ -19,6 +19,7 @@ export function useAuthentication() {
           },
         }
       );
+
       setToken(res.data.api_token);
     } catch (error) {
       console.error("Error logging in:", error);
