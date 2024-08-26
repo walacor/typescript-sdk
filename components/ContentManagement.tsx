@@ -95,7 +95,6 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
         if (setEditBlog) setEditBlog(null);
       } else {
         await postSchema(blog);
-        console.log("HERE");
       }
     } catch (error) {
       console.error("Error saving blog:", error);

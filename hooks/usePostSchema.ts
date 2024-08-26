@@ -13,7 +13,7 @@ const usePostSchema = (etid: number) => {
   const { triggerRefetch } = useRefetch();
 
   const postSchema = useCallback(
-    async (data: BlogData) => {
+    async (data: BlogData | any) => {
       setLoading(true);
       try {
         const res = await axios.post(

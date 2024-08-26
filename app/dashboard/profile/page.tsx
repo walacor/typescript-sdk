@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/layout/dashboard.layout";
-import { useClerk } from "@clerk/nextjs";
 import Button from "@/components/single/Button";
-import { useUser } from "@clerk/nextjs";
 import Input from "@/components/single/Input";
 import Dropdown from "@/components/single/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,10 +11,13 @@ import {
   faRunning,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { useGetUser } from "@/hooks/useGetUser";
+import { useClerk, useUser } from "@clerk/nextjs";
 
 const Profile = () => {
+  const { data, getUser } = useGetUser();
+  const { user: clerkUser } = useUser();
   const { signOut } = useClerk();
-  const { user } = useUser();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -25,13 +26,19 @@ const Profile = () => {
   const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      setFirstName(user.firstName || "");
-      setLastName(user.lastName || "");
-      setEmail(user.emailAddresses[0]?.emailAddress || "");
+    if (clerkUser) {
+      getUser({ UserName: clerkUser.fullName || clerkUser.id });
+    }
+  }, [clerkUser, getUser]);
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const walacorUser = data[0];
+      setFirstName(walacorUser.FirstName || "");
+      setLastName(walacorUser.LastName || "");
       setRole("Viewer");
     }
-  }, [user]);
+  }, [data]);
 
   const handleChange = (
     setter: React.Dispatch<React.SetStateAction<string>>,
@@ -46,10 +53,11 @@ const Profile = () => {
     console.log("Profile updated");
   };
 
-  async function handleSignOut() {
+  const handleSignOut = async () => {
     await signOut();
+
     window.location.href = "/";
-  }
+  };
 
   return (
     <DashboardLayout>

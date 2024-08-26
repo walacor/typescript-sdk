@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import Link from "next/link";
 import DefaultLayout from "./default.layout";
@@ -9,6 +11,7 @@ import {
   FaDatabase,
   FaFish,
 } from "react-icons/fa";
+import useEnsureUserInDb from "@/hooks/useEnsureUserInDb";
 
 const sidebarItems = [
   {
