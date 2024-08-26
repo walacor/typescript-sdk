@@ -15,6 +15,7 @@ import {
   faRunning,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const Profile = () => {
   const { data, getUser } = useGetUser();
@@ -118,6 +119,12 @@ const Profile = () => {
               ]}
               className="mt-1 block w-full p-2 border border-gray-300"
             />
+            <Link
+              href="/dashboard/role"
+              className="mt-2 text-sm text-gray-500 cursor-pointer hover:underline"
+            >
+              Add role?
+            </Link>
           </div>
           <div className="mt-6">
             <Button
