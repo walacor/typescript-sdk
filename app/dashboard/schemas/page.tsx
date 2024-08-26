@@ -4,13 +4,9 @@ import React, { useState } from "react";
 import DashboardLayout from "@/layout/dashboard.layout";
 import SchemaDetails from "@/components/SchemaDetails";
 import { blogSchema } from "@/schemas/blogSchema";
-import { profileSchema } from "@/schemas/profileSchema";
 import Button from "@/components/single/Button";
 
-export const schemas = [
-  { schema: blogSchema, name: "Blog Schema" },
-  { schema: profileSchema, name: "Profile Schema" },
-];
+export const schemas = [{ schema: blogSchema, name: "Blog Schema" }];
 
 const SchemasPage = () => {
   const [selectedTab, setSelectedTab] = useState("about");
@@ -35,7 +31,7 @@ const SchemasPage = () => {
             <Button
               key={index}
               onClick={() => setSelectedTab(schemaObj.name)}
-              className={`px-4 py-2 mx-2 text-white ${
+              className={`px-4 py-2 text-white ${
                 selectedTab === schemaObj.name
                   ? "bg-primary"
                   : "bg-gray-400 hover:bg-gray-500"
@@ -59,8 +55,8 @@ const SchemasPage = () => {
             </p>
             <p className="text-gray-700 mb-4">
               Schemas can also belong to a 'family', which allows you to group
-              related schemas together. For example, a 'profile' family might
-              include schemas for user profiles, settings, and preferences.
+              related schemas together. For example, a 'blog' family might
+              include schemas for blog images, description, and alt texts.
               Grouping schemas into families makes it easier to manage and
               maintain related data structures, ensuring consistency across
               similar data types. The family concept helps in organizing your

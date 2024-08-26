@@ -8,6 +8,7 @@ interface InputProps {
   type?: string;
   required?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   type = "text",
   required = false,
   className,
+  disabled = false,
 }) => {
   return (
     <input
@@ -28,6 +30,7 @@ const Input: React.FC<InputProps> = ({
       onChange={onChange}
       required={required}
       className={`w-full px-4 py-2 border focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
+      disabled={disabled}
     />
   );
 };

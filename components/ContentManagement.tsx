@@ -88,7 +88,6 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitting blog:", blog);
     try {
       if (initialBlog) {
         await updateRecord(blog);
@@ -107,7 +106,6 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
       isPublished: true,
       publishedDate: new Date().toISOString(),
     };
-    console.log("Publishing blog:", updatedBlog);
     try {
       if (initialBlog) {
         await updateRecord(updatedBlog);
@@ -149,6 +147,9 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
         <BaseUploadImage onUpload={handleImageUpload} />
 
         <h2>Blog Content & Structure</h2>
+        <p className="text-xs opacity-50 -my-2 -mt-4">
+          (Limited to 500 characters for the description.)
+        </p>
         <ReactQuill
           className="bg-white"
           value={blog.content}

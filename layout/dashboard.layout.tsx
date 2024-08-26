@@ -1,5 +1,7 @@
 "use client";
 
+import "@/app/globals.css";
+
 import React, { ReactNode } from "react";
 import Link from "next/link";
 import DefaultLayout from "./default.layout";
@@ -65,11 +67,11 @@ export default function DashboardLayout({
         <div className="md:min-h-screen w-full sm:flex flex-col bg-muted-foreground hidden">
           {sidebarItems.map((item, index) => (
             <Link
-              className="flex items-center justify-start border-b p-4 cursor-pointer transition-all hover:bg-muted"
+              className="flex items-center justify-start border-b p-4 cursor-pointer transition-all bg-red-100"
               key={index}
               href={item.href}
             >
-              <div className="flex items-center space-x-2 gap-4">
+              <div className="flex items-center space-x-2 gap-4 hover:opacity-50">
                 {item.icon}
                 <div className="flex flex-col">
                   <span className="font-bold">{item.name}</span>

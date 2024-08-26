@@ -27,7 +27,6 @@ export function useCreateSchema(etid: number) {
         }
       );
 
-      console.log("Schema created:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error creating schema:", error);

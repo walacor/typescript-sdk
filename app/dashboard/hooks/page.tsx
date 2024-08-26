@@ -106,7 +106,6 @@ export const hooks = [
               }
             );
 
-            console.log("Schema created:", response.data);
             return response.data;
           } catch (error) {
             console.error("Error creating schema:", error);
@@ -479,7 +478,7 @@ const HooksPage = () => {
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
-        <h1 className="text-4xl mb-6 text-center">Hooks</h1>
+        <h1 className="text-4xl mb-6 text-center font-bold">Hooks</h1>
 
         {/* Tab Selector */}
         <div className="flex justify-center mb-8">

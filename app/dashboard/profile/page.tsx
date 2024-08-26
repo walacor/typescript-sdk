@@ -6,22 +6,28 @@ import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
 import Dropdown from "@/components/single/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useGetUser } from "@/hooks/useGetUser";
+import { useUpdateUser } from "@/hooks/useUpdateUser";
+import { useClerk, useUser } from "@clerk/nextjs";
+
 import {
   faArrowLeft,
   faRunning,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { useGetUser } from "@/hooks/useGetUser";
-import { useClerk, useUser } from "@clerk/nextjs";
 
 const Profile = () => {
   const { data, getUser } = useGetUser();
+  const {
+    updateRecord,
+    loading: updatingUser,
+    error: updateError,
+  } = useUpdateUser(10);
   const { user: clerkUser } = useUser();
   const { signOut } = useClerk();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [role, setRole] = useState("Viewer");
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -36,7 +42,7 @@ const Profile = () => {
       const walacorUser = data[0];
       setFirstName(walacorUser.FirstName || "");
       setLastName(walacorUser.LastName || "");
-      setRole("Viewer");
+      setRole(walacorUser.UserType || "Viewer");
     }
   }, [data]);
 
@@ -48,14 +54,27 @@ const Profile = () => {
     setIsUpdated(true);
   };
 
-  const handleUpdate = () => {
-    setIsUpdated(false);
-    console.log("Profile updated");
+  const handleUpdate = async () => {
+    if (!clerkUser || !data || data.length === 0) return;
+
+    try {
+      const updatedUserData = {
+        UID: data[0].UID,
+        FirstName: firstName,
+        LastName: lastName,
+        UserType: role,
+      };
+
+      await updateRecord(updatedUserData);
+
+      setIsUpdated(false);
+    } catch (error) {
+      console.error("Failed to update profile", error);
+    }
   };
 
   const handleSignOut = async () => {
     await signOut();
-
     window.location.href = "/";
   };
 
@@ -88,17 +107,6 @@ const Profile = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => handleChange(setEmail, e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
               Role
             </label>
             <Dropdown
@@ -117,15 +125,20 @@ const Profile = () => {
                 isUpdated ? "" : "opacity-75 cursor-not-allowed"
               }`}
               onClick={handleUpdate}
-              disabled={!isUpdated}
+              disabled={!isUpdated || updatingUser}
             >
               <FontAwesomeIcon className="w-3 mx-1" icon={faUser} />
-              Update Profile
+              {updatingUser ? "Updating..." : "Update Profile"}
               <FontAwesomeIcon
                 className="w-4 mx-1 opacity-0"
                 icon={faRunning}
               />
             </Button>
+            {updateError && (
+              <p className="text-red-500 mt-2">
+                Error updating profile: {updateError.message}
+              </p>
+            )}
           </div>
           <div className="mt-6">
             <Button
