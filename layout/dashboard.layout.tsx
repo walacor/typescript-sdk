@@ -12,8 +12,9 @@ import {
   FaUser,
   FaDatabase,
   FaFish,
+  FaJava,
 } from "react-icons/fa";
-import { useCheckAndAddUser } from "@/hooks/useCheckAndAddUser";
+import { useCheckAndAddUser } from "@/hooks/user/useCheckAndAddUser";
 
 const sidebarItems = [
   {
@@ -39,6 +40,12 @@ const sidebarItems = [
     href: "/dashboard/profile",
     icon: <FaUser />,
     description: "Edit your profile",
+  },
+  {
+    name: "Roles",
+    href: "/dashboard/role",
+    icon: <FaJava />,
+    description: "Edit your roles",
   },
   {
     name: "Schemas",

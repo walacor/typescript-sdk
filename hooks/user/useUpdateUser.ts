@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import useAuthenticatedToken from "./useAuthenticatedToken";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { useRefetch } from "@/context/RefetchContext";
 
 type User = {

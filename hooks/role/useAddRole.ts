@@ -1,40 +1,25 @@
 import { useState } from "react";
 import axios from "axios";
-import useAuthenticatedToken from "./useAuthenticatedToken";
-import { BlogData, blogSchema } from "@/schemas/blogSchema";
+import useAuthenticatedToken from "@/hooks/auth/useAuthenticatedToken";
 import { useRefetch } from "@/context/RefetchContext";
 
-export function useUpdateSchema(etid: number) {
+export function useAddRole(etid: number) {
   const token = useAuthenticatedToken();
   const { triggerRefetch } = useRefetch();
   const [loading, setLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState<Error | null>(null);
 
-  const filterValidFields = (data: Partial<BlogData>): Partial<BlogData> => {
-    const validFields = blogSchema.Fields.map((field) => field.FieldName);
-    const filteredData = Object.keys(data)
-      .filter(
-        (key): key is keyof BlogData =>
-          validFields.includes(key) || key === "UID"
-      )
-      .reduce((obj, key) => {
-        obj[key] = data[key as keyof BlogData] as undefined;
-        return obj;
-      }, {} as Partial<BlogData>);
-    return filteredData;
-  };
-
-  const updateRecord = async (data: Partial<BlogData>) => {
+  const addRole = async (roleData: { RoleName: string; Scopes: string[] }) => {
     setLoading(true);
     setError(null);
     setResponse(null);
 
-    const filteredData = filterValidFields(data);
     const payload = {
+      ETId: etid,
       Data: [
         {
-          ...filteredData,
+          ...roleData,
         },
       ],
     };
@@ -45,8 +30,8 @@ export function useUpdateSchema(etid: number) {
         payload,
         {
           headers: {
-            Authorization: `${token}`,
             ETId: etid,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -57,7 +42,7 @@ export function useUpdateSchema(etid: number) {
 
       return response.data;
     } catch (error) {
-      console.error("Error updating record:", error);
+      console.error("Error adding role:", error);
       setError(error as Error);
       throw error;
     } finally {
@@ -65,5 +50,5 @@ export function useUpdateSchema(etid: number) {
     }
   };
 
-  return { updateRecord, loading, response, error };
+  return { addRole, loading, response, error };
 }

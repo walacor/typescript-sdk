@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useGetUser } from "@/hooks/useGetUser";
-import { useAddUser } from "@/hooks/useAddUser";
+import { useGetUser } from "@/hooks/user/useGetUser";
+import { useAddUser } from "@/hooks/user/useAddUser";
 
 export const useCheckAndAddUser = () => {
   const { user } = useUser();

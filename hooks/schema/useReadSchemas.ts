@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
-import useAuthenticatedToken from "./useAuthenticatedToken";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
 

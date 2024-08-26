@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import useAuthenticatedToken from "./useAuthenticatedToken";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { blogSchema } from "@/schemas/blogSchema";
 
 export function useCreateSchema(etid: number) {

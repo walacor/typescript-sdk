@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
-import useAuthenticatedToken from "./useAuthenticatedToken";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 
 type User = {
   UID: string;

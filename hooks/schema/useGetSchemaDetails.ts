@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import useAuthenticatedToken from "./useAuthenticatedToken";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 
 export function useGetSchemaDetails(etid: number) {
   const token = useAuthenticatedToken();

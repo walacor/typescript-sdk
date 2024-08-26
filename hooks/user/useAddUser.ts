@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
-import usePostSchema from "./usePostSchema";
+import usePostSchema from "../schema/usePostSchema";
 
 export const useAddUser = () => {
   const [error, setError] = useState<Error | null>(null);
@@ -11,7 +11,7 @@ export const useAddUser = () => {
     postSchema,
     response: postResponse,
     error: postError,
-  } = usePostSchema(10);
+  } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
 
   const addUser = useCallback(async () => {
     if (!user) {

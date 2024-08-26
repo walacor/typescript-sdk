@@ -5,7 +5,7 @@ import BaseMoreStories from "@/components/BaseMoreStories";
 import BaseBlog from "@/components/BaseBlog";
 import BlogLayout from "@/layout/blog.layout";
 import Link from "next/link";
-import useReadOneSchema from "@/hooks/useReadOneSchema";
+import useReadOneSchema from "@/hooks/schema/useReadOneSchema";
 import { useEffect, useState } from "react";
 import { blogData } from "@/data/blogData";
 import { BlogData } from "@/schemas/blogSchema";

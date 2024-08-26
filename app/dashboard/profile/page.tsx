@@ -6,8 +6,8 @@ import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
 import Dropdown from "@/components/single/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useGetUser } from "@/hooks/useGetUser";
-import { useUpdateUser } from "@/hooks/useUpdateUser";
+import { useGetUser } from "@/hooks/user/useGetUser";
+import { useUpdateUser } from "@/hooks/user/useUpdateUser";
 import { useClerk, useUser } from "@clerk/nextjs";
 
 import {
@@ -22,7 +22,7 @@ const Profile = () => {
     updateRecord,
     loading: updatingUser,
     error: updateError,
-  } = useUpdateUser(10);
+  } = useUpdateUser(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
   const { user: clerkUser } = useUser();
   const { signOut } = useClerk();
 

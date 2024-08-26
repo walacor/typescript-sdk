@@ -5,7 +5,7 @@ import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import { BlogData } from "@/schemas/blogSchema";
 import { useEffect, useState } from "react";
-import useReadSchemas from "@/hooks/useReadSchemas";
+import useReadSchemas from "@/hooks/schema/useReadSchemas";
 
 export default function ReadTheBlog() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
