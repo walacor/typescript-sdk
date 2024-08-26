@@ -11,7 +11,7 @@ import {
   FaDatabase,
   FaFish,
 } from "react-icons/fa";
-import useEnsureUserInDb from "@/hooks/useEnsureUserInDb";
+import { useCheckAndAddUser } from "@/hooks/useCheckAndAddUser";
 
 const sidebarItems = [
   {
@@ -57,6 +57,8 @@ export default function DashboardLayout({
 }: {
   children?: ReactNode;
 }) {
+  useCheckAndAddUser();
+
   return (
     <DefaultLayout>
       <div className="flex flex-col sm:flex-row">
