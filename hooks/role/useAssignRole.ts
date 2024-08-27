@@ -3,7 +3,7 @@ import axios from "axios";
 import useAuthenticatedToken from "@/hooks/auth/useAuthenticatedToken";
 import { useRefetch } from "@/context/RefetchContext";
 
-export function useAssignRole(etid: number) {
+export function useAssignRole() {
   const token = useAuthenticatedToken();
   const { triggerRefetch } = useRefetch();
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,7 +18,7 @@ export function useAssignRole(etid: number) {
     setResponse(null);
 
     const payload = {
-      ETId: etid,
+      ETId: 16,
       Data: roleAssignments,
     };
 
@@ -28,7 +28,7 @@ export function useAssignRole(etid: number) {
         payload,
         {
           headers: {
-            ETId: etid,
+            ETId: 16,
             Authorization: `${token}`,
             "Content-Type": "application/json",
           },

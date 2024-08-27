@@ -3,6 +3,7 @@ import axios from "axios";
 import useAuthenticatedToken from "@/hooks/auth/useAuthenticatedToken";
 
 type Role = {
+  _id: string;
   UID: string;
   RoleName: string;
   Scopes: string[];

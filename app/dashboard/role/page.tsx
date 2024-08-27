@@ -26,7 +26,6 @@ const RoleList = () => {
   const handleAddRole = async () => {
     try {
       await addRole({ RoleName: roleName, Scopes: [scope] });
-      console.log("Role added successfully");
       getRoles();
     } catch (err) {
       console.error("Failed to add role", err);

@@ -1,4 +1,6 @@
 import React from "react";
+import Button from "./single/Button";
+import { useCreateSchema } from "@/hooks/schema/useCreateSchema";
 
 interface FieldType {
   FieldName: string;
@@ -30,6 +32,10 @@ interface SchemaDetailsProps {
 }
 
 const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
+  const { createSchema } = useCreateSchema(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
+
   return (
     <div className="bg-white p-6 mb-8">
       <h2 className="text-2xl font-bold mb-4">{name}</h2>
@@ -66,6 +72,12 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
           </li>
         ))}
       </ul>
+      <Button
+        onClick={createSchema}
+        className="w-full bg-primary text-primary-foreground"
+      >
+        Create Schema
+      </Button>
     </div>
   );
 };

@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
-import Dropdown from "@/components/single/Dropdown";
+import MultiSelect from "@/components/single/MultiSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGetUser } from "@/hooks/user/useGetUser";
 import { useUpdateUser } from "@/hooks/user/useUpdateUser";
+import { useAssignRole } from "@/hooks/role/useAssignRole";
+import { useGetRoles } from "@/hooks/role/useGetRoles";
 import { useClerk, useUser } from "@clerk/nextjs";
 
 import {
@@ -18,7 +20,9 @@ import {
 import Link from "next/link";
 
 const Profile = () => {
-  const { data, getUser } = useGetUser();
+  const { data: userData, getUser } = useGetUser();
+  const { data: rolesData, getRoles } = useGetRoles();
+  const { assignRole, loading: assigningRole } = useAssignRole();
   const {
     updateRecord,
     loading: updatingUser,
@@ -29,44 +33,55 @@ const Profile = () => {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("Viewer");
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(() => {
     if (clerkUser) {
       getUser({ UserName: clerkUser.fullName || clerkUser.id });
+      getRoles();
     }
-  }, [clerkUser, getUser]);
+  }, [clerkUser, getUser, getRoles]);
 
   useEffect(() => {
-    if (data && data.length > 0) {
-      const walacorUser = data[0];
+    if (userData && userData.length > 0 && rolesData && rolesData.length > 0) {
+      const walacorUser = userData[0];
       setFirstName(walacorUser.FirstName || "");
       setLastName(walacorUser.LastName || "");
-      setRole(walacorUser.UserType || "Viewer");
-    }
-  }, [data]);
 
-  const handleChange = (
-    setter: React.Dispatch<React.SetStateAction<string>>,
-    value: string
-  ) => {
-    setter(value);
+      const userRoles = rolesData
+        .filter((role) => role.UID === walacorUser.UID)
+        .map((role) => role.RoleName);
+
+      setSelectedRoles(userRoles);
+    }
+  }, [userData, rolesData]);
+
+  const handleRoleChange = (selectedRoles: string[]) => {
+    setSelectedRoles(selectedRoles);
     setIsUpdated(true);
   };
 
   const handleUpdate = async () => {
-    if (!clerkUser || !data || data.length === 0) return;
+    if (!clerkUser || !userData || userData.length === 0) return;
 
     try {
       const updatedUserData = {
-        UID: data[0].UID,
+        UID: userData[0].UID,
         FirstName: firstName,
         LastName: lastName,
-        UserType: role,
+        UserType: selectedRoles.join(", "),
       };
 
       await updateRecord(updatedUserData);
+
+      const userUID = userData[0].UID;
+      const roleAssignments = selectedRoles.map((roleName) => {
+        const role = rolesData?.find((r) => r.RoleName === roleName);
+        return { RoleID: role?._id || "", UserUID: userUID };
+      });
+
+      await assignRole(roleAssignments);
 
       setIsUpdated(false);
     } catch (error) {
@@ -91,7 +106,10 @@ const Profile = () => {
             <Input
               type="text"
               value={firstName}
-              onChange={(e) => handleChange(setFirstName, e.target.value)}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                setIsUpdated(true);
+              }}
               className="mt-1 block w-full p-2 border border-gray-300"
             />
           </div>
@@ -102,44 +120,44 @@ const Profile = () => {
             <Input
               type="text"
               value={lastName}
-              onChange={(e) => handleChange(setLastName, e.target.value)}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                setIsUpdated(true);
+              }}
               className="mt-1 block w-full p-2 border border-gray-300"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Role
+              Roles
             </label>
-            <Dropdown
-              value={role}
-              onChange={(e) => handleChange(setRole, e.target.value)}
-              options={[
-                { label: "Author", value: "Author" },
-                { label: "Viewer", value: "Viewer" },
-              ]}
+            <MultiSelect
+              values={selectedRoles}
+              onChange={handleRoleChange}
+              options={
+                rolesData
+                  ? rolesData.map((role) => ({
+                      label: role.RoleName,
+                      value: role.RoleName,
+                    }))
+                  : []
+              }
               className="mt-1 block w-full p-2 border border-gray-300"
             />
             <Link
               href="/dashboard/role"
-              className="mt-2 text-sm text-gray-500 cursor-pointer hover:underline"
+              className="mt-4 text-xs text-gray-500 cursor-pointer hover:underline"
             >
-              Add role?
+              Want to add role?
             </Link>
           </div>
           <div className="mt-6">
             <Button
-              className={`bg-primary text-white w-full ${
-                isUpdated ? "" : "opacity-75 cursor-not-allowed"
-              }`}
+              className={`bg-primary text-white w-full`}
               onClick={handleUpdate}
-              disabled={!isUpdated || updatingUser}
+              disabled={!isUpdated || updatingUser || assigningRole}
             >
-              <FontAwesomeIcon className="w-3 mx-1" icon={faUser} />
-              {updatingUser ? "Updating..." : "Update Profile"}
-              <FontAwesomeIcon
-                className="w-4 mx-1 opacity-0"
-                icon={faRunning}
-              />
+              {updatingUser || assigningRole ? "Updating..." : "Update Profile"}
             </Button>
             {updateError && (
               <p className="text-red-500 mt-2">
@@ -152,12 +170,7 @@ const Profile = () => {
               className="bg-red-500 text-white w-full"
               onClick={handleSignOut}
             >
-              <FontAwesomeIcon className="w-4 mx-1" icon={faRunning} />
               Sign out
-              <FontAwesomeIcon
-                className="w-4 mx-1 opacity-0"
-                icon={faArrowLeft}
-              />
             </Button>
           </div>
         </div>
