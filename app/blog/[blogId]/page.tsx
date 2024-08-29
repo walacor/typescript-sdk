@@ -40,7 +40,7 @@ const BlogPost = () => {
     return (
       <BlogLayout>
         <div className="w-full text-center flex flex-col justify-center items-center">
-          <h1 className="text-2xl font-bold mb-4">Blog Not Found</h1>
+          <h1 className="text-2xl font-semibold mb-4">Blog Not Found</h1>
           <p className="text-gray-600 mb-6">
             Sorry, the blog post you are looking for does not exist or has been
             removed.

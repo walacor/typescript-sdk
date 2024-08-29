@@ -107,7 +107,7 @@ export default function DashboardLayout({
                 <div className="flex items-center space-x-2 gap-4">
                   {item.icon}
                   <div className="flex flex-col">
-                    <span className="font-bold">{item.name}</span>
+                    <span className="font-semibold">{item.name}</span>
                     <span className="text-sm text-gray-500">
                       {item.description}
                     </span>
@@ -124,7 +124,7 @@ export default function DashboardLayout({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
+              transition={{ duration: 0.25 }}
             >
               {children}
             </motion.div>

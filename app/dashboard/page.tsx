@@ -5,14 +5,14 @@ const DashboardHome = () => {
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
-        <h1 className="text-4xl font-bold mb-4 text-center">
+        <h1 className="text-4xl font-semibold mb-4 text-center">
           Welcome to Walacor Dashboard
         </h1>
         <p className="text-gray-600 mb-6 text-center">
           Manage your data posts, profile, and settings all in one place.
         </p>
         <div className="bg-white p-6">
-          <h2 className="text-2xl font-bold mb-4">About Walacor</h2>
+          <h2 className="text-2xl font-semibold mb-4">About Walacor</h2>
           <p className="text-gray-700 mb-4">
             Walacor is your ultimate data companion. Our platform provides
             powerful features and customizable schemas to enhance your data

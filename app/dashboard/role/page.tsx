@@ -68,7 +68,7 @@ const RoleList = () => {
   return (
     <DashboardLayout>
       <div className="w-full mx-auto p-8">
-        <h1 className="text-3xl font-bold mb-6">Role Management</h1>
+        <h1 className="text-3xl font-semibold mb-6">Role Management</h1>
 
         {isSiteAdmin ? (
           <div className="space-y-4">

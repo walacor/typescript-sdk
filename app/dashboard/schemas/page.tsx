@@ -14,7 +14,7 @@ const SchemasPage = () => {
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
-        <h1 className="text-4xl font-bold mb-6 text-center">Schemas</h1>
+        <h1 className="text-4xl font-semibold mb-6 text-center">Schemas</h1>
 
         <div className="flex justify-center mb-8">
           <Button
@@ -44,7 +44,7 @@ const SchemasPage = () => {
 
         {selectedTab === "about" ? (
           <div className="bg-white p-6">
-            <h2 className="text-2xl font-bold mb-4">About Schemas</h2>
+            <h2 className="text-2xl font-semibold mb-4">About Schemas</h2>
             <p className="text-gray-700 mb-4">
               Schemas in Walacor define the structure of your data. Each schema
               contains fields that specify the type of data, length, and whether

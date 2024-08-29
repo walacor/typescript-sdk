@@ -478,7 +478,7 @@ const HooksPage = () => {
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
-        <h1 className="text-4xl mb-6 text-center font-bold">Hooks</h1>
+        <h1 className="text-4xl mb-6 text-center font-semibold">Hooks</h1>
 
         {/* Tab Selector */}
         <div className="flex justify-center mb-8">

@@ -21,7 +21,7 @@ const BaseBlog: React.FC<BlogData> = ({
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold mb-4 text-center">{title}</h1>
+      <h1 className="text-4xl font-semibold mb-4 text-center">{title}</h1>
       <p className="text-gray-600 mb-6 text-center">{description}</p>
 
       {!isImageLoaded && (

@@ -171,7 +171,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
 
   return (
     <div className="container mx-auto py-12">
-      <h1 className={`${initialBlog ? "" : "mb-6"} text-3xl font-bold`}>
+      <h1 className={`${initialBlog ? "" : "mb-6"} text-3xl font-semibold`}>
         {initialBlog ? "" : "Create Blog"}
       </h1>
       {canPerformActions() ? (

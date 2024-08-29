@@ -35,7 +35,7 @@ export default function ReadTheBlog() {
                   <div className="inline-block rounded-lg bg-white px-3 py-1 text-sm">
                     Featured
                   </div>
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  <h1 className="text-3xl font-semibold tracking-tighter sm:text-4xl md:text-5xl">
                     Introducing the Ultimate Blog Starter Kit
                   </h1>
                 </div>

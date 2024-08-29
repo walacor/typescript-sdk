@@ -42,7 +42,7 @@ const ContentManagement = () => {
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
-        <h1 className="text-3xl font-bold mb-6">Content Management</h1>
+        <h1 className="text-3xl font-semibold mb-6">Content Management</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             name="id"

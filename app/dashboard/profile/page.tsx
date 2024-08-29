@@ -101,7 +101,7 @@ const Profile = () => {
   return (
     <DashboardLayout>
       <div className="w-full mx-auto p-8">
-        <h1 className="text-3xl font-bold mb-6">Profile</h1>
+        <h1 className="text-3xl font-semibold mb-6">Profile</h1>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">

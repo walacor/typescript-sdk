@@ -58,7 +58,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
 
   return (
     <div className="bg-white p-6 mb-8">
-      <h2 className="text-2xl font-bold mb-4">{name}</h2>
+      <h2 className="text-2xl font-semibold mb-4">{name}</h2>
       <p className="text-gray-700 mb-4">Table Name: {schema.TableName}</p>
       <p className="text-gray-700 mb-4">ETId: {schema.ETId}</p>
       <p className="text-gray-700 mb-4">Family: {schema.Family}</p>
@@ -66,7 +66,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
         Summary Enabled: {schema.DoSummary ? "Yes" : "No"}
       </p>
 
-      <h3 className="text-xl font-bold mb-2">Fields</h3>
+      <h3 className="text-xl font-semibold mb-2">Fields</h3>
       <ul className="list-disc list-inside text-gray-700 mb-4">
         {schema.Fields.map((field, index) => (
           <li key={index}>
@@ -78,7 +78,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
         ))}
       </ul>
 
-      <h3 className="text-xl font-bold mb-2">Indexes</h3>
+      <h3 className="text-xl font-semibold mb-2">Indexes</h3>
       <ul className="list-disc list-inside text-gray-700 mb-4">
         {schema.Indexes.map((index, idx) => (
           <li key={idx}>

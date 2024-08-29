@@ -17,7 +17,7 @@ const BaseBlogCards: React.FC<BaseBlogCardsProps> = ({ limit }) => {
             <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm mb-1">
               Latest Posts
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+            <h2 className="text-3xl font-semibold tracking-tighter sm:text-5xl">
               Explore Our Blog
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
