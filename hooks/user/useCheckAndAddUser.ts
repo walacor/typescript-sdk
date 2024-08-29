@@ -14,12 +14,11 @@ export const useCheckAndAddUser = () => {
       const checkAndAddUser = async () => {
         await getUser({ UserName: user.fullName || user.id });
 
-        // Ensure `data` is populated after calling `getUser`
         if (data && data.length === 0) {
           await addUser();
         }
 
-        setUserChecked(true); // Mark that the user has been checked to prevent further loops
+        setUserChecked(true);
       };
 
       checkAndAddUser();

@@ -6,6 +6,7 @@ interface MultiSelectProps {
   onChange: (values: string[]) => void;
   options: { label: string; value: string }[];
   className?: string;
+  placeholder?: string;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -14,6 +15,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   options,
   className,
+  placeholder = "Select options",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -52,7 +54,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         className="flex justify-between items-center px-2 cursor-pointer"
         onClick={handleToggle}
       >
-        <span>{values.length > 0 ? values.join(", ") : "Select options"}</span>
+        <span>{values.length > 0 ? values.join(", ") : placeholder}</span>
         <span
           className={`transform scale-50 transition-transform duration-200 ${
             isOpen ? "rotate-180" : "rotate-0"

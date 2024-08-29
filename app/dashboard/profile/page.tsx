@@ -4,20 +4,19 @@ import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
-import MultiSelect from "@/components/single/MultiSelect";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Dropdown from "@/components/single/Dropdown";
 import { useGetUser } from "@/hooks/user/useGetUser";
 import { useUpdateUser } from "@/hooks/user/useUpdateUser";
 import { useAssignRole } from "@/hooks/role/useAssignRole";
 import { useGetRoles } from "@/hooks/role/useGetRoles";
 import { useClerk, useUser } from "@clerk/nextjs";
-
-import {
-  faArrowLeft,
-  faRunning,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
+import {
+  successToastStyle,
+  errorToastStyle,
+  loadingToastStyle,
+} from "@/styles/toastStyles";
 
 const Profile = () => {
   const { data: userData, getUser } = useGetUser();
@@ -33,7 +32,7 @@ const Profile = () => {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectedRole, setSelectedRole] = useState<string>("");
   const [isUpdated, setIsUpdated] = useState(false);
 
   useEffect(() => {
@@ -49,42 +48,47 @@ const Profile = () => {
       setFirstName(walacorUser.FirstName || "");
       setLastName(walacorUser.LastName || "");
 
-      const userRoles = rolesData
-        .filter((role) => role.UID === walacorUser.UID)
-        .map((role) => role.RoleName);
+      const userRole = walacorUser.UserType;
 
-      setSelectedRoles(userRoles);
+      setSelectedRole(userRole);
     }
   }, [userData, rolesData]);
 
-  const handleRoleChange = (selectedRoles: string[]) => {
-    setSelectedRoles(selectedRoles);
+  const handleRoleChange = (selectedRole: string) => {
+    setSelectedRole(selectedRole);
     setIsUpdated(true);
   };
 
   const handleUpdate = async () => {
     if (!clerkUser || !userData || userData.length === 0) return;
 
+    toast.loading("Updating profile...", loadingToastStyle);
+
     try {
       const updatedUserData = {
         UID: userData[0].UID,
         FirstName: firstName,
         LastName: lastName,
-        UserType: selectedRoles.join(", "),
+        UserType: selectedRole,
       };
 
       await updateRecord(updatedUserData);
 
       const userUID = userData[0].UID;
-      const roleAssignments = selectedRoles.map((roleName) => {
-        const role = rolesData?.find((r) => r.RoleName === roleName);
-        return { RoleID: role?._id || "", UserUID: userUID };
-      });
+      const role = rolesData?.find((r) => r.RoleName === selectedRole);
+      const roleAssignment = {
+        RoleID: role?._id || "",
+        UserUID: userUID,
+      };
 
-      await assignRole(roleAssignments);
+      await assignRole([roleAssignment]);
 
+      toast.dismiss();
+      toast.success("Profile updated successfully!", successToastStyle);
       setIsUpdated(false);
     } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to update profile", errorToastStyle);
       console.error("Failed to update profile", error);
     }
   };
@@ -129,10 +133,10 @@ const Profile = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Roles
+              Role
             </label>
-            <MultiSelect
-              values={selectedRoles}
+            <Dropdown
+              value={selectedRole}
               onChange={handleRoleChange}
               options={
                 rolesData

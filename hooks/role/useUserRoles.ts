@@ -2,11 +2,11 @@ import { useState, useCallback } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "@/hooks/auth/useAuthenticatedToken";
 
-type Role = {
+type UserRole = {
   _id: string;
   UID: string;
-  RoleName: string;
-  Scopes: string[];
+  RoleID: string;
+  UserUID: string;
   IsDeleted: boolean;
   CreatedAt: number;
   UpdatedAt: number;
@@ -15,29 +15,29 @@ type Role = {
   LastModifiedBy: string;
 };
 
-export const useGetRoles = () => {
-  const [data, setData] = useState<Role[] | null>(null);
+export const useUserRoles = () => {
+  const [data, setData] = useState<UserRole[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
   const token = useAuthenticatedToken();
 
-  const getRoles = useCallback(async () => {
+  const getUserRoles = useCallback(async () => {
     setLoading(true);
 
     try {
       const res = await axios.post(
-        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/query/getcomplex`,
+        `${String(
+          process.env.NEXT_PUBLIC_EC2_WALACOR
+        )}/api/query/get?fromSummary=true`,
         {},
         {
           headers: {
-            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID),
+            ETId: 16,
             Authorization: `${token}`,
             "Content-Type": "application/json",
           },
         }
       );
-
-      console.log(res.data);
 
       if (res.data && res.data.success && Array.isArray(res.data.data)) {
         setData(res.data.data);
@@ -51,5 +51,5 @@ export const useGetRoles = () => {
     }
   }, [token]);
 
-  return { data, error, loading, getRoles };
+  return { data, error, loading, getUserRoles };
 };

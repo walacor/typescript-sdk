@@ -90,7 +90,7 @@ export default function DashboardLayout({
             </Link>
           ))}
         </div>
-        <div className="bg-muted mx-auto sm:py-12 min-h-screen w-full">
+        <div className="bg-muted max-w-[1440px] mx-auto sm:py-12 min-h-screen w-full">
           {children}
         </div>
       </div>

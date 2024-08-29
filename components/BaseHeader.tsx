@@ -24,7 +24,7 @@ export default function BaseHeader() {
 
   return (
     <header
-      className={`px-4 lg:px-6 h-14 flex items-center top-0 sticky z-50 transition-all duration-300 ${
+      className={`px-4 lg:px-6 h-14 flex items-center top-0 sticky z-[100] transition-all duration-300 ${
         scrolled ? "bg-white/30 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
