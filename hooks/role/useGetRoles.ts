@@ -37,8 +37,6 @@ export const useGetRoles = () => {
         }
       );
 
-      console.log(res.data);
-
       if (res.data && res.data.success && Array.isArray(res.data.data)) {
         setData(res.data.data);
       } else {
