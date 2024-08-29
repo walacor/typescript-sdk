@@ -187,7 +187,7 @@ const MyBlogs: React.FC = () => {
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
         >
           <div className="bg-white p-6 shadow-lg">
             <h2 className="text-xl font-bold mb-4">Are you sure?</h2>

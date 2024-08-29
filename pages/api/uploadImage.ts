@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import sharp from "sharp";
+import rateLimit from "@/middleware/rateLimiter";
 
 AWS.config.update({
   accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
@@ -10,10 +11,18 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
+const rateLimiter = rateLimit(100);
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await new Promise((resolve) => rateLimiter(req, res, resolve));
+
+  if (res.headersSent) {
+    return;
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }

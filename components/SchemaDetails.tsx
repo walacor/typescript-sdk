@@ -1,6 +1,12 @@
 import React from "react";
 import Button from "./single/Button";
 import { useCreateSchema } from "@/hooks/schema/useCreateSchema";
+import { toast } from "react-hot-toast";
+import {
+  successToastStyle,
+  errorToastStyle,
+  loadingToastStyle,
+} from "@/styles/toastStyles";
 
 interface FieldType {
   FieldName: string;
@@ -35,6 +41,20 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
   const { createSchema } = useCreateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
+
+  async function handleCreateSchema() {
+    toast.loading("Creating schema...", loadingToastStyle);
+
+    try {
+      await createSchema();
+      toast.dismiss();
+      toast.success("Schema created successfully!", successToastStyle);
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to create schema.", errorToastStyle);
+      console.error("Error creating schema:", error);
+    }
+  }
 
   return (
     <div className="bg-white p-6 mb-8">
@@ -73,7 +93,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
         ))}
       </ul>
       <Button
-        onClick={createSchema}
+        onClick={handleCreateSchema}
         className="w-full bg-primary text-primary-foreground"
       >
         Create Schema

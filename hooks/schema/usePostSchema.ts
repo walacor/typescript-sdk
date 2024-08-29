@@ -27,6 +27,7 @@ const usePostSchema = (etid: number) => {
             },
           }
         );
+
         setResponse(res.data);
         triggerRefetch();
       } catch (err) {

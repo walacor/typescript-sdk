@@ -14,7 +14,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={`px-4 py-2 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
+      className={`px-4 py-3 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
       {...props}
     >
       {children}
