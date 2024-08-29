@@ -123,8 +123,8 @@ export default function DashboardLayout({
               key={String(params?.path)}
               initial={{ opacity: 0, x: 25 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0, x: -25 }}
+              transition={{ duration: 0.25 }}
             >
               {children}
             </motion.div>

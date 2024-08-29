@@ -28,15 +28,9 @@ export default function BaseHeader() {
         scrolled ? "bg-white/30 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
-      <Link
-        href="/"
-        className="flex items-center justify-center"
-        prefetch={false}
-      >
-        <div className="pointer-events-none flex items-center justify-center">
-          <UserButton />
-        </div>
-      </Link>
+      <div className="pointer-events-none flex items-center justify-center">
+        <UserButton />
+      </div>
       <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
         <Link
           href="/"
