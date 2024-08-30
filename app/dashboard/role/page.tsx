@@ -70,62 +70,59 @@ const RoleList = () => {
       <div className="w-full mx-auto p-8">
         <h1 className="text-3xl font-semibold mb-6">Role Management</h1>
 
-        {isSiteAdmin ? (
-          <div className="space-y-4">
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold mb-2">Add New Role</h3>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Role Name
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Role Name"
-                  value={roleName}
-                  onChange={(e) => setRoleName(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300"
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Scope
-                </label>
-                <Dropdown
-                  value={scope}
-                  onChange={handleScopeChange}
-                  options={[
-                    { label: "AdminAccess", value: "AdminAccess" },
-                    { label: "ReadWrite", value: "ReadWrite" },
-                    { label: "ReadOnly", value: "ReadOnly" },
-                  ]}
-                  className="mt-1 block w-full p-2 border border-gray-300"
-                />
-              </div>
-
-              <Button
-                onClick={handleAddRole}
-                disabled={loadingAddRole}
-                className={`bg-primary text-white w-full mt-4 ${
-                  loadingAddRole ? "opacity-75 cursor-not-allowed" : ""
-                }`}
-              >
-                {loadingAddRole ? "Adding Role..." : "Add Role"}
-              </Button>
-
-              {errorAddRole && (
-                <p className="text-red-500 mt-2">
-                  Error adding role: {errorAddRole.message}
-                </p>
-              )}
+        <div className="space-y-4">
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold mb-2">Add New Role</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Role Name
+              </label>
+              <Input
+                type="text"
+                placeholder="Role Name"
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300"
+              />
             </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Select Scope
+              </label>
+              <Dropdown
+                value={scope}
+                onChange={handleScopeChange}
+                options={[
+                  { label: "AdminAccess", value: "AdminAccess" },
+                  { label: "ReadWrite", value: "ReadWrite" },
+                  { label: "ReadOnly", value: "ReadOnly" },
+                ]}
+                className="mt-1 block w-full p-2 border border-gray-300"
+              />
+            </div>
+
+            <Button
+              onClick={handleAddRole}
+              disabled={!isSiteAdmin || loadingAddRole}
+              className={`bg-primary text-white w-full mt-4 ${
+                loadingAddRole ? "opacity-75 cursor-not-allowed" : ""
+              }`}
+            >
+              {loadingAddRole
+                ? "Adding Role..."
+                : isSiteAdmin
+                ? "Add Role"
+                : "Insufficient Permissions"}
+            </Button>
+
+            {errorAddRole && (
+              <p className="text-red-500 mt-2">
+                Error adding role: {errorAddRole.message}
+              </p>
+            )}
           </div>
-        ) : (
-          <p className="text-red-500">
-            You do not have permission to create roles. Only Site_Admin users
-            can create roles.
-          </p>
-        )}
+        </div>
 
         <div className="mt-8">
           <h2 className="text-xl font-semibold">Current Roles</h2>
