@@ -10,17 +10,26 @@ import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
 import ContentManagement from "@/components/ContentManagement";
 import { formatDate, formatTimestampToDateTime } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faChevronDown,
+  faChevronUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
 import { useUser } from "@clerk/nextjs";
+import useReadBlogRevisions from "@/hooks/schema/useReadBlogRevisions";
 
 const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [editBlog, setEditBlog] = useState<BlogData | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState<BlogData | null>(null);
+  const [openRevisions, setOpenRevisions] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [revisions, setRevisions] = useState<{ [key: string]: BlogData[] }>({});
 
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
@@ -29,6 +38,15 @@ const MyBlogs: React.FC = () => {
   );
   const { updateRecord } = useUpdateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
+
+  const {
+    revisions: fetchedRevisions,
+    error: revisionError,
+    loading: revisionLoading,
+  } = useReadBlogRevisions(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+    blogs.length > 0 ? blogs[0].id : ""
   );
 
   useEffect(() => {
@@ -43,6 +61,20 @@ const MyBlogs: React.FC = () => {
       setBlogs(response);
     }
   }, [response]);
+
+  const toggleRevisions = (blogId: string) => {
+    setOpenRevisions((prevOpen) => ({
+      ...prevOpen,
+      [blogId]: !prevOpen[blogId],
+    }));
+
+    if (!revisions[blogId] && fetchedRevisions) {
+      setRevisions((prevRevisions) => ({
+        ...prevRevisions,
+        [blogId]: fetchedRevisions,
+      }));
+    }
+  };
 
   const canPerformActions = () => {
     if (userData && userData.length > 0) {
@@ -96,11 +128,12 @@ const MyBlogs: React.FC = () => {
     };
     try {
       await updateRecord(updatedBlog);
-      if (blog.isPublished) {
-        toast.success("Blog unpublished successfully!", successToastStyle);
-      } else {
-        toast.success("Blog published successfully!", successToastStyle);
-      }
+      toast.success(
+        blog.isPublished
+          ? "Blog unpublished successfully!"
+          : "Blog published successfully!",
+        successToastStyle
+      );
     } catch (error) {
       console.error("Error toggling publish state:", error);
       toast.error("Failed to change publish status.", errorToastStyle);
@@ -121,6 +154,7 @@ const MyBlogs: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {blogs.map((blog) => (
+              // Blog Card
               <div key={blog.id} className="bg-white p-4">
                 <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
                 <Link
@@ -162,7 +196,21 @@ const MyBlogs: React.FC = () => {
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <div />
+                  <div className="flex justify-between items-center mt-4">
+                    <Button
+                      className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2 text-xs"
+                      onClick={() => toggleRevisions(blog.id)}
+                    >
+                      {openRevisions[blog.id]
+                        ? "Hide Revisions"
+                        : "See Revisions"}
+                      <FontAwesomeIcon
+                        icon={
+                          openRevisions[blog.id] ? faChevronUp : faChevronDown
+                        }
+                      />
+                    </Button>
+                  </div>
                   <span className="opacity-50 text-xs mt-4">
                     Created: {formatTimestampToDateTime(blog.CreatedAt)}
                   </span>
@@ -172,12 +220,33 @@ const MyBlogs: React.FC = () => {
                   <span className="opacity-50 text-xs mt-2">
                     Published:{" "}
                     {blog.isPublished
-                      ? formatDate(
-                          String(blog.publishedDate && blog.publishedDate)
-                        )
+                      ? formatDate(String(blog.publishedDate))
                       : "Not Published"}
                   </span>
                 </div>
+
+                {openRevisions[blog.id] && revisions[blog.id] && (
+                  <div className="mt-4 p-4">
+                    <h3 className="font-semibold mb-2">Previous Revisions:</h3>
+                    {revisions[blog.id]
+                      .slice()
+                      .reverse()
+                      .map((revision, index) => (
+                        <div key={index} className="mb-4 border p-4">
+                          <h4 className="text-lg font-semibold mb-1">
+                            {revision.title}
+                          </h4>
+                          <p className="text-xs mb-4 opacity-50">
+                            Updated:{" "}
+                            {formatTimestampToDateTime(revision.UpdatedAt)}
+                          </p>
+                          <p className="text-gray-600">
+                            {revision.description}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
