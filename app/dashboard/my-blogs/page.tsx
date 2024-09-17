@@ -153,7 +153,7 @@ const MyBlogs: React.FC = () => {
 
   const createHighlightedDiff = (oldText: string, newText: string) => {
     const diff = diffWords(oldText, newText);
-    const result = [] as any;
+    const result = [] as JSX.Element[];
 
     let added = false;
     let removed = false;
@@ -210,10 +210,14 @@ const MyBlogs: React.FC = () => {
         <div key={index} className="mb-4">
           <div className="p-4 border">
             <div className="text-xs opacity-50 mb-1">
-              Revision #{reversedIndex - 1}
+              Revision #{reversedIndex}
             </div>
             <h5 className="font-semibold mb-2">{revision.title}</h5>
             <p className="text-gray-600">{revision.description}</p>
+
+            <div className="text-xs opacity-50 mb-2">
+              Created: {formatTimestampToDateTime(revision.CreatedAt)}
+            </div>
 
             {includePreviousRevision[blogId] && (
               <>
@@ -231,6 +235,11 @@ const MyBlogs: React.FC = () => {
                       revision.description
                     )}
                   </p>
+
+                  <div className="text-xs opacity-50 mb-2">
+                    Created:{" "}
+                    {formatTimestampToDateTime(previousRevision.CreatedAt)}
+                  </div>
                 </div>
               </>
             )}
