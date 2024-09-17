@@ -20,6 +20,7 @@ import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
 import { useUser } from "@clerk/nextjs";
 import useReadBlogRevisions from "@/hooks/schema/useReadBlogRevisions";
+import { diffWords } from "diff";
 
 const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
@@ -27,6 +28,9 @@ const MyBlogs: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [blogToDelete, setBlogToDelete] = useState<BlogData | null>(null);
   const [openRevisions, setOpenRevisions] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [includePreviousRevision, setIncludePreviousRevision] = useState<{
     [key: string]: boolean;
   }>({});
   const [revisions, setRevisions] = useState<{ [key: string]: BlogData[] }>({});
@@ -74,6 +78,13 @@ const MyBlogs: React.FC = () => {
         [blogId]: fetchedRevisions,
       }));
     }
+  };
+
+  const toggleIncludePrevious = (blogId: string) => {
+    setIncludePreviousRevision((prevInclude) => ({
+      ...prevInclude,
+      [blogId]: !prevInclude[blogId],
+    }));
   };
 
   const canPerformActions = () => {
@@ -140,6 +151,95 @@ const MyBlogs: React.FC = () => {
     }
   };
 
+  const createHighlightedDiff = (oldText: string, newText: string) => {
+    const diff = diffWords(oldText, newText);
+    const result = [] as any;
+
+    let added = false;
+    let removed = false;
+
+    diff.forEach((part, index) => {
+      if (part.added) {
+        if (removed) {
+          result.push(
+            <span key={`arrow-${index}`} className="mx-1 text-gray-600">
+              {"->"}
+            </span>
+          );
+        }
+        result.push(
+          <span key={`added-${index}`} className="text-green-500">
+            {part.value}
+          </span>
+        );
+        added = true;
+        removed = false;
+      } else if (part.removed) {
+        result.push(
+          <span key={`removed-${index}`} className="text-red-500">
+            {part.value}
+          </span>
+        );
+        removed = true;
+        added = false;
+      } else {
+        result.push(
+          <span key={`normal-${index}`} className="">
+            {part.value}
+          </span>
+        );
+        added = false;
+        removed = false;
+      }
+    });
+
+    return result;
+  };
+
+  const compareWithPreviousRevision = (
+    revisions: BlogData[],
+    blogId: string
+  ) => {
+    return revisions.map((revision, index) => {
+      const previousRevision = revisions[index + 1];
+      if (!previousRevision) return null;
+
+      const reversedIndex = revisions.length - index;
+
+      return (
+        <div key={index} className="mb-4">
+          <div className="p-4 border">
+            <div className="text-xs opacity-50 mb-1">
+              Revision #{reversedIndex - 1}
+            </div>
+            <h5 className="font-semibold mb-2">{revision.title}</h5>
+            <p className="text-gray-600">{revision.description}</p>
+
+            {includePreviousRevision[blogId] && (
+              <>
+                <div className="text-xs opacity-50 mb-1">Previous Revision</div>
+                <div className="p-4 mb-4 border border-red-300">
+                  <h5 className="font-semibold mb-2 text-red-500">
+                    {createHighlightedDiff(
+                      previousRevision.title,
+                      revision.title
+                    )}
+                  </h5>
+                  <p className="text-gray-600">
+                    {createHighlightedDiff(
+                      previousRevision.description,
+                      revision.description
+                    )}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      );
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
@@ -154,7 +254,6 @@ const MyBlogs: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {blogs.map((blog) => (
-              // Blog Card
               <div key={blog.id} className="bg-white p-4">
                 <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
                 <Link
@@ -228,23 +327,34 @@ const MyBlogs: React.FC = () => {
                 {openRevisions[blog.id] && revisions[blog.id] && (
                   <div className="mt-4 p-4">
                     <h3 className="font-semibold mb-2">Previous Revisions:</h3>
-                    {revisions[blog.id]
-                      .slice()
-                      .reverse()
-                      .map((revision, index) => (
-                        <div key={index} className="mb-4 border p-4">
-                          <h4 className="text-lg font-semibold mb-1">
-                            {revision.title}
-                          </h4>
-                          <p className="text-xs mb-4 opacity-50">
-                            Updated:{" "}
-                            {formatTimestampToDateTime(revision.UpdatedAt)}
-                          </p>
-                          <p className="text-gray-600">
-                            {revision.description}
-                          </p>
-                        </div>
-                      ))}
+
+                    <label className="flex items-center space-x-2 mb-4">
+                      <span className="text-xs font-medium">
+                        Include Previous Revision
+                      </span>
+
+                      <span
+                        onClick={() => toggleIncludePrevious(blog.id)}
+                        className={`${
+                          includePreviousRevision[blog.id]
+                            ? "bg-primary"
+                            : "bg-gray-400"
+                        } relative inline-block w-8 h-4 rounded-full transition cursor-pointer shadow-sm`}
+                      >
+                        <span
+                          className={`${
+                            includePreviousRevision[blog.id]
+                              ? "translate-x-3 bg-gray-100"
+                              : "translate-x-0 bg-gray-100"
+                          } absolute left-1 top-0 bottom-0 m-auto w-3 h-3 rounded-full transition transform`}
+                        />
+                      </span>
+                    </label>
+
+                    {compareWithPreviousRevision(
+                      revisions[blog.id].slice().reverse(),
+                      blog.id
+                    )}
                   </div>
                 )}
               </div>
