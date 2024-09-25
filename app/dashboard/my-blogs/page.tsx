@@ -111,11 +111,9 @@ const MyBlogs: React.FC = () => {
   const confirmDelete = async () => {
     if (blogToDelete) {
       try {
-        // Mark the main blog as deleted
         const blogCopy = { ...blogToDelete, IsDeleted: true };
         await updateRecord(blogCopy);
 
-        // Delete all revisions related to the blog
         const relatedRevisions = blogRevisions?.filter(
           (revision) => revision.id === blogToDelete.id
         );
@@ -260,7 +258,7 @@ const MyBlogs: React.FC = () => {
         ...revision,
         id: blogId,
         liveVersion: true,
-        isPublished: false, // Not published
+        isPublished: false,
       });
       toast.success(
         "Revision selected as live version (not published)!",
@@ -386,11 +384,11 @@ const MyBlogs: React.FC = () => {
                     <div className="space-y-4">
                       {groupedRevisions[blog.id] &&
                         groupedRevisions[blog.id]
-                          .reverse() // Show the latest revisions at the top
+                          .reverse()
                           .filter(
                             (revision: BlogData) =>
                               showDeletedRevisions || !revision.IsDeleted
-                          ) // Filter out deleted revisions unless checkbox is checked
+                          )
                           .map((revision: BlogData, index: number) => {
                             const previousRevision =
                               groupedRevisions[blog.id][index + 1];
@@ -406,7 +404,7 @@ const MyBlogs: React.FC = () => {
                                   revision.IsDeleted
                                     ? "bg-gray-100 opacity-50"
                                     : ""
-                                }`} // Grey out deleted revisions
+                                }`}
                               >
                                 <div className="flex justify-between items-center mb-2">
                                   <div className="text-sm text-gray-600">
@@ -491,10 +489,15 @@ const MyBlogs: React.FC = () => {
                                     </Button>
                                   ) : (
                                     <Button
-                                      className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover"
+                                      className={`bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover ${
+                                        revision.IsDeleted
+                                          ? "cursor-not-allowed opacity-50"
+                                          : ""
+                                      }`}
                                       onClick={() =>
                                         setShowPublishModal(revision)
                                       }
+                                      disabled={revision.IsDeleted}
                                     >
                                       Select Version
                                       <FontAwesomeIcon
@@ -505,10 +508,15 @@ const MyBlogs: React.FC = () => {
                                   )}
                                   {!isLive && (
                                     <Button
-                                      className="bg-red-500 text-white hover:bg-red-600"
+                                      className={`bg-red-500 text-white hover:bg-red-600 ${
+                                        revision.IsDeleted
+                                          ? "cursor-not-allowed opacity-50"
+                                          : ""
+                                      }`}
                                       onClick={() =>
                                         handleDeleteRevision(revision)
                                       }
+                                      disabled={revision.IsDeleted}
                                     >
                                       Delete
                                       <FontAwesomeIcon
