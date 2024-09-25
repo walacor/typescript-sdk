@@ -33,6 +33,7 @@ const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
         return !blog.IsDeleted && (!onlyPublished || blog.isPublished);
       });
 
+      // Separate the latest and live versions
       const latestData = filteredData.reduce(
         (acc: BlogData[], current: BlogData) => {
           const existing = acc.find((item) => item.id === current.id);
@@ -48,8 +49,21 @@ const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
         [] as BlogData[]
       );
 
+      // Find live versions
+      const liveData = filteredData.filter(
+        (blog: BlogData) => blog.liveVersion
+      );
+
+      // Merge latest and live versions
+      const mergedData = latestData.map((latestBlog: BlogData) => {
+        const liveBlog = liveData.find(
+          (blog: BlogData) => blog.id === latestBlog.id
+        );
+        return liveBlog ? { ...latestBlog, ...liveBlog } : latestBlog;
+      });
+
       setError(null);
-      setResponse(latestData);
+      setResponse(mergedData);
     } catch (err) {
       setError(err as Error);
     } finally {

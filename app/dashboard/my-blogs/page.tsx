@@ -14,6 +14,8 @@ import {
   faArrowUpRightFromSquare,
   faChevronDown,
   faChevronUp,
+  faCircleArrowRight,
+  faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
@@ -26,6 +28,9 @@ const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [editBlog, setEditBlog] = useState<BlogData | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState<BlogData | null>(
+    null
+  );
   const [blogToDelete, setBlogToDelete] = useState<BlogData | null>(null);
   const [openRevisions, setOpenRevisions] = useState<{
     [key: string]: boolean;
@@ -170,6 +175,63 @@ const MyBlogs: React.FC = () => {
     return result;
   };
 
+  const promoteToLive = async (blogId: string, revision: BlogData) => {
+    try {
+      const currentLiveVersion = blogs.find((blog) => blog.liveVersion);
+      if (currentLiveVersion) {
+        await updateRecord({
+          ...currentLiveVersion,
+          liveVersion: false,
+          isPublished: false,
+        });
+      }
+
+      await updateRecord({
+        ...revision,
+        id: blogId,
+        liveVersion: true,
+        isPublished: true,
+      });
+      toast.success("Revision promoted to live version!", successToastStyle);
+    } catch (error) {
+      toast.error("Failed to promote revision.", errorToastStyle);
+      console.error("Error promoting revision:", error);
+    }
+  };
+
+  const promoteWithoutPublishing = async (
+    blogId: string,
+    revision: BlogData
+  ) => {
+    try {
+      const currentLiveVersion = blogs.find((blog) => blog.liveVersion);
+      if (currentLiveVersion) {
+        await updateRecord({
+          ...currentLiveVersion,
+          liveVersion: false,
+          isPublished: false,
+        });
+      }
+
+      await updateRecord({
+        ...revision,
+        id: blogId,
+        liveVersion: true,
+        isPublished: false, // Not published
+      });
+      toast.success(
+        "Revision selected as live version (not published)!",
+        successToastStyle
+      );
+    } catch (error) {
+      toast.error(
+        "Failed to select revision as live version.",
+        errorToastStyle
+      );
+      console.error("Error selecting revision as live version:", error);
+    }
+  };
+
   const groupedRevisions = blogRevisions?.reduce((acc: any, revision: any) => {
     const blogId = revision.id.toString();
     if (!acc[blogId]) {
@@ -184,12 +246,8 @@ const MyBlogs: React.FC = () => {
       <div className="container mx-auto py-12">
         <h1 className="text-3xl font-semibold mb-6">My Blogs</h1>
 
-        {loading || revisionsLoading ? (
+        {loading ? (
           <div className="space-y-6">Loading...</div>
-        ) : error || revisionsError ? (
-          <div className="space-y-6 text-red-500 font-semibold">
-            Things happen. Our system is under maintenance, come back soon.
-          </div>
         ) : editBlog ? (
           <ContentManagement initialBlog={editBlog} setEditBlog={setEditBlog} />
         ) : (
@@ -253,7 +311,6 @@ const MyBlogs: React.FC = () => {
                     Created: {formatTimestampToDateTime(blog.CreatedAt)}
                   </span>
                 </div>
-                {/* Add the revision history here */}
                 {openRevisions[blog.id] && (
                   <div className="mt-4 p-4">
                     <div className="flex items-center mb-4">
@@ -271,16 +328,28 @@ const MyBlogs: React.FC = () => {
                     <div className="space-y-4">
                       {groupedRevisions[blog.id] &&
                         groupedRevisions[blog.id].map(
-                          (revision: any, index: number) => {
+                          (revision: BlogData, index: number) => {
                             const previousRevision =
                               groupedRevisions[blog.id][index + 1];
+                            const isLive = revision.liveVersion;
                             return (
                               <div
                                 key={index}
-                                className="border p-4 rounded shadow-sm"
+                                className={`border p-4 rounded shadow-sm ${
+                                  isLive
+                                    ? "border-green-500 bg-green-50"
+                                    : "border-gray-300"
+                                }`}
                               >
-                                <div className="text-sm text-gray-600 mb-2">
-                                  <strong>Revision ID:</strong> {revision._id}
+                                <div className="flex justify-between items-center mb-2">
+                                  <div className="text-sm text-gray-600">
+                                    <strong>Revision ID:</strong> {revision.id}
+                                  </div>
+                                  {isLive && (
+                                    <div className="text-xs text-green-600 font-semibold">
+                                      Currently Live
+                                    </div>
+                                  )}
                                 </div>
                                 <div className="text-sm text-gray-600 mb-2">
                                   <strong>Author:</strong> {revision.authorName}
@@ -341,6 +410,33 @@ const MyBlogs: React.FC = () => {
                                     </div>
                                   </div>
                                 )}
+                                <div className="mt-4 flex items-center space-x-2">
+                                  {isLive ? (
+                                    <Button
+                                      className="bg-green-500 text-white cursor-not-allowed"
+                                      disabled
+                                    >
+                                      Currently Live
+                                      <FontAwesomeIcon
+                                        className="ml-2"
+                                        icon={faCircleArrowRight}
+                                      />
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover"
+                                      onClick={() =>
+                                        setShowPublishModal(revision)
+                                      }
+                                    >
+                                      Roll back
+                                      <FontAwesomeIcon
+                                        className="ml-2"
+                                        icon={faRedo}
+                                      />
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
                             );
                           }
@@ -354,6 +450,7 @@ const MyBlogs: React.FC = () => {
         )}
       </div>
 
+      {/* Delete Confirmation Modal */}
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -371,6 +468,56 @@ const MyBlogs: React.FC = () => {
               </Button>
               <Button className="bg-red-500 text-white" onClick={confirmDelete}>
                 Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Publish Confirmation Modal */}
+      {showPublishModal && (
+        <div
+          onClick={() => setShowPublishModal(null)}
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        >
+          <div className="bg-white p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              Confirm Version Selection
+            </h2>
+            <p className="mb-6">
+              Do you want to select this revision as the live version?
+            </p>
+            <div className="flex justify-end space-x-2">
+              <Button
+                className="bg-gray-500 text-white"
+                onClick={() => setShowPublishModal(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-green-500 text-white"
+                onClick={() => {
+                  if (showPublishModal) {
+                    promoteToLive(showPublishModal.id, showPublishModal);
+                    setShowPublishModal(null);
+                  }
+                }}
+              >
+                Select Version & Publish
+              </Button>
+              <Button
+                className="bg-primary text-white"
+                onClick={() => {
+                  if (showPublishModal) {
+                    promoteWithoutPublishing(
+                      showPublishModal.id,
+                      showPublishModal
+                    );
+                    setShowPublishModal(null);
+                  }
+                }}
+              >
+                Select Version & Do Not Publish
               </Button>
             </div>
           </div>

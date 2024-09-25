@@ -59,6 +59,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     UpdatedAt: initialBlog?.UpdatedAt || Date.now(),
     isPublished: initialBlog?.isPublished || false,
     publishedDate: initialBlog?.publishedDate || null,
+    liveVersion: initialBlog?.liveVersion || true, // Default to true for new blog posts
   };
 
   const [blog, setBlog] = useState<BlogData>(initialBlogState);
@@ -114,13 +115,18 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
       return;
     }
 
+    const newBlog = {
+      ...blog,
+      liveVersion: true, // Ensure liveVersion is true on submit
+    };
+
     try {
       if (initialBlog) {
-        await updateRecord(blog);
+        await updateRecord(newBlog);
         if (setEditBlog) setEditBlog(null);
         toast.success("Blog updated successfully!", successToastStyle);
       } else {
-        await postSchema(blog);
+        await postSchema(newBlog);
         toast.success("Blog created successfully!", successToastStyle);
 
         setBlog(initialBlogState);
@@ -144,6 +150,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
       ...blog,
       isPublished: true,
       publishedDate: new Date().toISOString(),
+      liveVersion: true,
     };
     try {
       if (initialBlog) {
