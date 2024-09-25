@@ -357,7 +357,7 @@ const MyBlogs: React.FC = () => {
                     <div className="flex items-center mb-4">
                       <label className="mr-2 text-sm font-semibold flex items-center">
                         Show Changes:
-                        <Tooltip text="This feature is to show the changes between the current revision and the previous revision. This is useful for seeing what has changed between revisions." />
+                        <Tooltip text="This feature is to show the changes between the current revision and the previous revision. This is useful for easily identifying what has changed between revisions." />
                       </label>
                       <input
                         type="checkbox"
