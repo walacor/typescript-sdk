@@ -78,7 +78,12 @@ const MyBlogs: React.FC = () => {
 
   useEffect(() => {
     if (response) {
-      setBlogs(response);
+      setBlogs(
+        response.sort(
+          (a, b) =>
+            new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime()
+        )
+      );
       fetchRevisions();
     }
   }, [response, fetchRevisions]);
