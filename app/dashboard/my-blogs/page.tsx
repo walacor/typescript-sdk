@@ -12,9 +12,9 @@ import { formatTimestampToDateTime } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,
+  faCheckCircle,
   faChevronDown,
   faChevronUp,
-  faCircleArrowRight,
   faRedo,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-hot-toast";
@@ -347,7 +347,7 @@ const MyBlogs: React.FC = () => {
                                   </div>
                                   {isLive && (
                                     <div className="text-xs text-green-600 font-semibold">
-                                      Currently Live
+                                      Selected Version
                                     </div>
                                   )}
                                 </div>
@@ -416,10 +416,10 @@ const MyBlogs: React.FC = () => {
                                       className="bg-green-500 text-white cursor-not-allowed"
                                       disabled
                                     >
-                                      Currently Live
+                                      Selected Version
                                       <FontAwesomeIcon
                                         className="ml-2"
-                                        icon={faCircleArrowRight}
+                                        icon={faCheckCircle}
                                       />
                                     </Button>
                                   ) : (

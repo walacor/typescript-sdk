@@ -59,7 +59,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     UpdatedAt: initialBlog?.UpdatedAt || Date.now(),
     isPublished: initialBlog?.isPublished || false,
     publishedDate: initialBlog?.publishedDate || null,
-    liveVersion: initialBlog?.liveVersion || true, // Default to true for new blog posts
+    liveVersion: initialBlog?.liveVersion ?? true, // Default to true for new posts, keep current value for existing ones
   };
 
   const [blog, setBlog] = useState<BlogData>(initialBlogState);
@@ -115,9 +115,10 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
       return;
     }
 
+    // Ensure liveVersion is only true for new posts, and not when editing existing ones
     const newBlog = {
       ...blog,
-      liveVersion: true, // Ensure liveVersion is true on submit
+      liveVersion: !initialBlog, // Set liveVersion to true only if it's a new blog post
     };
 
     try {
