@@ -8,7 +8,7 @@ import useReadSchemas from "@/hooks/schema/useReadSchemas";
 import { BlogData } from "@/schemas/blogSchema";
 import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
 import ContentManagement from "@/components/ContentManagement";
-import { formatDate, formatTimestampToDateTime } from "@/lib/utils";
+import { formatTimestampToDateTime } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,
@@ -33,11 +33,10 @@ const MyBlogs: React.FC = () => {
   const [includePreviousRevision, setIncludePreviousRevision] = useState<{
     [key: string]: boolean;
   }>({});
-  const [revisions, setRevisions] = useState<{ [key: string]: BlogData[] }>({});
 
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
-  const { readSchema, response } = useReadSchemas(
+  const { response, error, loading, readSchema } = useReadSchemas(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
   const { updateRecord } = useUpdateSchema(
@@ -45,39 +44,34 @@ const MyBlogs: React.FC = () => {
   );
 
   const {
-    revisions: fetchedRevisions,
-    error: revisionError,
-    loading: revisionLoading,
-  } = useReadBlogRevisions(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
-    blogs.length > 0 ? blogs[0].id : ""
-  );
+    response: blogRevisions,
+    loading: revisionsLoading,
+    error: revisionsError,
+    fetchSchemas: fetchRevisions,
+  } = useReadBlogRevisions(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     if (clerkUser) {
       getUser({ UserName: clerkUser.fullName || clerkUser.id });
     }
-    readSchema();
-  }, [clerkUser, getUser, readSchema]);
+  }, [clerkUser, getUser]);
+
+  useEffect(() => {
+    readSchema(); // Fetch the main blog data using readSchema
+  }, [readSchema]);
 
   useEffect(() => {
     if (response) {
-      setBlogs(response);
+      setBlogs(response); // Update blogs state with fetched data
+      fetchRevisions(); // Fetch revisions only after blogs are set
     }
-  }, [response]);
+  }, [response, fetchRevisions]);
 
   const toggleRevisions = (blogId: string) => {
     setOpenRevisions((prevOpen) => ({
       ...prevOpen,
       [blogId]: !prevOpen[blogId],
     }));
-
-    if (!revisions[blogId] && fetchedRevisions) {
-      setRevisions((prevRevisions) => ({
-        ...prevRevisions,
-        [blogId]: fetchedRevisions,
-      }));
-    }
   };
 
   const toggleIncludePrevious = (blogId: string) => {
@@ -153,122 +147,57 @@ const MyBlogs: React.FC = () => {
 
   const createHighlightedDiff = (oldText: string, newText: string) => {
     const diff = diffWords(oldText, newText);
-    const result = [] as JSX.Element[];
-
-    let added = false;
-    let removed = false;
+    const result: JSX.Element[] = [];
 
     diff.forEach((part, index) => {
       if (part.added) {
-        if (removed) {
-          result.push(
-            <span key={`arrow-${index}`} className="mx-1 text-gray-600">
-              {"->"}
-            </span>
-          );
-        }
         result.push(
-          <span key={`added-${index}`} className="text-green-500">
+          <span key={`added-${index}`} className="bg-green-200">
             {part.value}
           </span>
         );
-        added = true;
-        removed = false;
       } else if (part.removed) {
         result.push(
-          <span key={`removed-${index}`} className="text-red-500">
+          <span key={`removed-${index}`} className="bg-red-200">
             {part.value}
           </span>
         );
-        removed = true;
-        added = false;
       } else {
-        result.push(
-          <span key={`normal-${index}`} className="">
-            {part.value}
-          </span>
-        );
-        added = false;
-        removed = false;
+        result.push(<span key={`normal-${index}`}>{part.value}</span>);
       }
     });
 
     return result;
   };
 
-  const compareWithPreviousRevision = (
-    revisions: BlogData[],
-    blogId: string
-  ) => {
-    return revisions.map((revision, index) => {
-      const previousRevision = revisions[index + 1];
-      if (!previousRevision) return null;
-
-      const reversedIndex = revisions.length - index;
-
-      return (
-        <div key={index} className="mb-4">
-          <div className="p-4 border">
-            <div className="text-xs opacity-50 mb-1">
-              Revision #{reversedIndex}
-            </div>
-            <h5 className="font-semibold mb-2">{revision.title}</h5>
-            <p className="text-gray-600">{revision.description}</p>
-
-            <div className="text-xs opacity-50 mb-2">
-              Created: {formatTimestampToDateTime(revision.CreatedAt)}
-            </div>
-
-            {includePreviousRevision[blogId] && (
-              <>
-                <div className="text-xs opacity-50 mb-1">Previous Revision</div>
-                <div className="p-4 mb-4 border border-red-300">
-                  <h5 className="font-semibold mb-2 text-red-500">
-                    {createHighlightedDiff(
-                      previousRevision.title,
-                      revision.title
-                    )}
-                  </h5>
-                  <p className="text-gray-600">
-                    {createHighlightedDiff(
-                      previousRevision.description,
-                      revision.description
-                    )}
-                  </p>
-
-                  <div className="text-xs opacity-50 mb-2">
-                    Created:{" "}
-                    {formatTimestampToDateTime(previousRevision.CreatedAt)}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      );
-    });
-  };
+  // Group blog revisions by blog id
+  const groupedRevisions = blogRevisions?.reduce((acc: any, revision: any) => {
+    const blogId = revision.id.toString(); // Ensure the ID is a string
+    if (!acc[blogId]) {
+      acc[blogId] = [];
+    }
+    acc[blogId].push(revision);
+    return acc;
+  }, {});
 
   return (
     <DashboardLayout>
       <div className="container mx-auto py-12">
         <h1 className="text-3xl font-semibold mb-6">My Blogs</h1>
-        {editBlog ? (
-          <div>
-            <ContentManagement
-              initialBlog={editBlog}
-              setEditBlog={setEditBlog}
-            />
-          </div>
+
+        {loading ? (
+          <div className="space-y-6">Loading...</div>
+        ) : editBlog ? (
+          <ContentManagement initialBlog={editBlog} setEditBlog={setEditBlog} />
         ) : (
           <div className="space-y-6">
             {blogs.map((blog) => (
-              <div key={blog.id} className="bg-white p-4">
+              <div key={blog.id} className="bg-white p-4 border rounded shadow">
                 <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
                 <Link
                   target="_blank"
-                  className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2"
                   href={`/blog/${blog.id}`}
+                  className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2"
                 >
                   <span>Read Blog</span>
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
@@ -291,11 +220,11 @@ const MyBlogs: React.FC = () => {
                         Edit
                       </Button>
                       <Button
-                        className={`${
+                        className={
                           blog.isPublished
                             ? "bg-gray-500 text-white"
                             : "bg-green-500 text-white"
-                        }`}
+                        }
                         onClick={() => handleTogglePublish(blog)}
                       >
                         {blog.isPublished ? "Unpublish" : "Publish"}
@@ -304,66 +233,104 @@ const MyBlogs: React.FC = () => {
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex justify-between items-center mt-4">
-                    <Button
-                      className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2 text-xs"
-                      onClick={() => toggleRevisions(blog.id)}
-                    >
-                      {openRevisions[blog.id]
-                        ? "Hide Revisions"
-                        : "See Revisions"}
-                      <FontAwesomeIcon
-                        icon={
-                          openRevisions[blog.id] ? faChevronUp : faChevronDown
-                        }
-                      />
-                    </Button>
-                  </div>
+                  <button
+                    className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2 text-xs"
+                    onClick={() => toggleRevisions(blog.id)}
+                  >
+                    {openRevisions[blog.id]
+                      ? "Hide Revisions"
+                      : "See Revisions"}
+                    <FontAwesomeIcon
+                      icon={
+                        openRevisions[blog.id] ? faChevronUp : faChevronDown
+                      }
+                    />
+                  </button>
                   <span className="opacity-50 text-xs mt-4">
                     Created: {formatTimestampToDateTime(blog.CreatedAt)}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div />
-                  <span className="opacity-50 text-xs mt-2">
-                    Published:{" "}
-                    {blog.isPublished
-                      ? formatDate(String(blog.publishedDate))
-                      : "Not Published"}
-                  </span>
-                </div>
-
-                {openRevisions[blog.id] && revisions[blog.id] && (
+                {/* Add the revision history here */}
+                {openRevisions[blog.id] && (
                   <div className="mt-4 p-4">
-                    <h3 className="font-semibold mb-2">Previous Revisions:</h3>
-
-                    <label className="flex items-center space-x-2 mb-4">
-                      <span className="text-xs font-medium">
-                        Include Previous Revision
-                      </span>
-
-                      <span
-                        onClick={() => toggleIncludePrevious(blog.id)}
-                        className={`${
-                          includePreviousRevision[blog.id]
-                            ? "bg-primary"
-                            : "bg-gray-400"
-                        } relative inline-block w-8 h-4 rounded-full transition cursor-pointer shadow-sm`}
-                      >
-                        <span
-                          className={`${
-                            includePreviousRevision[blog.id]
-                              ? "translate-x-3 bg-gray-100"
-                              : "translate-x-0 bg-gray-100"
-                          } absolute left-1 top-0 bottom-0 m-auto w-3 h-3 rounded-full transition transform`}
-                        />
-                      </span>
-                    </label>
-
-                    {compareWithPreviousRevision(
-                      revisions[blog.id].slice().reverse(),
-                      blog.id
-                    )}
+                    <h3 className="font-semibold mb-2">Revision History:</h3>
+                    <div className="space-y-4">
+                      {groupedRevisions[blog.id] &&
+                        groupedRevisions[blog.id].map(
+                          (revision: any, index: number) => {
+                            const previousRevision =
+                              groupedRevisions[blog.id][index + 1];
+                            return (
+                              <div
+                                key={index}
+                                className="border p-4 rounded shadow-sm"
+                              >
+                                <div className="text-sm text-gray-600 mb-2">
+                                  <strong>Revision ID:</strong> {revision._id}
+                                </div>
+                                <div className="text-sm text-gray-600 mb-2">
+                                  <strong>Author:</strong> {revision.authorName}
+                                </div>
+                                <div className="text-sm text-gray-600 mb-2">
+                                  <strong>Created At:</strong>{" "}
+                                  {formatTimestampToDateTime(
+                                    revision.CreatedAt
+                                  )}
+                                </div>
+                                {previousRevision ? (
+                                  <div className="mt-4">
+                                    <h4 className="font-semibold mb-1">
+                                      Changes:
+                                    </h4>
+                                    <div className="p-2 bg-gray-50 border rounded">
+                                      <div className="mb-2">
+                                        <strong>Title:</strong>{" "}
+                                        {createHighlightedDiff(
+                                          previousRevision.title,
+                                          revision.title
+                                        )}
+                                      </div>
+                                      <div className="mb-2">
+                                        <strong>Description:</strong>{" "}
+                                        {createHighlightedDiff(
+                                          previousRevision.description,
+                                          revision.description
+                                        )}
+                                      </div>
+                                      <div className="mb-2">
+                                        <strong>Content:</strong>{" "}
+                                        {createHighlightedDiff(
+                                          previousRevision.content,
+                                          revision.content
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="mt-4">
+                                    <h4 className="font-semibold mb-1">
+                                      Revision Content:
+                                    </h4>
+                                    <div className="p-2 bg-gray-50 border rounded">
+                                      <div className="mb-2">
+                                        <strong>Title:</strong> {revision.title}
+                                      </div>
+                                      <div className="mb-2">
+                                        <strong>Description:</strong>{" "}
+                                        {revision.description}
+                                      </div>
+                                      <div className="mb-2">
+                                        <strong>Content:</strong>{" "}
+                                        {revision.content}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        )}
+                    </div>
                   </div>
                 )}
               </div>

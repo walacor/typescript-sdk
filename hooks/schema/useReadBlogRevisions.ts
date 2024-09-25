@@ -4,19 +4,21 @@ import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
 
-const useReadBlogRevisions = (etid: number, blogId: string) => {
-  const [revisions, setRevisions] = useState<BlogData[]>([]);
+const useReadSchemas = (etid: number) => {
+  const [response, setResponse] = useState<BlogData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const token = useAuthenticatedToken();
   const { shouldRefetch, resetRefetch } = useRefetch();
 
-  const fetchRevisions = useCallback(async () => {
+  const fetchSchemas = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/query/get`,
+      const res = await axios.post(
+        `${String(
+          process.env.NEXT_PUBLIC_EC2_WALACOR
+        )}/api/query/get?fromSummary=true`,
         {},
         {
           headers: {
@@ -27,37 +29,26 @@ const useReadBlogRevisions = (etid: number, blogId: string) => {
         }
       );
 
-      if (response.status === 200 && response.data?.data) {
-        const filteredRevisions = response.data.data.filter(
-          (revision: BlogData) => revision.id === blogId && !revision.IsDeleted
-        );
-
-        setRevisions(filteredRevisions);
-        setError(null);
-      } else {
-        setError(new Error("Failed to fetch revisions"));
-      }
+      setResponse(res.data?.data || []);
+      setError(null);
     } catch (err) {
-      console.error("Error fetching revisions:", err);
       setError(err as Error);
     } finally {
       setLoading(false);
     }
-  }, [etid, blogId, token]);
+  }, [token, etid]);
 
   useEffect(() => {
-    if (blogId) {
-      fetchRevisions();
-    }
-  }, [blogId, fetchRevisions]);
+    fetchSchemas();
+  }, [fetchSchemas]);
 
   useEffect(() => {
     if (shouldRefetch) {
-      fetchRevisions().then(resetRefetch);
+      fetchSchemas().then(resetRefetch);
     }
-  }, [shouldRefetch, fetchRevisions, resetRefetch]);
+  }, [shouldRefetch, fetchSchemas, resetRefetch]);
 
-  return { revisions, error, loading };
+  return { response, error, loading, fetchSchemas };
 };
 
-export default useReadBlogRevisions;
+export default useReadSchemas;
