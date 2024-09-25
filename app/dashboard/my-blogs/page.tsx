@@ -30,25 +30,21 @@ const MyBlogs: React.FC = () => {
   const [openRevisions, setOpenRevisions] = useState<{
     [key: string]: boolean;
   }>({});
-  const [includePreviousRevision, setIncludePreviousRevision] = useState<{
+  const [, setIncludePreviousRevision] = useState<{
     [key: string]: boolean;
   }>({});
 
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
-  const { response, error, loading, readSchema } = useReadSchemas(
+  const { response, loading, readSchema } = useReadSchemas(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
   const { updateRecord } = useUpdateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
 
-  const {
-    response: blogRevisions,
-    loading: revisionsLoading,
-    error: revisionsError,
-    fetchSchemas: fetchRevisions,
-  } = useReadBlogRevisions(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+  const { response: blogRevisions, fetchSchemas: fetchRevisions } =
+    useReadBlogRevisions(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     if (clerkUser) {
@@ -57,13 +53,13 @@ const MyBlogs: React.FC = () => {
   }, [clerkUser, getUser]);
 
   useEffect(() => {
-    readSchema(); // Fetch the main blog data using readSchema
+    readSchema();
   }, [readSchema]);
 
   useEffect(() => {
     if (response) {
-      setBlogs(response); // Update blogs state with fetched data
-      fetchRevisions(); // Fetch revisions only after blogs are set
+      setBlogs(response);
+      fetchRevisions();
     }
   }, [response, fetchRevisions]);
 
@@ -170,9 +166,8 @@ const MyBlogs: React.FC = () => {
     return result;
   };
 
-  // Group blog revisions by blog id
   const groupedRevisions = blogRevisions?.reduce((acc: any, revision: any) => {
-    const blogId = revision.id.toString(); // Ensure the ID is a string
+    const blogId = revision.id.toString();
     if (!acc[blogId]) {
       acc[blogId] = [];
     }
