@@ -477,10 +477,7 @@ const MyBlogs: React.FC = () => {
                                 )}
                                 <div className="mt-4 flex items-center space-x-2">
                                   {isLive ? (
-                                    <Button
-                                      className="bg-green-500 text-white cursor-not-allowed"
-                                      disabled
-                                    >
+                                    <Button className="bg-green-500 text-white cursor-not-allowed">
                                       Current Version
                                       <FontAwesomeIcon
                                         className="ml-2"
