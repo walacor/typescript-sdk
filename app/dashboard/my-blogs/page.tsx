@@ -369,7 +369,7 @@ const MyBlogs: React.FC = () => {
                     <div className="flex items-center mb-4">
                       <label className="mr-2 text-sm font-semibold flex items-center">
                         Show Data in Walacor
-                        <Tooltip text="This feature is to show off Walacor's robust data platform in that they store ALL history and maintain an indefinite audit log, etc." />
+                        <Tooltip text="This feature is to show off Walacor's robust data platform in that we store ALL history and maintain an indefinite audit log, etc." />
                       </label>
                       <input
                         type="checkbox"
