@@ -15,6 +15,7 @@ import { formatDate } from "@/lib/utils";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
+import useReadSchemas from "@/hooks/schema/useReadSchemas";
 
 interface ContentManagementProps {
   initialBlog?: BlogData | null;
@@ -29,6 +30,11 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
   const { userId } = useAuth();
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
+
+  const { response: blogs } = useReadSchemas(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+    String(userId && userId)
+  );
 
   useEffect(() => {
     if (clerkUser) {
@@ -59,7 +65,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     UpdatedAt: initialBlog?.UpdatedAt || Date.now(),
     isPublished: initialBlog?.isPublished || false,
     publishedDate: initialBlog?.publishedDate || null,
-    liveVersion: initialBlog?.liveVersion ?? true, // Default to true for new posts, keep current value for existing ones
+    liveVersion: initialBlog?.liveVersion ?? true,
   };
 
   const [blog, setBlog] = useState<BlogData>(initialBlogState);
@@ -115,22 +121,30 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
       return;
     }
 
-    // Ensure liveVersion is only true for new posts, and not when editing existing ones
-    const newBlog = {
-      ...blog,
-      liveVersion: !initialBlog, // Set liveVersion to true only if it's a new blog post
-    };
-
     try {
       if (initialBlog) {
-        await updateRecord(newBlog);
+        const currentLiveVersion = blogs?.find(
+          (blogItem) => blogItem.liveVersion
+        );
+        if (currentLiveVersion) {
+          await updateRecord({ ...currentLiveVersion, liveVersion: false });
+        }
+
+        await updateRecord({ ...blog, liveVersion: true });
         if (setEditBlog) setEditBlog(null);
         toast.success("Blog updated successfully!", successToastStyle);
       } else {
-        await postSchema(newBlog);
+        await postSchema({ ...blog, liveVersion: true });
         toast.success("Blog created successfully!", successToastStyle);
-
         setBlog(initialBlogState);
+
+        setTimeout(() => {
+          toast.success("Redirecting...", successToastStyle);
+        }, 1000);
+
+        setTimeout(() => {
+          window.location.href = "/dashboard/my-blogs";
+        }, 2000);
       }
     } catch (error) {
       toast.error("Error saving blog", errorToastStyle);
@@ -155,6 +169,13 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     };
     try {
       if (initialBlog) {
+        const currentLiveVersion = blogs?.find(
+          (blogItem) => blogItem.liveVersion
+        );
+        if (currentLiveVersion) {
+          await updateRecord({ ...currentLiveVersion, liveVersion: false });
+        }
+
         await updateRecord(updatedBlog);
         if (setEditBlog) setEditBlog(null);
         toast.success("Blog published successfully!", successToastStyle);
@@ -164,7 +185,6 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
           "Blog created and published successfully!",
           successToastStyle
         );
-
         setBlog(initialBlogState);
       }
     } catch (error) {

@@ -16,19 +16,25 @@ import {
   faChevronDown,
   faChevronUp,
   faRedo,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
 import { useUser } from "@clerk/nextjs";
 import useReadBlogRevisions from "@/hooks/schema/useReadBlogRevisions";
 import { diffWords } from "diff";
+import { Tooltip } from "@/components/single/Tooltip";
 
 const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [editBlog, setEditBlog] = useState<BlogData | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState<BlogData | null>(
+    null
+  );
+  const [revisionToDelete, setRevisionToDelete] = useState<BlogData | null>(
     null
   );
   const [blogToDelete, setBlogToDelete] = useState<BlogData | null>(null);
@@ -38,12 +44,17 @@ const MyBlogs: React.FC = () => {
   const [includePreviousRevision, setIncludePreviousRevision] = useState<{
     [key: string]: boolean;
   }>({});
+  const [showDeletedRevisions, setShowDeletedRevisions] = useState(false);
 
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
+  const userId = clerkUser?.id || "";
+
   const { response, error, loading, readSchema } = useReadSchemas(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
+    userId
   );
+
   const { updateRecord } = useUpdateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
@@ -99,15 +110,43 @@ const MyBlogs: React.FC = () => {
 
   const confirmDelete = async () => {
     if (blogToDelete) {
-      const blogCopy = { ...blogToDelete, IsDeleted: true };
       try {
+        // Mark the main blog as deleted
+        const blogCopy = { ...blogToDelete, IsDeleted: true };
         await updateRecord(blogCopy);
+
+        // Delete all revisions related to the blog
+        const relatedRevisions = blogRevisions?.filter(
+          (revision) => revision.id === blogToDelete.id
+        );
+        if (relatedRevisions) {
+          for (const revision of relatedRevisions) {
+            await updateRecord({ ...revision, IsDeleted: true });
+          }
+        }
+
         setShowModal(false);
         setBlogToDelete(null);
-        toast.success("Blog deleted successfully!", successToastStyle);
+        toast.success(
+          "Blog and its revisions deleted successfully!",
+          successToastStyle
+        );
       } catch (error) {
-        console.error("Error deleting blog:", error);
-        toast.error("Failed to delete blog.", errorToastStyle);
+        console.error("Error deleting blog and revisions:", error);
+        toast.error("Failed to delete blog and revisions.", errorToastStyle);
+      }
+    }
+  };
+
+  const confirmDeleteRevision = async () => {
+    if (revisionToDelete) {
+      try {
+        await updateRecord({ ...revisionToDelete, IsDeleted: true });
+        setRevisionToDelete(null);
+        toast.success("Revision deleted successfully!", successToastStyle);
+      } catch (error) {
+        console.error("Error deleting revision:", error);
+        toast.error("Failed to delete revision.", errorToastStyle);
       }
     }
   };
@@ -115,6 +154,10 @@ const MyBlogs: React.FC = () => {
   const handleDelete = (blog: BlogData) => {
     setBlogToDelete(blog);
     setShowModal(true);
+  };
+
+  const handleDeleteRevision = (revision: BlogData) => {
+    setRevisionToDelete(revision);
   };
 
   const handleEdit = (blog: BlogData) => {
@@ -314,8 +357,9 @@ const MyBlogs: React.FC = () => {
                 {openRevisions[blog.id] && (
                   <div className="mt-4 p-4">
                     <div className="flex items-center mb-4">
-                      <label className="mr-2 text-sm font-semibold">
+                      <label className="mr-2 text-sm font-semibold flex items-center">
                         Show Changes:
+                        <Tooltip text="This feature is to show the changes between the current revision and the previous revision. This is useful for seeing what has changed between revisions." />
                       </label>
                       <input
                         type="checkbox"
@@ -324,11 +368,30 @@ const MyBlogs: React.FC = () => {
                         className="toggle-checkbox"
                       />
                     </div>
+                    <div className="flex items-center mb-4">
+                      <label className="mr-2 text-sm font-semibold flex items-center">
+                        Show Data in Walacor
+                        <Tooltip text="This feature is to show off Walacor's robust data platform in that they store ALL history and maintain an indefinite audit log, etc." />
+                      </label>
+                      <input
+                        type="checkbox"
+                        checked={showDeletedRevisions}
+                        onChange={(e) =>
+                          setShowDeletedRevisions(e.target.checked)
+                        }
+                        className="toggle-checkbox"
+                      />
+                    </div>
                     <h3 className="font-semibold mb-2">Revision History:</h3>
                     <div className="space-y-4">
                       {groupedRevisions[blog.id] &&
-                        groupedRevisions[blog.id].map(
-                          (revision: BlogData, index: number) => {
+                        groupedRevisions[blog.id]
+                          .reverse() // Show the latest revisions at the top
+                          .filter(
+                            (revision: BlogData) =>
+                              showDeletedRevisions || !revision.IsDeleted
+                          ) // Filter out deleted revisions unless checkbox is checked
+                          .map((revision: BlogData, index: number) => {
                             const previousRevision =
                               groupedRevisions[blog.id][index + 1];
                             const isLive = revision.liveVersion;
@@ -339,7 +402,11 @@ const MyBlogs: React.FC = () => {
                                   isLive
                                     ? "border-green-500 bg-green-50"
                                     : "border-gray-300"
-                                }`}
+                                } ${
+                                  revision.IsDeleted
+                                    ? "bg-gray-100 opacity-50"
+                                    : ""
+                                }`} // Grey out deleted revisions
                               >
                                 <div className="flex justify-between items-center mb-2">
                                   <div className="text-sm text-gray-600">
@@ -347,7 +414,7 @@ const MyBlogs: React.FC = () => {
                                   </div>
                                   {isLive && (
                                     <div className="text-xs text-green-600 font-semibold">
-                                      Selected Version
+                                      Current Version
                                     </div>
                                   )}
                                 </div>
@@ -416,7 +483,7 @@ const MyBlogs: React.FC = () => {
                                       className="bg-green-500 text-white cursor-not-allowed"
                                       disabled
                                     >
-                                      Selected Version
+                                      Current Version
                                       <FontAwesomeIcon
                                         className="ml-2"
                                         icon={faCheckCircle}
@@ -429,18 +496,31 @@ const MyBlogs: React.FC = () => {
                                         setShowPublishModal(revision)
                                       }
                                     >
-                                      Roll back
+                                      Select Version
                                       <FontAwesomeIcon
                                         className="ml-2"
                                         icon={faRedo}
                                       />
                                     </Button>
                                   )}
+                                  {!isLive && (
+                                    <Button
+                                      className="bg-red-500 text-white hover:bg-red-600"
+                                      onClick={() =>
+                                        handleDeleteRevision(revision)
+                                      }
+                                    >
+                                      Delete
+                                      <FontAwesomeIcon
+                                        className="ml-2"
+                                        icon={faTrash}
+                                      />
+                                    </Button>
+                                  )}
                                 </div>
                               </div>
                             );
-                          }
-                        )}
+                          })}
                     </div>
                   </div>
                 )}
@@ -450,7 +530,7 @@ const MyBlogs: React.FC = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Blog Confirmation Modal */}
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
@@ -467,6 +547,33 @@ const MyBlogs: React.FC = () => {
                 Cancel
               </Button>
               <Button className="bg-red-500 text-white" onClick={confirmDelete}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Revision Confirmation Modal */}
+      {revisionToDelete && (
+        <div
+          onClick={() => setRevisionToDelete(null)}
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        >
+          <div className="bg-white p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Are you sure?</h2>
+            <p className="mb-6">Do you really want to delete this revision?</p>
+            <div className="flex justify-end space-x-2">
+              <Button
+                className="bg-gray-500 text-white"
+                onClick={() => setRevisionToDelete(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-red-500 text-white"
+                onClick={confirmDeleteRevision}
+              >
                 Delete
               </Button>
             </div>

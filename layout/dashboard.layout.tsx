@@ -75,7 +75,7 @@ export default function DashboardLayout({
   return (
     <DefaultLayout>
       <div className="flex flex-col sm:flex-row">
-        <div className="md:min-h-screen w-full sm:flex flex-col hidden">
+        <div className="md:min-h-screen w-full sm:flex flex-col">
           {sidebarItems.map((item, index) => {
             const isActive = pathname === item.href;
 

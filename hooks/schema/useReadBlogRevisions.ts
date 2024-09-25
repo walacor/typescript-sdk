@@ -29,7 +29,7 @@ const useReadSchemas = (etid: number) => {
         }
       );
 
-      setResponse(res.data?.data || []);
+      setResponse(res.data?.data);
       setError(null);
     } catch (err) {
       setError(err as Error);

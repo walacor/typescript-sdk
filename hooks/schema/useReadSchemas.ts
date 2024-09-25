@@ -4,7 +4,11 @@ import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
 
-const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
+const useReadSchemas = (
+  etid: number,
+  userId: string,
+  onlyPublished: boolean = false
+) => {
   const [response, setResponse] = useState<BlogData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,10 +34,14 @@ const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
       );
 
       const filteredData = (res.data?.data || []).filter((blog: BlogData) => {
-        return !blog.IsDeleted && (!onlyPublished || blog.isPublished);
+        // Ensure blogs are not deleted, belong to the current user, and match the published filter
+        return (
+          !blog.IsDeleted &&
+          blog.userId === userId &&
+          (!onlyPublished || blog.isPublished)
+        );
       });
 
-      // Separate the latest and live versions
       const latestData = filteredData.reduce(
         (acc: BlogData[], current: BlogData) => {
           const existing = acc.find((item) => item.id === current.id);
@@ -49,12 +57,10 @@ const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
         [] as BlogData[]
       );
 
-      // Find live versions
       const liveData = filteredData.filter(
         (blog: BlogData) => blog.liveVersion
       );
 
-      // Merge latest and live versions
       const mergedData = latestData.map((latestBlog: BlogData) => {
         const liveBlog = liveData.find(
           (blog: BlogData) => blog.id === latestBlog.id
@@ -69,7 +75,7 @@ const useReadSchemas = (etid: number, onlyPublished: boolean = false) => {
     } finally {
       setLoading(false);
     }
-  }, [token, etid, onlyPublished]);
+  }, [token, etid, userId, onlyPublished]);
 
   useEffect(() => {
     readSchema();
