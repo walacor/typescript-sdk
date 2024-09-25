@@ -30,21 +30,25 @@ const MyBlogs: React.FC = () => {
   const [openRevisions, setOpenRevisions] = useState<{
     [key: string]: boolean;
   }>({});
-  const [, setIncludePreviousRevision] = useState<{
+  const [includePreviousRevision, setIncludePreviousRevision] = useState<{
     [key: string]: boolean;
   }>({});
 
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
-  const { response, loading, readSchema } = useReadSchemas(
+  const { response, error, loading, readSchema } = useReadSchemas(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
   const { updateRecord } = useUpdateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
 
-  const { response: blogRevisions, fetchSchemas: fetchRevisions } =
-    useReadBlogRevisions(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+  const {
+    response: blogRevisions,
+    loading: revisionsLoading,
+    error: revisionsError,
+    fetchSchemas: fetchRevisions,
+  } = useReadBlogRevisions(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     if (clerkUser) {
@@ -180,8 +184,12 @@ const MyBlogs: React.FC = () => {
       <div className="container mx-auto py-12">
         <h1 className="text-3xl font-semibold mb-6">My Blogs</h1>
 
-        {loading ? (
+        {loading || revisionsLoading ? (
           <div className="space-y-6">Loading...</div>
+        ) : error || revisionsError ? (
+          <div className="space-y-6 text-red-500 font-semibold">
+            Things happen. Our system is under maintenance, come back soon.
+          </div>
         ) : editBlog ? (
           <ContentManagement initialBlog={editBlog} setEditBlog={setEditBlog} />
         ) : (
@@ -248,6 +256,17 @@ const MyBlogs: React.FC = () => {
                 {/* Add the revision history here */}
                 {openRevisions[blog.id] && (
                   <div className="mt-4 p-4">
+                    <div className="flex items-center mb-4">
+                      <label className="mr-2 text-sm font-semibold">
+                        Show Changes:
+                      </label>
+                      <input
+                        type="checkbox"
+                        checked={includePreviousRevision[blog.id] || false}
+                        onChange={() => toggleIncludePrevious(blog.id)}
+                        className="toggle-checkbox"
+                      />
+                    </div>
                     <h3 className="font-semibold mb-2">Revision History:</h3>
                     <div className="space-y-4">
                       {groupedRevisions[blog.id] &&
@@ -272,7 +291,8 @@ const MyBlogs: React.FC = () => {
                                     revision.CreatedAt
                                   )}
                                 </div>
-                                {previousRevision ? (
+                                {includePreviousRevision[blog.id] &&
+                                previousRevision ? (
                                   <div className="mt-4">
                                     <h4 className="font-semibold mb-1">
                                       Changes:
