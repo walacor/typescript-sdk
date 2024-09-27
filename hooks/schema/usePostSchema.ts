@@ -15,6 +15,8 @@ const usePostSchema = (etid: number) => {
   const postSchema = useCallback(
     async (data: BlogData | any) => {
       setLoading(true);
+
+      console.log(data);
       try {
         const res = await axios.post(
           `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/envelopes/submit`,

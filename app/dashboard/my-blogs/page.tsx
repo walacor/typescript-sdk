@@ -17,8 +17,8 @@ import {
   faChevronUp,
   faRedo,
   faTrash,
+  faUndo,
 } from "@fortawesome/free-solid-svg-icons";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
@@ -45,6 +45,13 @@ const MyBlogs: React.FC = () => {
     [key: string]: boolean;
   }>({});
   const [showDeletedRevisions, setShowDeletedRevisions] = useState(false);
+  const [showMore, setShowMore] = useState<{ [key: string]: boolean }>({});
+  const [showMoreDescription, setShowMoreDescription] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [showMoreTitle, setShowMoreTitle] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
@@ -100,6 +107,32 @@ const MyBlogs: React.FC = () => {
       ...prevInclude,
       [blogId]: !prevInclude[blogId],
     }));
+  };
+
+  const toggleShowMore = (blogId: string) => {
+    setShowMore((prevShowMore) => ({
+      ...prevShowMore,
+      [blogId]: !prevShowMore[blogId],
+    }));
+  };
+
+  const toggleShowMoreDescription = (blogId: string) => {
+    setShowMoreDescription((prevShowMore) => ({
+      ...prevShowMore,
+      [blogId]: !prevShowMore[blogId],
+    }));
+  };
+
+  const toggleShowMoreTitle = (blogId: string) => {
+    setShowMoreTitle((prevShowMore) => ({
+      ...prevShowMore,
+      [blogId]: !prevShowMore[blogId],
+    }));
+  };
+
+  const truncateContent = (content: string, length: number) => {
+    if (content.length <= length) return content;
+    return `${content.substring(0, length)}...`;
   };
 
   const canPerformActions = () => {
@@ -196,7 +229,23 @@ const MyBlogs: React.FC = () => {
     }
   };
 
-  const createHighlightedDiff = (oldText: string, newText: string) => {
+  const restoreBlogOrRevision = async (blogOrRevision: BlogData) => {
+    try {
+      await updateRecord({ ...blogOrRevision, IsDeleted: false });
+      toast.success("Item restored successfully!", successToastStyle);
+    } catch (error) {
+      console.error("Error restoring item:", error);
+      toast.error("Failed to restore item.", errorToastStyle);
+    }
+  };
+
+  const createHighlightedDiff = (
+    oldText: string,
+    newText: string,
+    showDiff: boolean
+  ) => {
+    if (!showDiff) return newText;
+
     const diff = diffWords(oldText, newText);
     const result: JSX.Element[] = [];
 
@@ -300,7 +349,21 @@ const MyBlogs: React.FC = () => {
           <div className="space-y-6">
             {blogs.map((blog) => (
               <div key={blog.id} className="bg-white p-4 border rounded shadow">
-                <h2 className="text-xl font-semibold mb-2">{blog.title}</h2>
+                <h2 className="text-xl font-semibold mb-2">
+                  {blog.title.length > 30 && (
+                    <>
+                      {showMoreTitle[blog.id]
+                        ? blog.title
+                        : truncateContent(blog.title, 30)}
+                      <button
+                        className="text-blue-500 hover:underline text-sm ml-2"
+                        onClick={() => toggleShowMoreTitle(blog.id)}
+                      >
+                        {showMoreTitle[blog.id] ? "See Less" : "See More"}
+                      </button>
+                    </>
+                  )}
+                </h2>
                 <Link
                   target="_blank"
                   href={`/blog/${blog.id}`}
@@ -309,33 +372,59 @@ const MyBlogs: React.FC = () => {
                   <span>Read Blog</span>
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                 </Link>
-                <p className="text-gray-600 mb-4">{blog.description}</p>
+                <p className="text-gray-600 mb-4">
+                  {blog.description.length > 100 && (
+                    <>
+                      {showMore[blog.id]
+                        ? blog.description
+                        : truncateContent(blog.description, 100)}
+                      <button
+                        className="text-blue-500 hover:underline text-sm mb-4"
+                        onClick={() => toggleShowMore(blog.id)}
+                      >
+                        {showMore[blog.id] ? "See Less" : "See More"}
+                      </button>
+                    </>
+                  )}
+                </p>
                 <div className="flex justify-between items-center">
                   <div />
                   {canPerformActions() && (
                     <div className="flex space-x-2 items-center">
-                      <Button
-                        className="bg-red-500 text-white"
-                        onClick={() => handleDelete(blog)}
-                      >
-                        Delete
-                      </Button>
-                      <Button
-                        className="bg-primary text-primary-foreground"
-                        onClick={() => handleEdit(blog)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        className={
-                          blog.isPublished
-                            ? "bg-gray-500 text-white"
-                            : "bg-green-500 text-white"
-                        }
-                        onClick={() => handleTogglePublish(blog)}
-                      >
-                        {blog.isPublished ? "Unpublish" : "Publish"}
-                      </Button>
+                      {blog.IsDeleted ? (
+                        <Button
+                          className="bg-yellow-500 text-white"
+                          onClick={() => restoreBlogOrRevision(blog)}
+                        >
+                          Restore
+                          <FontAwesomeIcon className="ml-2" icon={faUndo} />
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            className="bg-red-500 text-white"
+                            onClick={() => handleDelete(blog)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            className="bg-primary text-primary-foreground"
+                            onClick={() => handleEdit(blog)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            className={
+                              blog.isPublished
+                                ? "bg-gray-500 text-white"
+                                : "bg-green-500 text-white"
+                            }
+                            onClick={() => handleTogglePublish(blog)}
+                          >
+                            {blog.isPublished ? "Unpublish" : "Publish"}
+                          </Button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -405,11 +494,7 @@ const MyBlogs: React.FC = () => {
                                   isLive
                                     ? "border-green-500 bg-green-50"
                                     : "border-gray-300"
-                                } ${
-                                  revision.IsDeleted
-                                    ? "bg-gray-100 opacity-50"
-                                    : ""
-                                }`}
+                                } ${revision.IsDeleted ? "bg-gray-100" : ""}`}
                               >
                                 <div className="flex justify-between items-center mb-2">
                                   <div className="text-sm text-gray-600">
@@ -432,34 +517,32 @@ const MyBlogs: React.FC = () => {
                                 </div>
                                 {includePreviousRevision[blog.id] &&
                                 previousRevision ? (
-                                  <div className="mt-4">
-                                    <h4 className="font-semibold mb-1">
-                                      Changes:
-                                    </h4>
-                                    <div className="p-2 bg-gray-50 border rounded">
-                                      <div className="mb-2">
-                                        <strong>Title:</strong>{" "}
-                                        {createHighlightedDiff(
-                                          previousRevision.title,
-                                          revision.title
-                                        )}
-                                      </div>
-                                      <div className="mb-2">
-                                        <strong>Description:</strong>{" "}
-                                        {createHighlightedDiff(
-                                          previousRevision.description,
-                                          revision.description
-                                        )}
-                                      </div>
-                                      <div className="mb-2">
-                                        <strong>Content:</strong>{" "}
-                                        {createHighlightedDiff(
-                                          previousRevision.content,
-                                          revision.content
-                                        )}
-                                      </div>
+                                  <>
+                                    <div className="mb-2">
+                                      <strong>Title:</strong>{" "}
+                                      {createHighlightedDiff(
+                                        previousRevision.title,
+                                        revision.title,
+                                        includePreviousRevision[blog.id]
+                                      )}
                                     </div>
-                                  </div>
+                                    <div className="mb-2">
+                                      <strong>Description:</strong>{" "}
+                                      {createHighlightedDiff(
+                                        previousRevision.description,
+                                        revision.description,
+                                        includePreviousRevision[blog.id]
+                                      )}
+                                    </div>
+                                    <div className="mb-2">
+                                      <strong>Content:</strong>{" "}
+                                      {createHighlightedDiff(
+                                        previousRevision.content,
+                                        revision.content,
+                                        includePreviousRevision[blog.id]
+                                      )}
+                                    </div>
+                                  </>
                                 ) : (
                                   <div className="mt-4">
                                     <h4 className="font-semibold mb-1">
@@ -467,15 +550,81 @@ const MyBlogs: React.FC = () => {
                                     </h4>
                                     <div className="p-2 bg-gray-50 border rounded">
                                       <div className="mb-2">
-                                        <strong>Title:</strong> {revision.title}
+                                        <strong>Title:</strong>{" "}
+                                        {revision.title.length > 30 ? (
+                                          <>
+                                            {showMoreTitle[revision.id]
+                                              ? revision.title
+                                              : truncateContent(
+                                                  revision.title,
+                                                  30
+                                                )}
+                                            <button
+                                              className="text-blue-500 hover:underline text-sm ml-2"
+                                              onClick={() =>
+                                                toggleShowMoreTitle(revision.id)
+                                              }
+                                            >
+                                              {showMoreTitle[revision.id]
+                                                ? "See Less"
+                                                : "See More"}
+                                            </button>
+                                          </>
+                                        ) : (
+                                          revision.title
+                                        )}
                                       </div>
                                       <div className="mb-2">
                                         <strong>Description:</strong>{" "}
-                                        {revision.description}
+                                        {revision.description.length > 50 ? (
+                                          <>
+                                            {showMoreDescription[revision.id]
+                                              ? revision.description
+                                              : truncateContent(
+                                                  revision.description,
+                                                  50
+                                                )}
+                                            <button
+                                              className="text-blue-500 hover:underline text-sm ml-2"
+                                              onClick={() =>
+                                                toggleShowMoreDescription(
+                                                  revision.id
+                                                )
+                                              }
+                                            >
+                                              {showMoreDescription[revision.id]
+                                                ? "See Less"
+                                                : "See More"}
+                                            </button>
+                                          </>
+                                        ) : (
+                                          revision.description
+                                        )}
                                       </div>
                                       <div className="mb-2">
                                         <strong>Content:</strong>{" "}
-                                        {revision.content}
+                                        {revision.content.length > 50 ? (
+                                          <>
+                                            {showMore[revision.id]
+                                              ? revision.content
+                                              : truncateContent(
+                                                  revision.content,
+                                                  50
+                                                )}
+                                            <button
+                                              className="text-blue-500 hover:underline text-sm ml-2"
+                                              onClick={() =>
+                                                toggleShowMore(revision.id)
+                                              }
+                                            >
+                                              {showMore[revision.id]
+                                                ? "See Less"
+                                                : "See More"}
+                                            </button>
+                                          </>
+                                        ) : (
+                                          revision.content
+                                        )}
                                       </div>
                                     </div>
                                   </div>
@@ -490,42 +639,49 @@ const MyBlogs: React.FC = () => {
                                       />
                                     </Button>
                                   ) : (
-                                    <Button
-                                      className={`bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover ${
-                                        revision.IsDeleted
-                                          ? "cursor-not-allowed opacity-50"
-                                          : ""
-                                      }`}
-                                      onClick={() =>
-                                        setShowPublishModal(revision)
-                                      }
-                                      disabled={revision.IsDeleted}
-                                    >
-                                      Select Version
-                                      <FontAwesomeIcon
-                                        className="ml-2"
-                                        icon={faRedo}
-                                      />
-                                    </Button>
+                                    !revision.IsDeleted && (
+                                      <Button
+                                        className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover"
+                                        onClick={() =>
+                                          setShowPublishModal(revision)
+                                        }
+                                      >
+                                        Select Version
+                                        <FontAwesomeIcon
+                                          className="ml-2"
+                                          icon={faRedo}
+                                        />
+                                      </Button>
+                                    )
                                   )}
-                                  {!isLive && (
+                                  {revision.IsDeleted ? (
                                     <Button
-                                      className={`bg-red-500 text-white hover:bg-red-600 ${
-                                        revision.IsDeleted
-                                          ? "cursor-not-allowed opacity-50"
-                                          : ""
-                                      }`}
+                                      className="bg-yellow-500 text-white"
                                       onClick={() =>
-                                        handleDeleteRevision(revision)
+                                        restoreBlogOrRevision(revision)
                                       }
-                                      disabled={revision.IsDeleted}
                                     >
-                                      Delete
+                                      Restore
                                       <FontAwesomeIcon
                                         className="ml-2"
-                                        icon={faTrash}
+                                        icon={faUndo}
                                       />
                                     </Button>
+                                  ) : (
+                                    !isLive && (
+                                      <Button
+                                        className="bg-red-500 text-white hover:bg-red-600"
+                                        onClick={() =>
+                                          handleDeleteRevision(revision)
+                                        }
+                                      >
+                                        Delete
+                                        <FontAwesomeIcon
+                                          className="ml-2"
+                                          icon={faTrash}
+                                        />
+                                      </Button>
+                                    )
                                   )}
                                 </div>
                               </div>

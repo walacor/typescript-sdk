@@ -11,12 +11,19 @@ export const useCheckAndAddUser = () => {
 
   useEffect(() => {
     if (user && !userChecked) {
+      console.log(user);
       const checkAndAddUser = async () => {
+        console.log(user);
         await getUser({ UserName: user.fullName || user.id });
 
-        if (data && data.length === 0) {
+        console.log(data);
+
+        if ((data && data.length === 0) || data === null) {
+          console.log(data);
           await addUser();
         }
+
+        console.log(user);
 
         setUserChecked(true);
       };

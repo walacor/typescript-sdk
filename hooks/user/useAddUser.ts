@@ -14,6 +14,7 @@ export const useAddUser = () => {
   } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
 
   const addUser = useCallback(async () => {
+    console.log(user);
     if (!user) {
       setError(new Error("User not authenticated"));
       return;
@@ -21,14 +22,18 @@ export const useAddUser = () => {
 
     setLoading(true);
 
+    console.log(user);
+    console.log(user.fullName || user.id);
+    console.log(user.firstName);
+
     try {
       const payload = {
         UserName: user.fullName || user.id,
         FirstName: user.firstName || "First",
         LastName: user.lastName || "Last",
-        Password: "TemporaryPassword123",
       };
 
+      console.log(payload);
       await postSchema(payload);
 
       if (postError) {

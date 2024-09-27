@@ -28,7 +28,7 @@ export const useGetUser = () => {
           {},
           {
             headers: {
-              ETId: 10,
+              ETId: Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID),
               Authorization: `${token}`,
               "Content-Type": "application/json",
             },
