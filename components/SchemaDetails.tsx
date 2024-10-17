@@ -38,15 +38,13 @@ interface SchemaDetailsProps {
 }
 
 const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
-  const { createSchema } = useCreateSchema(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
-  );
+  const { createSchema } = useCreateSchema();
 
-  async function handleCreateSchema() {
+  async function handleCreateSchema(etid: number) {
     toast.loading("Creating schema...", loadingToastStyle);
 
     try {
-      await createSchema();
+      await createSchema(etid, schema);
       toast.dismiss();
       toast.success("Schema created successfully!", successToastStyle);
     } catch (error) {
@@ -93,7 +91,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
         ))}
       </ul>
       <Button
-        onClick={handleCreateSchema}
+        onClick={() => handleCreateSchema(schema.ETId)}
         className="w-full bg-primary text-primary-foreground"
       >
         Create Schema

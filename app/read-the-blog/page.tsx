@@ -5,24 +5,39 @@ import DefaultLayout from "@/layout/default.layout";
 import BaseBlogCard from "@/components/BaseBlogCard";
 import { BlogData } from "@/schemas/blogSchema";
 import { useEffect, useState } from "react";
-import useReadSchemas from "@/hooks/schema/useReadSchemas";
+import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
+import { toast } from "react-hot-toast";
 
 export default function ReadTheBlog() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const { readSchema, response, error, loading } = useReadSchemas(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
-    true
+  const { data, error, loading, readSchemas } = useReadSchemas(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
 
   useEffect(() => {
-    readSchema();
-  }, [readSchema]);
+    readSchemas();
+  }, [readSchemas]);
 
   useEffect(() => {
-    if (response) {
-      setBlogs(response);
+    if (Array.isArray(data)) {
+      const filteredBlogs = data
+        .filter(
+          (blog): blog is BlogData =>
+            (blog as BlogData).isPublished && !(blog as BlogData).IsDeleted
+        )
+        .sort(
+          (a: BlogData, b: BlogData) =>
+            new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime()
+        );
+      setBlogs(filteredBlogs);
     }
-  }, [response]);
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load blogs");
+    }
+  }, [error]);
 
   return (
     <DefaultLayout>
@@ -74,6 +89,7 @@ export default function ReadTheBlog() {
                   UpdatedAt={blog.UpdatedAt}
                   isPublished={blog.isPublished}
                   publishedDate={blog.publishedDate}
+                  liveVersion={false}
                 />
               ))}
             </div>

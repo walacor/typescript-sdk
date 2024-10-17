@@ -1,30 +1,21 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "../auth/useAuthenticatedToken";
-
-type User = {
-  UID: string;
-  UserName: string;
-  FirstName: string;
-  LastName: string;
-  UserType: string;
-};
+import { ProfileData } from "@/schemas/profileSchema";
 
 export const useGetUser = () => {
-  const [data, setData] = useState<User[] | null>(null);
+  const [data, setData] = useState<ProfileData | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
   const token = useAuthenticatedToken();
 
   const getUser = useCallback(
-    async (filter: { UserName?: string; UserUID?: string }) => {
+    async (filter: { userId?: string }) => {
       setLoading(true);
 
       try {
         const res = await axios.post(
-          `${String(
-            process.env.NEXT_PUBLIC_EC2_WALACOR
-          )}/api/query/get?fromSummary=true`,
+          `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/query/get`,
           {},
           {
             headers: {
@@ -36,19 +27,15 @@ export const useGetUser = () => {
         );
 
         if (res.data && res.data.success && Array.isArray(res.data.data)) {
-          const filteredData = res.data.data.filter((user: User) => {
-            if (filter.UserName) {
-              return user.UserName === filter.UserName;
-            }
-            if (filter.UserUID) {
-              return user.UID === filter.UserUID;
-            }
-            return false;
-          });
+          const filteredUser = res.data.data.find(
+            (user: ProfileData) => user.userId === filter.userId
+          );
 
-          setData(filteredData);
+          setData(filteredUser || null);
         } else {
-          setError(new Error("Unexpected response structure"));
+          setError(
+            new Error("Unexpected response structure or no data returned")
+          );
         }
       } catch (err) {
         setError(err as Error);

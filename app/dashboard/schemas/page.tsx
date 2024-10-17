@@ -6,10 +6,12 @@ import SchemaDetails from "@/components/SchemaDetails";
 import { blogSchema } from "@/schemas/blogSchema";
 import Button from "@/components/single/Button";
 import { profileSchema } from "@/schemas/profileSchema";
+import { roleSchema } from "@/schemas/roleSchema";
 
 export const schemas = [
-  { schema: blogSchema, name: "Blog Schema" },
-  { schema: profileSchema, name: "Profile Schema" },
+  { schema: blogSchema, name: "Blog" },
+  { schema: profileSchema, name: "Profile" },
+  { schema: roleSchema, name: "Role" },
 ];
 
 const SchemasPage = () => {

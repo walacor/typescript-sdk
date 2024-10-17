@@ -1,28 +1,6 @@
-type FieldType = {
-  FieldName: string;
-  DataType: string;
-  MaxLength?: number;
-  Required?: boolean;
-  Default?: any;
-};
+import { SchemaType } from "@/types/schema";
 
-type IndexType = {
-  Fields: string[];
-  IndexValue: string;
-  ForceUpdate: boolean;
-  Delete: boolean;
-};
-
-interface BlogSchemaType {
-  ETId: number;
-  TableName: string;
-  Family: string;
-  DoSummary: boolean;
-  Fields: FieldType[];
-  Indexes: IndexType[];
-}
-
-export const blogSchema: BlogSchemaType = {
+export const blogSchema: SchemaType = {
   ETId: Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
   TableName: "blogs",
   Family: "blog-family",
@@ -121,6 +99,7 @@ export const blogSchema: BlogSchemaType = {
 };
 
 export interface BlogData {
+  UID?: string;
   id: string;
   userId: string;
   imageSrc: string;

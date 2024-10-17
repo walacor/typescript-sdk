@@ -3,6 +3,8 @@ import axios from "axios";
 import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
+import { ProfileData } from "@/schemas/profileSchema";
+import { RoleData } from "@/schemas/roleSchema";
 
 const usePostSchema = (etid: number) => {
   const [response, setResponse] = useState(null);
@@ -13,10 +15,9 @@ const usePostSchema = (etid: number) => {
   const { triggerRefetch } = useRefetch();
 
   const postSchema = useCallback(
-    async (data: BlogData | any) => {
+    async (data: BlogData | ProfileData | RoleData) => {
       setLoading(true);
 
-      console.log(data);
       try {
         const res = await axios.post(
           `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/envelopes/submit`,
@@ -33,6 +34,7 @@ const usePostSchema = (etid: number) => {
         setResponse(res.data);
         triggerRefetch();
       } catch (err) {
+        console.log(err);
         setError(err as Error);
       } finally {
         setLoading(false);

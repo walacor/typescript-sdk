@@ -6,9 +6,6 @@ import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
 import Dropdown from "@/components/single/Dropdown";
 import { useGetUser } from "@/hooks/user/useGetUser";
-import { useUpdateUser } from "@/hooks/user/useUpdateUser";
-import { useAssignRole } from "@/hooks/role/useAssignRole";
-import { useGetRoles } from "@/hooks/role/useGetRoles";
 import { useClerk, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
@@ -17,18 +14,25 @@ import {
   errorToastStyle,
   loadingToastStyle,
 } from "@/styles/toastStyles";
+import { ProfileData } from "@/schemas/profileSchema";
+import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
+import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
+import { RoleData } from "@/schemas/roleSchema";
 
 const Profile = () => {
   const { data: userData, getUser } = useGetUser();
-  const { data: rolesData, getRoles } = useGetRoles();
-  const { assignRole, loading: assigningRole } = useAssignRole();
+  const { user: clerkUser } = useUser();
+  const { signOut } = useClerk();
+
   const {
     updateRecord,
     loading: updatingUser,
     error: updateError,
-  } = useUpdateUser(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
-  const { user: clerkUser } = useUser();
-  const { signOut } = useClerk();
+  } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
+
+  const { data: availableRoles, readSchemas } = useReadSchemas(
+    Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID)
+  );
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -37,22 +41,18 @@ const Profile = () => {
 
   useEffect(() => {
     if (clerkUser) {
-      getUser({ UserName: clerkUser.fullName || clerkUser.id });
-      getRoles();
+      getUser({ userId: clerkUser.id });
+      readSchemas();
     }
-  }, [clerkUser, getUser, getRoles]);
+  }, [clerkUser, getUser, readSchemas]);
 
   useEffect(() => {
-    if (userData && userData.length > 0 && rolesData && rolesData.length > 0) {
-      const walacorUser = userData[0];
-      setFirstName(walacorUser.FirstName || "");
-      setLastName(walacorUser.LastName || "");
-
-      const userRole = walacorUser.UserType;
-
-      setSelectedRole(userRole);
+    if (userData) {
+      setFirstName(userData.firstName || "");
+      setLastName(userData.lastName || "");
+      setSelectedRole(userData?.userRole || "");
     }
-  }, [userData, rolesData]);
+  }, [userData]);
 
   const handleRoleChange = (selectedRole: string) => {
     setSelectedRole(selectedRole);
@@ -60,28 +60,17 @@ const Profile = () => {
   };
 
   const handleUpdate = async () => {
-    if (!clerkUser || !userData || userData.length === 0) return;
-
+    if (!clerkUser || !userData) return;
     toast.loading("Updating profile...", loadingToastStyle);
-
     try {
-      const updatedUserData = {
-        UID: userData[0].UID,
-        FirstName: firstName,
-        LastName: lastName,
-        UserType: selectedRole,
+      const updatedUserData: Partial<ProfileData> = {
+        UID: userData.UID,
+        firstName,
+        lastName,
+        userRole: selectedRole,
       };
 
       await updateRecord(updatedUserData);
-
-      const userUID = userData[0].UID;
-      const role = rolesData?.find((r) => r.RoleName === selectedRole);
-      const roleAssignment = {
-        RoleID: role?._id || "",
-        UserUID: userUID,
-      };
-
-      await assignRole([roleAssignment]);
 
       toast.dismiss();
       toast.success("Profile updated successfully!", successToastStyle);
@@ -102,6 +91,7 @@ const Profile = () => {
     <DashboardLayout>
       <div className="w-full mx-auto p-8">
         <h1 className="text-3xl font-semibold mb-6">Profile</h1>
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -138,15 +128,13 @@ const Profile = () => {
             <Dropdown
               value={selectedRole}
               onChange={handleRoleChange}
+              placeholder={"Select Role"}
               options={
-                rolesData
-                  ? rolesData.map((role) => ({
-                      label: role.RoleName,
-                      value: role.RoleName,
-                    }))
-                  : []
+                (availableRoles as RoleData[])?.map(
+                  (role: RoleData) => role.roleName + " (" + role.scope + ")"
+                ) || ["Loading..."]
               }
-              className="mt-1 block w-full p-2 border border-gray-300"
+              className="mt-1 block w-full p-2 border text-black border-gray-300"
             />
             <Link
               href="/dashboard/role"
@@ -159,9 +147,9 @@ const Profile = () => {
             <Button
               className={`bg-primary text-white w-full`}
               onClick={handleUpdate}
-              disabled={!isUpdated || updatingUser || assigningRole}
+              disabled={!isUpdated || updatingUser}
             >
-              {updatingUser || assigningRole ? "Updating..." : "Update Profile"}
+              {updatingUser ? "Updating..." : "Update Profile"}
             </Button>
             {updateError && (
               <p className="text-red-500 mt-2">

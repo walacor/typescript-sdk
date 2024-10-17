@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/utils";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
-import useReadSchemas from "@/hooks/schema/useReadSchemas";
+import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
 
 interface ContentManagementProps {
   initialBlog?: BlogData | null;
@@ -31,14 +31,13 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
   const { user: clerkUser } = useUser();
   const { data: userData, getUser } = useGetUser();
 
-  const { response: blogs } = useReadSchemas(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
-    String(userId && userId)
+  const { data: blogs } = useReadSchemas(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
 
   useEffect(() => {
     if (clerkUser) {
-      getUser({ UserName: clerkUser.fullName || clerkUser.id });
+      getUser({ userId: clerkUser.id });
     }
   }, [clerkUser, getUser]);
 
@@ -70,19 +69,13 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
 
   const [blog, setBlog] = useState<BlogData>(initialBlogState);
 
-  const {
-    postSchema,
-    response: postResponse,
-    error: postError,
-    loading: postLoading,
-  } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+  const { postSchema, loading: postLoading } = usePostSchema(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
 
-  const {
-    updateRecord,
-    response: updateResponse,
-    error: updateError,
-    loading: updateLoading,
-  } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+  const { updateRecord, loading: updateLoading } = useUpdateSchema(
+    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -99,33 +92,16 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     setBlog((prevBlog) => ({ ...prevBlog, imageSrc: String(url) }));
   };
 
-  const canPerformActions = () => {
-    if (userData && userData.length > 0) {
-      const walacorUser = userData[0];
-      return (
-        walacorUser.UserType === "Author" ||
-        walacorUser.UserType === "Site_Admin"
-      );
-    }
-    return false;
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!canPerformActions()) {
-      toast.error(
-        "You do not have permission to create or edit a blog.",
-        errorToastStyle
-      );
-      return;
-    }
-
     try {
       if (initialBlog) {
-        const currentLiveVersion = blogs?.find(
-          (blogItem) => blogItem.liveVersion
-        );
+        const currentLiveVersion = Array.isArray(blogs)
+          ? (blogs as BlogData[]).find(
+              (blogItem: BlogData) => blogItem.liveVersion
+            )
+          : null;
         if (currentLiveVersion) {
           await updateRecord({ ...currentLiveVersion, liveVersion: false });
         }
@@ -153,14 +129,6 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
   };
 
   const handlePublish = async () => {
-    if (!canPerformActions()) {
-      toast.error(
-        "You do not have permission to publish this blog.",
-        errorToastStyle
-      );
-      return;
-    }
-
     const updatedBlog = {
       ...blog,
       isPublished: true,
@@ -169,9 +137,9 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
     };
     try {
       if (initialBlog) {
-        const currentLiveVersion = blogs?.find(
-          (blogItem) => blogItem.liveVersion
-        );
+        const currentLiveVersion = Array.isArray(blogs)
+          ? blogs.find((blogItem) => (blogItem as BlogData).liveVersion)
+          : null;
         if (currentLiveVersion) {
           await updateRecord({ ...currentLiveVersion, liveVersion: false });
         }
@@ -262,25 +230,17 @@ const ContentManagement: React.FC<ContentManagementProps> = ({
           <Button
             type="submit"
             className={`bg-primary text-white w-full`}
-            disabled={!canPerformActions() || postLoading || updateLoading}
+            disabled={postLoading || updateLoading}
           >
-            {postLoading || updateLoading
-              ? "Saving..."
-              : canPerformActions()
-              ? "Save Blog Post"
-              : "Insufficient Permissions"}
+            {postLoading || updateLoading ? "Saving..." : "Save Blog Post"}
           </Button>
           <Button
             type="button"
             className="w-full bg-secondary text-secondary-foreground border-2 border-black hover:bg-black hover:text-white transition-all"
             onClick={handlePublish}
-            disabled={!canPerformActions() || postLoading || updateLoading}
+            disabled={postLoading || updateLoading}
           >
-            {postLoading || updateLoading
-              ? "Publishing..."
-              : canPerformActions()
-              ? "Save & Publish"
-              : "Insufficient Permissions"}
+            {postLoading || updateLoading ? "Publishing..." : "Save & Publish"}
           </Button>
           {initialBlog && (
             <Button

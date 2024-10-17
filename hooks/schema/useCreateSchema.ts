@@ -1,17 +1,14 @@
-"use client";
-
 import axios from "axios";
 import useAuthenticatedToken from "../auth/useAuthenticatedToken";
-import { blogSchema } from "@/schemas/blogSchema";
 
-export function useCreateSchema(etid: number) {
+export function useCreateSchema() {
   const token = useAuthenticatedToken();
 
-  const createSchema = async () => {
+  const createSchema = async (etid: number, schemaData: any) => {
     const schema = {
       ETId: 50,
       SV: 1,
-      Schema: blogSchema,
+      Schema: schemaData,
     };
 
     try {

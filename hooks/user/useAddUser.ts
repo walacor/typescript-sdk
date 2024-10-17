@@ -1,11 +1,14 @@
 import { useState, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
 import usePostSchema from "../schema/usePostSchema";
+import { useGetUser } from "@/hooks/user/useGetUser";
+import { ProfileData } from "@/schemas/profileSchema";
 
 export const useAddUser = () => {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  const { data: existingUser, getUser } = useGetUser();
 
   const {
     postSchema,
@@ -14,7 +17,6 @@ export const useAddUser = () => {
   } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
 
   const addUser = useCallback(async () => {
-    console.log(user);
     if (!user) {
       setError(new Error("User not authenticated"));
       return;
@@ -22,18 +24,20 @@ export const useAddUser = () => {
 
     setLoading(true);
 
-    console.log(user);
-    console.log(user.fullName || user.id);
-    console.log(user.firstName);
-
     try {
-      const payload = {
-        UserName: user.fullName || user.id,
-        FirstName: user.firstName || "First",
-        LastName: user.lastName || "Last",
+      await getUser({ userId: user.id });
+
+      if (existingUser) {
+        throw new Error("User with the same userId already exists.");
+      }
+
+      const payload: Partial<ProfileData> = {
+        userId: user.id,
+        firstName: user.firstName || "First",
+        lastName: user.lastName || "Last",
+        userRole: "Viewer",
       };
 
-      console.log(payload);
       await postSchema(payload);
 
       if (postError) {
@@ -44,7 +48,7 @@ export const useAddUser = () => {
     } finally {
       setLoading(false);
     }
-  }, [user, postSchema, postError]);
+  }, [user, postSchema, postError, getUser, existingUser]);
 
   return { response: postResponse, error, loading, addUser };
 };

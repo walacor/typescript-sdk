@@ -119,52 +119,7 @@ export const hooks = [
     explanation: `This hook allows you to create a new schema on the Walacor platform by 
       submitting the schema details. It handles authentication and returns the response from the platform.`,
   },
-  {
-    name: "useGetSchemaDetails",
-    description:
-      "Fetch the details of a specific schema from the Walacor platform.",
-    code: `
-      import { useState } from "react";
-      import axios from "axios";
-      import useAuthenticatedToken from "./useAuthenticatedToken";
 
-      export function useGetSchemaDetails(etid: number) {
-        const token = useAuthenticatedToken();
-        const [schemaDetails, setSchemaDetails] = useState(null);
-
-        const fetchSchemaData = async () => {
-          if (!token) {
-            console.error("No token available. Please log in first.");
-            return;
-          }
-
-          try {
-            const res = await axios.get(
-              \`\${String(
-                process.env.NEXT_PUBLIC_EC2_WALACOR
-              )}/api/schemas/envelopeTypes/\${Number(
-                process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID
-              )}/details\`,
-              {
-                headers: {
-                  ETid: etid,
-                  Authorization: \`\${token}\`,
-                },
-              }
-            );
-
-            setSchemaDetails(res.data);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        };
-
-        return { schemaDetails, fetchSchemaData };
-      }
-    `,
-    explanation: `This hook retrieves the schema details for a specific ETId from the Walacor platform. 
-      It handles authentication and provides schema metadata necessary for other operations.`,
-  },
   {
     name: "usePostSchema",
     description: "Post new data to the Walacor platform for a specific schema.",

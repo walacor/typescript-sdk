@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
-import useReadSchemas from "@/hooks/schema/useReadSchemas";
 import { BlogData } from "@/schemas/blogSchema";
 import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
 import ContentManagement from "@/components/ContentManagement";
@@ -26,6 +25,7 @@ import { useUser } from "@clerk/nextjs";
 import useReadBlogRevisions from "@/hooks/schema/useReadBlogRevisions";
 import { diffWords } from "diff";
 import { Tooltip } from "@/components/single/Tooltip";
+import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
 
 const MyBlogs: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
@@ -57,43 +57,64 @@ const MyBlogs: React.FC = () => {
   const { data: userData, getUser } = useGetUser();
   const userId = clerkUser?.id || "";
 
-  const { response, error, loading, readSchema } = useReadSchemas(
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID),
-    userId
-  );
+  const {
+    data: mainData,
+    error,
+    loading,
+    readSchemas,
+  } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   const { updateRecord } = useUpdateSchema(
     Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
   );
-
   const {
     response: blogRevisions,
     loading: revisionsLoading,
-    error: revisionsError,
     fetchSchemas: fetchRevisions,
   } = useReadBlogRevisions(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     if (clerkUser) {
-      getUser({ UserName: clerkUser.fullName || clerkUser.id });
+      getUser({ userId: clerkUser.fullName || clerkUser.id });
     }
   }, [clerkUser, getUser]);
 
   useEffect(() => {
-    readSchema();
-  }, [readSchema]);
+    readSchemas();
+  }, [readSchemas]);
+
+  // Filter blogs that aren't deleted and sort by CreatedAt
+  const filterAndSortBlogs = (blogs: BlogData[]): BlogData[] => {
+    const nonDeletedBlogs = blogs.filter((blog) => !blog.IsDeleted);
+
+    const latestBlogs = Object.values(
+      nonDeletedBlogs.reduce(
+        (acc: { [id: string]: BlogData }, blog: BlogData) => {
+          if (
+            !acc[blog.id] ||
+            new Date(blog.CreatedAt) > new Date(acc[blog.id].CreatedAt)
+          ) {
+            acc[blog.id] = blog;
+          }
+          return acc;
+        },
+        {}
+      )
+    );
+
+    return latestBlogs.sort(
+      (a, b) =>
+        new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime()
+    );
+  };
 
   useEffect(() => {
-    if (response) {
-      setBlogs(
-        response.sort(
-          (a, b) =>
-            new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime()
-        )
-      );
+    if (mainData) {
+      const filteredAndSortedBlogs = filterAndSortBlogs(mainData as BlogData[]);
+      setBlogs(filteredAndSortedBlogs);
       fetchRevisions();
     }
-  }, [response, fetchRevisions]);
+  }, [mainData, fetchRevisions]);
 
   const toggleRevisions = (blogId: string) => {
     setOpenRevisions((prevOpen) => ({
@@ -136,20 +157,14 @@ const MyBlogs: React.FC = () => {
   };
 
   const canPerformActions = () => {
-    if (userData && userData.length > 0) {
-      const walacorUser = userData[0];
-      return (
-        walacorUser.UserType === "Author" ||
-        walacorUser.UserType === "Site_Admin"
-      );
-    }
-    return false;
+    return true;
   };
 
+  // Confirm delete action for blogs
   const confirmDelete = async () => {
     if (blogToDelete) {
       try {
-        const blogCopy = { ...blogToDelete, IsDeleted: true };
+        const blogCopy = { UID: blogToDelete.UID, IsDeleted: true }; // Pass UID
         await updateRecord(blogCopy);
 
         const relatedRevisions = blogRevisions?.filter(
@@ -157,7 +172,7 @@ const MyBlogs: React.FC = () => {
         );
         if (relatedRevisions) {
           for (const revision of relatedRevisions) {
-            await updateRecord({ ...revision, IsDeleted: true });
+            await updateRecord({ UID: revision.UID, IsDeleted: true }); // Pass UID for revisions
           }
         }
 
@@ -168,39 +183,42 @@ const MyBlogs: React.FC = () => {
           successToastStyle
         );
       } catch (error) {
-        console.error("Error deleting blog and revisions:", error);
         toast.error("Failed to delete blog and revisions.", errorToastStyle);
       }
     }
   };
 
+  // Confirm delete action for revisions
   const confirmDeleteRevision = async () => {
     if (revisionToDelete) {
       try {
-        await updateRecord({ ...revisionToDelete, IsDeleted: true });
+        await updateRecord({ UID: revisionToDelete.UID, IsDeleted: true }); // Pass UID
         setRevisionToDelete(null);
         toast.success("Revision deleted successfully!", successToastStyle);
       } catch (error) {
-        console.error("Error deleting revision:", error);
         toast.error("Failed to delete revision.", errorToastStyle);
       }
     }
   };
 
+  // Handle delete button for blogs
   const handleDelete = (blog: BlogData) => {
     setBlogToDelete(blog);
     setShowModal(true);
   };
 
+  // Handle delete button for revisions
   const handleDeleteRevision = (revision: BlogData) => {
     setRevisionToDelete(revision);
   };
 
+  // Handle edit functionality
   const handleEdit = (blog: BlogData) => {
     setEditBlog(blog);
     toast.success("You can now edit the blog.", successToastStyle);
   };
 
+  // Toggle publish/unpublish blog
   const handleTogglePublish = async (blog: BlogData) => {
     if (!canPerformActions()) {
       toast.error(
@@ -211,7 +229,7 @@ const MyBlogs: React.FC = () => {
     }
 
     const updatedBlog = {
-      ...blog,
+      UID: blog.UID, // Pass UID
       isPublished: !blog.isPublished,
       publishedDate: blog.isPublished ? null : new Date().toISOString(),
     };
@@ -224,21 +242,21 @@ const MyBlogs: React.FC = () => {
         successToastStyle
       );
     } catch (error) {
-      console.error("Error toggling publish state:", error);
       toast.error("Failed to change publish status.", errorToastStyle);
     }
   };
 
+  // Restore blog or revision
   const restoreBlogOrRevision = async (blogOrRevision: BlogData) => {
     try {
-      await updateRecord({ ...blogOrRevision, IsDeleted: false });
+      await updateRecord({ UID: blogOrRevision.UID, IsDeleted: false }); // Pass UID
       toast.success("Item restored successfully!", successToastStyle);
     } catch (error) {
-      console.error("Error restoring item:", error);
       toast.error("Failed to restore item.", errorToastStyle);
     }
   };
 
+  // Highlight changes between revisions
   const createHighlightedDiff = (
     oldText: string,
     newText: string,
@@ -270,19 +288,20 @@ const MyBlogs: React.FC = () => {
     return result;
   };
 
+  // Promote a revision to be the live version
   const promoteToLive = async (blogId: string, revision: BlogData) => {
     try {
       const currentLiveVersion = blogs.find((blog) => blog.liveVersion);
       if (currentLiveVersion) {
         await updateRecord({
-          ...currentLiveVersion,
+          UID: currentLiveVersion.UID, // Pass UID for current live version
           liveVersion: false,
           isPublished: false,
         });
       }
 
       await updateRecord({
-        ...revision,
+        UID: revision.UID, // Pass UID of the revision
         id: blogId,
         liveVersion: true,
         isPublished: true,
@@ -290,10 +309,10 @@ const MyBlogs: React.FC = () => {
       toast.success("Revision promoted to live version!", successToastStyle);
     } catch (error) {
       toast.error("Failed to promote revision.", errorToastStyle);
-      console.error("Error promoting revision:", error);
     }
   };
 
+  // Promote a revision without publishing it
   const promoteWithoutPublishing = async (
     blogId: string,
     revision: BlogData
@@ -302,14 +321,14 @@ const MyBlogs: React.FC = () => {
       const currentLiveVersion = blogs.find((blog) => blog.liveVersion);
       if (currentLiveVersion) {
         await updateRecord({
-          ...currentLiveVersion,
+          UID: currentLiveVersion.UID, // Pass UID for current live version
           liveVersion: false,
           isPublished: false,
         });
       }
 
       await updateRecord({
-        ...revision,
+        UID: revision.UID, // Pass UID of the revision
         id: blogId,
         liveVersion: true,
         isPublished: false,
@@ -323,7 +342,6 @@ const MyBlogs: React.FC = () => {
         "Failed to select revision as live version.",
         errorToastStyle
       );
-      console.error("Error selecting revision as live version:", error);
     }
   };
 
@@ -350,7 +368,7 @@ const MyBlogs: React.FC = () => {
             {blogs.map((blog) => (
               <div key={blog.id} className="bg-white p-4 border rounded shadow">
                 <h2 className="text-xl font-semibold mb-2">
-                  {blog.title.length > 30 && (
+                  {blog.title.length > 30 ? (
                     <>
                       {showMoreTitle[blog.id]
                         ? blog.title
@@ -362,6 +380,8 @@ const MyBlogs: React.FC = () => {
                         {showMoreTitle[blog.id] ? "See Less" : "See More"}
                       </button>
                     </>
+                  ) : (
+                    blog.title
                   )}
                 </h2>
                 <Link
@@ -373,7 +393,7 @@ const MyBlogs: React.FC = () => {
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                 </Link>
                 <p className="text-gray-600 mb-4">
-                  {blog.description.length > 100 && (
+                  {blog.description.length > 100 ? (
                     <>
                       {showMore[blog.id]
                         ? blog.description
@@ -385,6 +405,8 @@ const MyBlogs: React.FC = () => {
                         {showMore[blog.id] ? "See Less" : "See More"}
                       </button>
                     </>
+                  ) : (
+                    blog.description
                   )}
                 </p>
                 <div className="flex justify-between items-center">
@@ -486,7 +508,7 @@ const MyBlogs: React.FC = () => {
                           .map((revision: BlogData, index: number) => {
                             const previousRevision =
                               groupedRevisions[blog.id][index + 1];
-                            const isLive = revision.liveVersion;
+                            const isLive = revision.liveVersion; // Use this flag to determine the live version
                             return (
                               <div
                                 key={index}
