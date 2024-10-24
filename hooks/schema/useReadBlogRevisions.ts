@@ -16,9 +16,7 @@ const useReadSchemas = (etid: number) => {
     setLoading(true);
     try {
       const res = await axios.post(
-        `${String(
-          process.env.NEXT_PUBLIC_EC2_WALACOR
-        )}/api/query/get?fromSummary=true`,
+        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/query/get?fromSummary=true`,
         {},
         {
           headers: {
