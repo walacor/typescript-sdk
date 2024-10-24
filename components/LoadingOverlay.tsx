@@ -33,7 +33,6 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ setupStage, loading, is
         setProgress(100);
         setTimeout(() => {
           setShowOverlay(false);
-
           sessionStorage.setItem("userConfigured", "true");
         }, 2000);
         break;
@@ -45,8 +44,20 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ setupStage, loading, is
   if (!loading || !showOverlay || isConfigured) return null;
 
   return (
-    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50 p-8">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-center w-full max-w-lg transition-all duration-300">
+    <motion.div
+      className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50 p-8"
+      initial={{ opacity: 0 }} // Fade in effect
+      animate={{ opacity: 1 }} // During showing
+      exit={{ opacity: 0 }} // Fade out effect
+      transition={{ duration: 0.5 }} // Duration of fade-in and fade-out
+    >
+      <motion.div
+        className="bg-white p-8 rounded-lg shadow-lg text-center w-full max-w-lg"
+        initial={{ opacity: 0, scale: 0.95 }} // Shrink and fade on entry
+        animate={{ opacity: 1, scale: 1 }} // Fully show and expand to normal size
+        exit={{ opacity: 0, scale: 0.95 }} // Shrink and fade on exit
+        transition={{ duration: 0.3 }} // Duration of the content animation
+      >
         <div className="flex items-center justify-center mb-4">
           <svg className="animate-spin w-8 h-8 text-primary mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 12h1.5M12 4v1.5M19.5 12H21M12 19.5V21M16.24 7.76l-1.06 1.06M7.76 16.24l1.06-1.06M16.24 16.24l-1.06-1.06M7.76 7.76l1.06 1.06" />
@@ -56,8 +67,8 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ setupStage, loading, is
         <div className="w-full bg-gray-200 rounded-full h-4 transition-all duration-500">
           <motion.div className="bg-primary h-4 rounded-full transition-all" style={{ width: `${progress}%` }} transition={{ ease: "easeOut", duration: 0.5 }}></motion.div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

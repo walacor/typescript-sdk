@@ -34,7 +34,9 @@ export const useCheckAndAddUser = () => {
 
           const profile = userProfileData as ProfileData;
 
-          if (isConfigured || profile?.isConfigured) {
+          const sessionConfigured = sessionStorage.getItem("userConfigured");
+
+          if (sessionConfigured === "true" || isConfigured || profile?.isConfigured) {
             console.log("User is already configured.");
             setIsConfigured(true);
             setSetupStage("Done");
@@ -82,6 +84,8 @@ export const useCheckAndAddUser = () => {
 
           await updateProfile(updatedProfile);
 
+          sessionStorage.setItem("userConfigured", "true");
+
           setIsConfigured(true);
           setSetupStage("Done");
           setUserChecked(true);
@@ -92,7 +96,7 @@ export const useCheckAndAddUser = () => {
     };
 
     checkAndAddUser();
-  }, [user, userChecked, getUser, addUser, createSchema, userProfileData, addRole, fetchRoles, rolesData, updateProfile, isConfigured]);
+  }, [user, userChecked, getUser, addUser, createSchema, userProfileData, addRole, fetchRoles, rolesData, updateProfile, isConfigured, setIsConfigured]);
 
   return { loading: loadingGet || loadingAdd || loadingRoles, setupStage, isConfigured };
 };
