@@ -2,11 +2,7 @@ import React from "react";
 import Button from "./single/Button";
 import { useCreateSchema } from "@/hooks/schema/useCreateSchema";
 import { toast } from "react-hot-toast";
-import {
-  successToastStyle,
-  errorToastStyle,
-  loadingToastStyle,
-} from "@/styles/toastStyles";
+import { successToastStyle, errorToastStyle, loadingToastStyle } from "@/styles/toastStyles";
 
 interface FieldType {
   FieldName: string;
@@ -60,9 +56,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
       <p className="text-gray-700 mb-4">Table Name: {schema.TableName}</p>
       <p className="text-gray-700 mb-4">ETId: {schema.ETId}</p>
       <p className="text-gray-700 mb-4">Family: {schema.Family}</p>
-      <p className="text-gray-700 mb-4">
-        Summary Enabled: {schema.DoSummary ? "Yes" : "No"}
-      </p>
+      <p className="text-gray-700 mb-4">Summary Enabled: {schema.DoSummary ? "Yes" : "No"}</p>
 
       <h3 className="text-xl font-semibold mb-2">Fields</h3>
       <ul className="list-disc list-inside text-gray-700 mb-4">
@@ -90,10 +84,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
           </li>
         ))}
       </ul>
-      <Button
-        onClick={() => handleCreateSchema(schema.ETId)}
-        className="w-full bg-primary text-primary-foreground"
-      >
+      <Button onClick={() => handleCreateSchema(schema.ETId)} className="w-full bg-primary text-primary-foreground">
         Create Schema
       </Button>
     </div>

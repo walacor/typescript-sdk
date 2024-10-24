@@ -10,11 +10,7 @@ export const useAddUser = () => {
   const { user } = useUser();
   const { data: existingUser, getUser } = useGetUser();
 
-  const {
-    postSchema,
-    response: postResponse,
-    error: postError,
-  } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
+  const { postSchema, response: postResponse, error: postError } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
 
   const addUser = useCallback(async () => {
     if (!user) {
@@ -35,7 +31,7 @@ export const useAddUser = () => {
         userId: user.id,
         firstName: user.firstName || "First",
         lastName: user.lastName || "Last",
-        userRole: "Viewer",
+        userRole: "Viewe1123r",
       };
 
       await postSchema(payload);

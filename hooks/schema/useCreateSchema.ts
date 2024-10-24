@@ -12,17 +12,13 @@ export function useCreateSchema() {
     };
 
     try {
-      const response = await axios.post(
-        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/schemas/`,
-        schema,
-        {
-          headers: {
-            Authorization: `${token}`,
-            ETId: etid,
-            SV: 1,
-          },
-        }
-      );
+      const response = await axios.post(`${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/schemas/`, schema, {
+        headers: {
+          Authorization: `${token}`,
+          ETId: etid,
+          SV: 1,
+        },
+      });
 
       return response.data;
     } catch (error) {

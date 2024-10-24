@@ -26,10 +26,4 @@ import { RoleData } from "@/schemas/roleSchema";
 import { ProfileData } from "@/schemas/profileSchema";
 import { BlogData } from "@/schemas/blogSchema";
 
-export type MainData =
-  | RoleData
-  | ProfileData
-  | BlogData
-  | RoleData[]
-  | ProfileData[]
-  | BlogData[];
+export type MainData = RoleData | ProfileData | BlogData | RoleData[] | ProfileData[] | BlogData[];

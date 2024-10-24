@@ -9,39 +9,35 @@ import { useGetUser } from "@/hooks/user/useGetUser";
 import { useClerk, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
-import {
-  successToastStyle,
-  errorToastStyle,
-  loadingToastStyle,
-} from "@/styles/toastStyles";
+import { successToastStyle, errorToastStyle, loadingToastStyle } from "@/styles/toastStyles";
 import { ProfileData } from "@/schemas/profileSchema";
 import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
 import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
 import { RoleData } from "@/schemas/roleSchema";
+import SubDashboardLayout from "@/layout/subdashboard.layout";
 
 const Profile = () => {
   const { data: userData, getUser } = useGetUser();
   const { user: clerkUser } = useUser();
   const { signOut } = useClerk();
 
-  const {
-    updateRecord,
-    loading: updatingUser,
-    error: updateError,
-  } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
+  const { updateRecord, loading: updatingUser, error: updateError } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
 
-  const { data: availableRoles, readSchemas } = useReadSchemas(
-    Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID)
-  );
+  const { data: availableRoles, readSchemas } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID));
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("Fetching...");
+  const [lastName, setLastName] = useState("Fetching...");
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [isUpdated, setIsUpdated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (clerkUser) {
-      getUser({ userId: clerkUser.id });
+      getUser({ userId: clerkUser.id }).finally(() => {
+        toast.dismiss();
+        setIsLoading(false);
+      });
+
       readSchemas();
     }
   }, [clerkUser, getUser, readSchemas]);
@@ -89,84 +85,64 @@ const Profile = () => {
 
   return (
     <DashboardLayout>
-      <div className="w-full mx-auto p-8">
-        <h1 className="text-3xl font-semibold mb-6">Profile</h1>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              First Name
-            </label>
-            <Input
-              type="text"
-              value={firstName}
-              onChange={(e) => {
-                setFirstName(e.target.value);
-                setIsUpdated(true);
-              }}
-              className="mt-1 block w-full p-2 border border-gray-300"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Last Name
-            </label>
-            <Input
-              type="text"
-              value={lastName}
-              onChange={(e) => {
-                setLastName(e.target.value);
-                setIsUpdated(true);
-              }}
-              className="mt-1 block w-full p-2 border border-gray-300"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Role
-            </label>
-            <Dropdown
-              value={selectedRole}
-              onChange={handleRoleChange}
-              placeholder={"Select Role"}
-              options={
-                (availableRoles as RoleData[])?.map(
-                  (role: RoleData) => role.roleName + " (" + role.scope + ")"
-                ) || ["Loading..."]
-              }
-              className="mt-1 block w-full p-2 border text-black border-gray-300"
-            />
-            <Link
-              href="/dashboard/role"
-              className="mt-4 text-xs text-gray-500 cursor-pointer hover:underline"
-            >
-              Want to add role?
-            </Link>
-          </div>
-          <div className="mt-6">
-            <Button
-              className={`bg-primary text-white w-full`}
-              onClick={handleUpdate}
-              disabled={!isUpdated || updatingUser}
-            >
-              {updatingUser ? "Updating..." : "Update Profile"}
-            </Button>
-            {updateError && (
-              <p className="text-red-500 mt-2">
-                Error updating profile: {updateError.message}
-              </p>
-            )}
-          </div>
-          <div className="mt-6">
-            <Button
-              className="bg-red-500 text-white w-full"
-              onClick={handleSignOut}
-            >
-              Sign out
-            </Button>
+      <SubDashboardLayout>
+        <div className="w-full mx-auto p-8">
+          <h1 className="text-3xl font-semibold mb-6 text-center">Profile</h1>
+          <p className="text-gray-600 mb-6 text-center">Walacor allows for us to create profile data structures for our users. This is a simple example of how you can edit and update your profile data.</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">First Name</label>
+              <Input
+                type="text"
+                value={firstName}
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                  setIsUpdated(true);
+                }}
+                className={`mt-1 block w-full p-2 border border-gray-300 ${isLoading ? "animate-pulse bg-gray-200" : ""}`}
+                disabled={isLoading}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Last Name</label>
+              <Input
+                type="text"
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                  setIsUpdated(true);
+                }}
+                className={`mt-1 block w-full p-2 border border-gray-300 ${isLoading ? "animate-pulse bg-gray-200" : ""}`}
+                disabled={isLoading}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Role</label>
+              <Dropdown
+                value={selectedRole}
+                onChange={handleRoleChange}
+                placeholder={"Select Role"}
+                options={(availableRoles as unknown as RoleData[])?.map((role: RoleData) => role.roleName + " (" + role.scope + ")") || ["Loading..."]}
+                className="mt-1 block w-full p-2 border text-black border-gray-300"
+              />
+              <Link href="/dashboard/role" className="mt-4 text-xs text-gray-500 cursor-pointer hover:underline">
+                Want to add role?
+              </Link>
+            </div>
+            <div className="mt-6">
+              <Button className={`bg-primary text-white w-full`} onClick={handleUpdate} disabled={!isUpdated || updatingUser || isLoading}>
+                {updatingUser ? "Updating..." : "Update Profile"}
+              </Button>
+              {updateError && <p className="text-red-500 mt-2">Error updating profile: {updateError.message}</p>}
+            </div>
+            <div className="mt-6">
+              <Button className="bg-red-500 text-white w-full" onClick={handleSignOut}>
+                Sign out
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </SubDashboardLayout>
     </DashboardLayout>
   );
 };

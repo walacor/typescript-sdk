@@ -5,18 +5,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({
-  type = "button",
-  children,
-  className = "",
-  disabled,
-  ...props
-}) => {
+const Button: React.FC<ButtonProps> = ({ type = "button", children, className = "", disabled, ...props }) => {
   return (
     <button
       type={type}
       className={`px-4 py-3 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary 
-        ${disabled ? "opacity-50 cursor-not-allowed" : ""} 
+        ${disabled ? "cursor-not-allowed" : ""} 
         ${className}`}
       disabled={disabled}
       {...props}

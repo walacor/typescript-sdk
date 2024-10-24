@@ -27,15 +27,11 @@ export const useGetUser = () => {
         );
 
         if (res.data && res.data.success && Array.isArray(res.data.data)) {
-          const filteredUser = res.data.data.find(
-            (user: ProfileData) => user.userId === filter.userId
-          );
+          const filteredUser = res.data.data.find((user: ProfileData) => user.userId === filter.userId);
 
           setData(filteredUser || null);
         } else {
-          setError(
-            new Error("Unexpected response structure or no data returned")
-          );
+          setError(new Error("Unexpected response structure or no data returned"));
         }
       } catch (err) {
         setError(err as Error);

@@ -23,27 +23,15 @@ export default function BaseHeader() {
   }, []);
 
   return (
-    <header
-      className={`px-4 lg:px-6 h-14 flex items-center top-0 sticky z-[100] transition-all duration-300 ${
-        scrolled ? "bg-white/30 backdrop-blur-md shadow-lg" : "bg-transparent"
-      }`}
-    >
+    <header className={`px-4 lg:px-6 h-14 flex items-center top-0 sticky transition-all duration-300 ${scrolled ? "bg-white/30 backdrop-blur-md shadow-lg" : "bg-transparent"}`}>
       <div className="pointer-events-none flex items-center justify-center">
         <UserButton />
       </div>
       <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
-        <Link
-          href="/"
-          className="text-sm font-medium hover:underline underline-offset-4"
-          prefetch={false}
-        >
+        <Link href="/" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
           Home
         </Link>
-        <Link
-          href="/read-the-blog"
-          className="text-sm font-medium hover:underline underline-offset-4"
-          prefetch={false}
-        >
+        <Link href="/read-the-blog" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
           Read
         </Link>
         <Link

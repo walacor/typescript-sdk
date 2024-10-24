@@ -1,16 +1,20 @@
-// Hook
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
-import useAuthenticatedToken from "@/hooks/auth/useAuthenticatedToken";
-import { MainData } from "@/types/schema";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
+import { BlogData } from "@/schemas/blogSchema";
+import { useRefetch } from "@/context/RefetchContext";
 
 export const useReadSchemas = (etid: number) => {
-  const [data, setData] = useState<MainData | null>(null);
+  const [data, setData] = useState<BlogData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
+
   const token = useAuthenticatedToken();
+  const { shouldRefetch, resetRefetch } = useRefetch();
 
   const readSchemas = useCallback(async () => {
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await axios.post(
@@ -37,6 +41,18 @@ export const useReadSchemas = (etid: number) => {
       setLoading(false);
     }
   }, [token, etid]);
+
+  useEffect(() => {
+    if (token) {
+      readSchemas();
+    }
+  }, [readSchemas, token]);
+
+  useEffect(() => {
+    if (shouldRefetch) {
+      readSchemas().then(resetRefetch);
+    }
+  }, [shouldRefetch, readSchemas, resetRefetch]);
 
   return { data, error, loading, readSchemas };
 };

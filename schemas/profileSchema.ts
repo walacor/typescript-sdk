@@ -36,6 +36,11 @@ export const profileSchema: SchemaType = {
       MaxLength: 2048,
       Required: false,
     },
+    {
+      FieldName: "isConfigured",
+      DataType: "BOOLEAN",
+      Required: false,
+    },
   ],
   Indexes: [
     {
@@ -61,4 +66,5 @@ export interface ProfileData {
   lastName?: string;
   IsDeleted?: boolean;
   userRole?: string;
+  isConfigured?: boolean;
 }

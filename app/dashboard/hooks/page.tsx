@@ -2,12 +2,14 @@
 
 import React, { useState } from "react";
 import DashboardLayout from "@/layout/dashboard.layout";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faServer, faDatabase, faCode, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import SubDashboardLayout from "@/layout/subdashboard.layout";
 
 export const hooks = [
   {
     name: "useAuthenticatedToken",
-    description:
-      "Ensure the user is authenticated and provide the token for API requests.",
+    description: "Ensure the user is authenticated and provide the token for API requests.",
     code: `
       "use client";
 
@@ -36,8 +38,7 @@ export const hooks = [
   },
   {
     name: "useAuthentication",
-    description:
-      "Authenticate users by obtaining a token from the Walacor platform.",
+    description: "Authenticate users by obtaining a token from the Walacor platform.",
     code: `
       import axios from "axios";
       import { useRecoilState } from "recoil";
@@ -174,8 +175,7 @@ export const hooks = [
   },
   {
     name: "useReadOneSchema",
-    description:
-      "Fetch and read a single schema by its ID from the Walacor platform.",
+    description: "Fetch and read a single schema by its ID from the Walacor platform.",
     code: `
       import { useState, useCallback, useEffect } from "react";
       import axios from "axios";
@@ -432,61 +432,42 @@ const HooksPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto py-12">
-        <h1 className="text-4xl mb-6 text-center font-semibold">Hooks</h1>
+      <SubDashboardLayout>
+        <div className="container mx-auto py-12">
+          <h1 className="text-4xl mb-6 text-center font-semibold">Hooks</h1>
+          <p className="text-gray-600 mb-6 text-center">Explore the available hooks to interact with the Walacor platform and build complex data interactions with minimal code.</p>
 
-        {/* Tab Selector */}
-        <div className="flex justify-center mb-8">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedHook("about")}
-              className={`px-4 py-2 text-white ${
-                selectedHook === "about"
-                  ? "bg-primary"
-                  : "bg-gray-400 hover:bg-gray-500"
-              }`}
-            >
-              About Hooks
-            </button>
-            {hooks.map((hook, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedHook(hook.name)}
-                className={`px-4 py-2 text-white ${
-                  selectedHook === hook.name
-                    ? "bg-primary"
-                    : "bg-gray-400 hover:bg-gray-500"
-                }`}
-              >
-                {hook.name}
+          <div className="flex justify-center mb-8">
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => setSelectedHook("about")} className={`px-4 py-2 text-white ${selectedHook === "about" ? "bg-primary" : "bg-gray-400 hover:bg-gray-500"}`}>
+                <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                About Hooks
               </button>
-            ))}
+              {hooks.map((hook, index) => (
+                <button key={index} onClick={() => setSelectedHook(hook.name)} className={`px-4 py-2 text-white ${selectedHook === hook.name ? "bg-primary" : "bg-gray-400 hover:bg-gray-500"}`}>
+                  <FontAwesomeIcon icon={faCode} className="mr-2" />
+                  {hook.name}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Render Content Based on Selected Tab */}
-        {selectedHook === "about" ? (
-          <div className="bg-white p-6">
-            <h2 className="text-2xl mb-4">About Hooks</h2>
-            <p className="text-gray-700">
-              Hooks in Walacor allow you to interact directly with the data
-              platform without the need for traditional backend APIs. These
-              hooks handle everything from fetching and posting data to managing
-              authentication and token handling. By using hooks, you can focus
-              on your application's frontend logic while the Walacor platform
-              manages the heavy lifting on the backend.
-            </p>
-            <p className="text-gray-700 mt-4">
-              Each hook is designed to be reusable and composable, allowing you
-              to build complex data interactions with minimal code. Explore the
-              available hooks to see how they work and how you can integrate
-              them into your application.
-            </p>
-          </div>
-        ) : (
-          getHookContent(selectedHook)
-        )}
-      </div>
+          {selectedHook === "about" ? (
+            <div className="bg-white p-6">
+              <h2 className="text-2xl mb-4">About Hooks</h2>
+              <p className="text-gray-700">
+                Hooks in Walacor allow you to interact directly with the data platform without the need for traditional backend APIs. These hooks handle everything from fetching and posting data to managing authentication and token
+                handling. By using hooks, you can focus on your applications frontend logic while the Walacor platform manages the heavy lifting on the backend.
+              </p>
+              <p className="text-gray-700 mt-4">
+                Each hook is designed to be reusable and composable, allowing you to build complex data interactions with minimal code. Explore the available hooks to see how they work and how you can integrate them into your application.
+              </p>
+            </div>
+          ) : (
+            getHookContent(selectedHook)
+          )}
+        </div>
+      </SubDashboardLayout>
     </DashboardLayout>
   );
 };
