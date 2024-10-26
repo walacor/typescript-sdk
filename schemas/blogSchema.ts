@@ -99,6 +99,7 @@ export const blogSchema: SchemaType = {
 };
 
 export interface BlogData {
+  roleName: string;
   UID?: string;
   id: string;
   userId: string;

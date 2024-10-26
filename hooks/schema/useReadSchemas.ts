@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "../auth/useAuthenticatedToken";
-import { BlogData } from "@/schemas/blogSchema";
 import { useRefetch } from "@/context/RefetchContext";
+import { MainData } from "@/types/schema";
 
 export const useReadSchemas = (etid: number) => {
-  const [data, setData] = useState<BlogData[] | null>(null);
+  const [data, setData] = useState<MainData[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 

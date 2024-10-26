@@ -4,7 +4,9 @@ export default function SubDashboardLayout({ children }: { children?: React.Reac
   return (
     <>
       {children}
-      <p className="flex gap-1 w-full text-center justify-center text-xs text-gray-600">by Walacor</p>
+      <div className="flex gap-1 w-full text-center justify-center text-xs text-gray-600">
+        <p>by Walacor</p>
+      </div>
     </>
   );
 }

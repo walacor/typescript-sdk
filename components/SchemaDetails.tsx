@@ -33,7 +33,7 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
 
   const toggleFields = () => setIsFieldsOpen((prev) => !prev);
 
-  const visibleFields = isFieldsOpen ? schema.Fields : schema.Fields.slice(0, 3); // Show only the first 3 when closed
+  const visibleFields = isFieldsOpen ? schema.Fields : schema.Fields.slice(0, 3);
 
   async function handleCreateSchema(etid: number) {
     toast.loading("Creating schema...", loadingToastStyle);
@@ -53,7 +53,6 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
     <div className="bg-white p-6 mb-8 w-full shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">{name} Schema</h2>
 
-      {/* Schema Overview */}
       <div className="bg-gray-50 p-4 rounded-lg mb-6">
         <p className="text-gray-800 mb-2">
           <strong>Table Name:</strong> {schema.TableName}
@@ -84,7 +83,6 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
         </p>
       </div>
 
-      {/* Fields Section with Dropdown and Fading Effect */}
       <div className="bg-gray-50 p-4 rounded-lg mb-6 relative cursor-pointer hover:bg-gray-100 transition-all" onClick={toggleFields}>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">Fields</h3>
@@ -105,11 +103,9 @@ const SchemaDetails: React.FC<SchemaDetailsProps> = ({ schema, name }) => {
           ))}
         </ul>
         {!isFieldsOpen && schema.Fields.length > 3 && <p className="text-gray-500">+ {schema.Fields.length - 3} more fields</p>}
-        {/* Fading effect div at the bottom when there are more fields */}
         {schema.Fields.length > 3 && <div className={`absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent ${isFieldsOpen ? "opacity-100" : "opacity-0"}`} />}
       </div>
 
-      {/* Create Schema Button */}
       <Button onClick={() => handleCreateSchema(schema.ETId)} className="w-full bg-primary text-primary-foreground">
         Create Schema
       </Button>

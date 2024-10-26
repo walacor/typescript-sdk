@@ -1,50 +1,111 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useWalacorUser } from "@/hooks/user/useWalacorUser";
 import usePostSchema from "../schema/usePostSchema";
-import { useGetUser } from "@/hooks/user/useGetUser";
-import { ProfileData } from "@/schemas/profileSchema";
+import { useCreateSchema } from "@/hooks/schema/useCreateSchema";
+import axios from "axios";
+import { profileSchema, ProfileData } from "@/schemas/profileSchema";
+import { blogSchema } from "@/schemas/blogSchema";
+import { roleSchema } from "@/schemas/roleSchema";
 
 export const useAddUser = () => {
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useUser();
-  const { data: existingUser, getUser } = useGetUser();
-
+  const isAdding = useRef(false);
+  const { user: clerkUser } = useUser();
+  const { data: userData, isFetched } = useWalacorUser();
   const { postSchema, response: postResponse, error: postError } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
+  const { createSchema } = useCreateSchema();
+
+  const cooldownPeriod = 5000;
+  const maxRetries = 3;
+
+  const confirmUserInDB = async (userId: string): Promise<boolean> => {
+    try {
+      const res = await axios.post(
+        `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/query/get`,
+        {},
+        {
+          headers: {
+            ETId: Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID),
+            Authorization: `Bearer ${userId}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return res.data?.data.some((user: ProfileData) => user.userId === userId) || false;
+    } catch {
+      return false;
+    }
+  };
+
+  const createAllSchemas = async () => {
+    try {
+      await createSchema(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID), blogSchema);
+      await createSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID), profileSchema);
+      await createSchema(Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID), roleSchema);
+    } catch (err) {
+      setError(new Error("Failed to create required schemas"));
+      throw err;
+    }
+  };
 
   const addUser = useCallback(async () => {
-    if (!user) {
-      setError(new Error("User not authenticated"));
-      return;
-    }
+    if (!clerkUser || isAdding.current) return;
 
+    isAdding.current = true;
     setLoading(true);
 
     try {
-      await getUser({ userId: user.id });
-
-      if (existingUser) {
-        throw new Error("User with the same userId already exists.");
+      const userExistsInDB = await confirmUserInDB(clerkUser.id);
+      if (userExistsInDB) {
+        setLoading(false);
+        return;
       }
 
+      await createAllSchemas();
+
       const payload: Partial<ProfileData> = {
-        userId: user.id,
-        firstName: user.firstName || "First",
-        lastName: user.lastName || "Last",
-        userRole: "Viewe1123r",
+        userId: clerkUser.id,
+        firstName: clerkUser.firstName || "First",
+        lastName: clerkUser.lastName || "Last",
+        userRole: "Viewer",
       };
 
-      await postSchema(payload);
+      let attempt = 0;
+      let userAdded = false;
 
-      if (postError) {
-        setError(postError);
+      while (attempt < maxRetries && !userAdded) {
+        if (attempt > 0) {
+          await new Promise((resolve) => setTimeout(resolve, cooldownPeriod));
+        }
+        await postSchema(payload);
+
+        if (postError) {
+          setError(postError);
+          break;
+        }
+
+        userAdded = await confirmUserInDB(clerkUser.id);
+
+        if (!userAdded) attempt++;
+      }
+
+      if (!userAdded) {
+        setError(new Error("Failed to add user after maximum retries"));
       }
     } catch (err) {
       setError(err as Error);
     } finally {
       setLoading(false);
+      isAdding.current = false;
+
+      if (!userData) {
+        window.location.reload();
+      }
     }
-  }, [user, postSchema, postError, getUser, existingUser]);
+  }, [clerkUser, postSchema, postError, createSchema]);
 
   return { response: postResponse, error, loading, addUser };
 };

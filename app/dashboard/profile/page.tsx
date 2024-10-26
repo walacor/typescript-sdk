@@ -5,8 +5,7 @@ import DashboardLayout from "@/layout/dashboard.layout";
 import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
 import Dropdown from "@/components/single/Dropdown";
-import { useGetUser } from "@/hooks/user/useGetUser";
-import { useClerk, useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle, loadingToastStyle } from "@/styles/toastStyles";
@@ -15,40 +14,30 @@ import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
 import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
 import { RoleData } from "@/schemas/roleSchema";
 import SubDashboardLayout from "@/layout/subdashboard.layout";
+import { useWalacorUser } from "@/hooks/user/useWalacorUser";
 
 const Profile = () => {
-  const { data: userData, getUser } = useGetUser();
-  const { user: clerkUser } = useUser();
+  const { data: userData, error, loading: userLoading, isFetched, refetch } = useWalacorUser();
   const { signOut } = useClerk();
-
   const { updateRecord, loading: updatingUser, error: updateError } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
-
   const { data: availableRoles, readSchemas } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID));
 
   const [firstName, setFirstName] = useState("Fetching...");
   const [lastName, setLastName] = useState("Fetching...");
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [isUpdated, setIsUpdated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (clerkUser) {
-      getUser({ userId: clerkUser.id }).finally(() => {
-        toast.dismiss();
-        setIsLoading(false);
-      });
-
-      readSchemas();
-    }
-  }, [clerkUser, getUser, readSchemas]);
-
-  useEffect(() => {
-    if (userData) {
+    if (isFetched && userData) {
       setFirstName(userData.firstName || "");
       setLastName(userData.lastName || "");
-      setSelectedRole(userData?.userRole || "");
+      setSelectedRole(userData.userRole || "");
     }
-  }, [userData]);
+    if (error) {
+      toast.error("Failed to load profile data", errorToastStyle);
+    }
+    readSchemas();
+  }, [isFetched, userData, error, readSchemas]);
 
   const handleRoleChange = (selectedRole: string) => {
     setSelectedRole(selectedRole);
@@ -56,7 +45,7 @@ const Profile = () => {
   };
 
   const handleUpdate = async () => {
-    if (!clerkUser || !userData) return;
+    if (!userData) return;
     toast.loading("Updating profile...", loadingToastStyle);
     try {
       const updatedUserData: Partial<ProfileData> = {
@@ -71,6 +60,9 @@ const Profile = () => {
       toast.dismiss();
       toast.success("Profile updated successfully!", successToastStyle);
       setIsUpdated(false);
+
+      // Refetch the latest user data after update
+      await refetch();
     } catch (error) {
       toast.dismiss();
       toast.error("Failed to update profile", errorToastStyle);
@@ -79,6 +71,7 @@ const Profile = () => {
   };
 
   const handleSignOut = async () => {
+    sessionStorage.clear();
     await signOut();
     window.location.href = "/";
   };
@@ -88,7 +81,7 @@ const Profile = () => {
       <SubDashboardLayout>
         <div className="w-full mx-auto p-8">
           <h1 className="text-3xl font-semibold mb-6 text-center">Profile</h1>
-          <p className="text-gray-600 mb-6 text-center">Walacor allows for us to create profile data structures for our users. This is a simple example of how you can edit and update your profile data.</p>
+          <p className="text-gray-600 mb-6 text-center">Walacor allows us to create profile data structures for our users. This is a simple example of how you can edit and update your profile data.</p>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">First Name</label>
@@ -99,8 +92,8 @@ const Profile = () => {
                   setFirstName(e.target.value);
                   setIsUpdated(true);
                 }}
-                className={`mt-1 block w-full p-2 border border-gray-300 ${isLoading ? "animate-pulse bg-gray-200" : ""}`}
-                disabled={isLoading}
+                className={`mt-1 block w-full p-2 border border-gray-300 ${userLoading ? "animate-pulse bg-gray-200" : ""}`}
+                disabled={userLoading}
               />
             </div>
             <div>
@@ -112,8 +105,8 @@ const Profile = () => {
                   setLastName(e.target.value);
                   setIsUpdated(true);
                 }}
-                className={`mt-1 block w-full p-2 border border-gray-300 ${isLoading ? "animate-pulse bg-gray-200" : ""}`}
-                disabled={isLoading}
+                className={`mt-1 block w-full p-2 border border-gray-300 ${userLoading ? "animate-pulse bg-gray-200" : ""}`}
+                disabled={userLoading}
               />
             </div>
             <div>
@@ -130,7 +123,7 @@ const Profile = () => {
               </Link>
             </div>
             <div className="mt-6">
-              <Button className={`bg-primary text-white w-full`} onClick={handleUpdate} disabled={!isUpdated || updatingUser || isLoading}>
+              <Button className={`bg-primary text-white w-full`} onClick={handleUpdate} disabled={!isUpdated || updatingUser || userLoading}>
                 {updatingUser ? "Updating..." : "Update Profile"}
               </Button>
               {updateError && <p className="text-red-500 mt-2">Error updating profile: {updateError.message}</p>}

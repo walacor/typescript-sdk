@@ -9,8 +9,6 @@ const useAuthenticatedToken = () => {
   const { login } = useAuthentication();
   const token = useRecoilValue(tokenState);
 
-  console.log(token);
-
   useEffect(() => {
     if (!token) {
       login();

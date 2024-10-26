@@ -7,28 +7,26 @@ import Button from "@/components/single/Button";
 import Input from "@/components/single/Input";
 import Dropdown from "@/components/single/Dropdown";
 import DashboardLayout from "@/layout/dashboard.layout";
-import { useUser } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle, loadingToastStyle } from "@/styles/toastStyles";
 import { RoleData } from "@/schemas/roleSchema";
 import BaseLoader from "@/components/BaseLoader";
 import SubDashboardLayout from "@/layout/subdashboard.layout";
+import { useWalacorUser } from "@/hooks/user/useWalacorUser";
 
 const RoleList = () => {
-  const { user: clerkUser } = useUser();
-
+  const { data: userData } = useWalacorUser();
   const { data, error, loading, readSchemas } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID));
-
   const { postSchema: addRole, loading: loadingAddRole, error: errorAddRole } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_ROLE_ETID));
 
   const [roleName, setRoleName] = useState("");
   const [scope, setScope] = useState("AdminAccess");
 
   useEffect(() => {
-    if (clerkUser) {
+    if (userData) {
       readSchemas();
     }
-  }, [clerkUser, readSchemas]);
+  }, [userData, readSchemas]);
 
   const handleAddRole = async () => {
     toast.loading("Adding role...", loadingToastStyle);

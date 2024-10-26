@@ -35,11 +35,11 @@ const MyBlogs: React.FC = () => {
   const [showMoreTitle, setShowMoreTitle] = useState<{ [key: string]: boolean }>({});
   const [isTimeoutActive, setIsTimeoutActive] = useState<boolean>(false);
 
-  const { user: clerkUser } = useUser();
-  const { getUser } = useGetUser();
-
   const { data: mainData, loading, readSchemas } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
   const { updateRecord } = useUpdateSchema(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+
+  const { user: clerkUser } = useUser();
+  const { getUser } = useGetUser();
 
   useEffect(() => {
     if (clerkUser) {

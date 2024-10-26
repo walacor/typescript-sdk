@@ -1,8 +1,10 @@
+import { useState } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 
 export function useCreateSchema() {
   const token = useAuthenticatedToken();
+  const [loading, setLoading] = useState(false);
 
   const createSchema = async (etid: number, schemaData: any) => {
     const schema = {
@@ -11,6 +13,7 @@ export function useCreateSchema() {
       Schema: schemaData,
     };
 
+    setLoading(true);
     try {
       const response = await axios.post(`${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/schemas/`, schema, {
         headers: {
@@ -24,8 +27,10 @@ export function useCreateSchema() {
     } catch (error) {
       console.error("Error creating schema:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { createSchema };
+  return { createSchema, loading };
 }
