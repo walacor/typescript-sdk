@@ -57,7 +57,7 @@ const MyBlogs: React.FC = () => {
         setIsTimeoutActive(true);
       }, 5000);
 
-      return () => clearTimeout(timeout); //
+      return () => clearTimeout(timeout);
     }
   }, [blogs, loading]);
 
@@ -293,6 +293,8 @@ const MyBlogs: React.FC = () => {
       toast.error("Failed to select revision as live version.", errorToastStyle);
     }
   };
+
+  console.log(mainData, "BLOGS");
 
   return (
     <DashboardLayout>

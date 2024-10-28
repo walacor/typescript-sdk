@@ -99,7 +99,6 @@ export const blogSchema: SchemaType = {
 };
 
 export interface BlogData {
-  roleName: string;
   UID?: string;
   id: string;
   userId: string;
@@ -117,5 +116,5 @@ export interface BlogData {
   publishedDate: string | null;
   CreatedAt: number;
   UpdatedAt: number;
-  liveVersion: boolean;
+  liveVersion?: boolean;
 }

@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 import Input from "@/components/single/Input";
 import ReactQuill from "react-quill";
@@ -80,7 +78,8 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
     e.preventDefault();
 
     try {
-      const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem: BlogData) => blogItem.liveVersion) : null;
+      const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem) => blogItem.liveVersion) : null;
+
       if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
         await updateRecord({ ...currentLiveVersion, liveVersion: false });
       }
@@ -106,8 +105,10 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
       publishedDate: new Date().toISOString(),
       liveVersion: true,
     };
+
     try {
       const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem) => blogItem.liveVersion) : null;
+
       if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
         await updateRecord({ ...currentLiveVersion, liveVersion: false });
       }
@@ -178,4 +179,3 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
 };
 
 export default ContentManagement;
-``;

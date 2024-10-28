@@ -11,7 +11,12 @@ import SubDashboardLayout from "@/layout/subdashboard.layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCode, faDatabase, faUser } from "@fortawesome/free-solid-svg-icons";
 
-export const schemas = [
+type SchemaObject = {
+  schema: typeof blogSchema | typeof profileSchema | typeof roleSchema;
+  name: string;
+};
+
+export const schemas: SchemaObject[] = [
   { schema: blogSchema, name: "Blog" },
   { schema: profileSchema, name: "Profile" },
   { schema: roleSchema, name: "Role" },

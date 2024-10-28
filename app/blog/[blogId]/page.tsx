@@ -19,10 +19,7 @@ const BlogPost = () => {
     return defaultBlog || null;
   });
 
-  const { response, error, loading, readOneSchema } = useReadOneSchema(
-    blogId,
-    Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID)
-  );
+  const { response, error, loading, readOneSchema } = useReadOneSchema(blogId, Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     if (!response && !loading && !error) {
@@ -41,10 +38,7 @@ const BlogPost = () => {
       <BlogLayout>
         <div className="w-full text-center flex flex-col justify-center items-center">
           <h1 className="text-2xl font-semibold mb-4">Blog Not Found</h1>
-          <p className="text-gray-600 mb-6">
-            Sorry, the blog post you are looking for does not exist or has been
-            removed.
-          </p>
+          <p className="text-gray-600 mb-6">Sorry, the blog post you are looking for does not exist or has been removed.</p>
           <Link
             href="/"
             className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
@@ -83,6 +77,7 @@ const BlogPost = () => {
         UpdatedAt={0}
         isPublished={false}
         publishedDate={null}
+        liveVersion={false}
       />
       <BaseMoreStories currentBlogId={blogId} />
     </BlogLayout>
