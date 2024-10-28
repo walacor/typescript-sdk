@@ -78,7 +78,8 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
     e.preventDefault();
 
     try {
-      const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem) => blogItem.liveVersion) : null;
+      // Cast blogs as BlogData[] to access `liveVersion`
+      const currentLiveVersion = Array.isArray(blogs) ? (blogs as BlogData[]).find((blogItem) => blogItem.liveVersion) : null;
 
       if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
         await updateRecord({ ...currentLiveVersion, liveVersion: false });
@@ -107,7 +108,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
     };
 
     try {
-      const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem) => blogItem.liveVersion) : null;
+      const currentLiveVersion = Array.isArray(blogs) ? (blogs as BlogData[]).find((blogItem) => blogItem.liveVersion) : null;
 
       if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
         await updateRecord({ ...currentLiveVersion, liveVersion: false });
