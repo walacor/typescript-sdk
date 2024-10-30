@@ -4,13 +4,18 @@ import React from "react";
 import { useWalacorUser } from "@/hooks/user/useWalacorUser";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import BaseLoader from "@/components/BaseLoader";
 
 export default function SubDashboardLayout({ children }: { children?: React.ReactNode }) {
   const { data: userData, loading } = useWalacorUser();
   const pathname = usePathname();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="p-8">
+        <BaseLoader />
+      </div>
+    );
   }
 
   const hasAccess = (() => {
