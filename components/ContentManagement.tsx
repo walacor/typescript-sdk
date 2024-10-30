@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Input from "@/components/single/Input";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -22,11 +23,13 @@ interface ContentManagementProps {
 }
 
 const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = null, setEditBlog }) => {
+  const router = useRouter();
   const today = new Date().toISOString().split("T")[0];
   const { userId } = useAuth();
   const { user: clerkUser } = useUser();
   const { getUser } = useGetUser();
   const { triggerRefetch } = useRefetch();
+  const pathname = usePathname();
 
   const { data: blogs } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
@@ -53,7 +56,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
     UpdatedAt: initialBlog?.UpdatedAt || Date.now(),
     isPublished: initialBlog?.isPublished || false,
     publishedDate: initialBlog?.publishedDate || null,
-    liveVersion: initialBlog?.liveVersion ?? true,
+    selectedVersion: initialBlog?.selectedVersion ?? true,
   };
 
   const [blog, setBlog] = useState<BlogData>(initialBlogState);
@@ -74,28 +77,44 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
     setBlog((prevBlog) => ({ ...prevBlog, imageSrc: String(url) }));
   };
 
+  const handleNavigation = () => {
+    if (pathname === "/dashboard/create") {
+      router.push("/dashboard/my-blogs");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      // Cast blogs as BlogData[] to access `liveVersion`
-      const currentLiveVersion = Array.isArray(blogs) ? (blogs as BlogData[]).find((blogItem) => blogItem.liveVersion) : null;
+      const isFirstBlog = Array.isArray(blogs) && blogs.length === 0;
 
-      if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
-        await updateRecord({ ...currentLiveVersion, liveVersion: false });
+      const payload = {
+        ...blog,
+        selectedVersion: blog.UID ? false : isFirstBlog,
+      };
+
+      if (blog.UID) {
+        const currentSelectedVersion = blogs ? blogs.find((blogItem) => blogItem.selectedVersion) : null;
+        if (currentSelectedVersion && initialBlog?.id !== currentSelectedVersion.id) {
+          await updateRecord({
+            ...currentSelectedVersion,
+            UID: currentSelectedVersion.UID,
+            selectedVersion: false,
+          });
+        }
+        await updateRecord(payload);
+      } else {
+        await postSchema(payload);
       }
 
-      await updateRecord({ ...blog, liveVersion: true });
-
       if (setEditBlog) setEditBlog(null);
-      toast.success("Blog updated successfully!", successToastStyle);
-
+      toast.success("Blog saved successfully!", successToastStyle);
       triggerRefetch();
+      handleNavigation();
     } catch (error) {
       toast.error("Error saving blog", errorToastStyle);
       console.error("Error saving blog:", error);
-    } finally {
-      window.location.href = "/dashboard/my-blogs";
     }
   };
 
@@ -104,27 +123,31 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
       ...blog,
       isPublished: true,
       publishedDate: new Date().toISOString(),
-      liveVersion: true,
+      selectedVersion: true,
+      ...(blog.UID ? { UID: blog.UID } : {}),
     };
 
     try {
-      const currentLiveVersion = Array.isArray(blogs) ? (blogs as BlogData[]).find((blogItem) => blogItem.liveVersion) : null;
-
+      // Find any current live version and unselect it
+      const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem) => blogItem.selectedVersion) : null;
       if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
-        await updateRecord({ ...currentLiveVersion, liveVersion: false });
+        await updateRecord({
+          UID: currentLiveVersion.UID,
+          selectedVersion: false,
+        });
       }
 
-      await updateRecord(updatedBlog);
+      // Publish the selected revision
+      await (blog.UID ? updateRecord(updatedBlog) : postSchema(updatedBlog));
 
+      // Trigger refresh and navigate to ensure state consistency
       if (setEditBlog) setEditBlog(null);
       toast.success("Blog published successfully!", successToastStyle);
-
       triggerRefetch();
+      handleNavigation();
     } catch (error) {
       toast.error("Error publishing blog", errorToastStyle);
       console.error("Error publishing blog:", error);
-    } finally {
-      window.location.href = "/dashboard/my-blogs";
     }
   };
 

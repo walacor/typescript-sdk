@@ -248,11 +248,11 @@ const MyBlogs: React.FC = () => {
 
   const promoteToLive = async (blogId: string, revision: BlogData) => {
     try {
-      const currentLiveVersion = blogs.find((blog) => blog.liveVersion);
+      const currentLiveVersion = blogs.find((blog) => blog.selectedVersion);
       if (currentLiveVersion) {
         await updateRecord({
           UID: currentLiveVersion.UID,
-          liveVersion: false,
+          selectedVersion: false,
           isPublished: false,
         });
       }
@@ -260,7 +260,7 @@ const MyBlogs: React.FC = () => {
       await updateRecord({
         UID: revision.UID,
         id: blogId,
-        liveVersion: true,
+        selectedVersion: true,
         isPublished: true,
       });
 
@@ -272,11 +272,11 @@ const MyBlogs: React.FC = () => {
 
   const promoteWithoutPublishing = async (blogId: string, revision: BlogData) => {
     try {
-      const currentLiveVersion = blogs.find((blog) => blog.liveVersion);
+      const currentLiveVersion = blogs.find((blog) => blog.selectedVersion && blog.id !== revision.id);
       if (currentLiveVersion) {
         await updateRecord({
           UID: currentLiveVersion.UID,
-          liveVersion: false,
+          selectedVersion: false,
           isPublished: false,
         });
       }
@@ -284,10 +284,11 @@ const MyBlogs: React.FC = () => {
       await updateRecord({
         UID: revision.UID,
         id: blogId,
-        liveVersion: true,
+        selectedVersion: true,
         isPublished: false,
       });
 
+      readSchemas();
       toast.success("Revision selected as live version (not published)!", successToastStyle);
     } catch (error) {
       toast.error("Failed to select revision as live version.", errorToastStyle);
@@ -401,7 +402,7 @@ const MyBlogs: React.FC = () => {
                             .filter((revision: BlogData) => showDeletedRevisions || !revision.IsDeleted)
                             .map((revision: BlogData, index: number) => {
                               const previousRevision = groupedRevisions[blog.id][index + 1];
-                              const isLive = revision.liveVersion;
+                              const isLive = revision.selectedVersion;
 
                               return (
                                 <div key={index} className={`border p-4 rounded shadow-sm ${isLive ? "border-green-500 bg-green-50" : "border-gray-300"} ${revision.IsDeleted ? "bg-gray-100" : ""}`}>
@@ -477,10 +478,30 @@ const MyBlogs: React.FC = () => {
                                   )}
                                   <div className="mt-4 flex items-center space-x-2">
                                     {isLive ? (
-                                      <Button className="bg-green-500 text-white cursor-not-allowed">
-                                        Current Version
-                                        <FontAwesomeIcon className="ml-2" icon={faCheckCircle} />
-                                      </Button>
+                                      <>
+                                        <Button className="bg-green-500 text-white cursor-not-allowed" onClick={() => toast.success("This is the current version.", successToastStyle)}>
+                                          Current Version
+                                          <FontAwesomeIcon className="ml-2" icon={faCheckCircle} />
+                                        </Button>
+                                        <Button
+                                          className="bg-red-500 text-white"
+                                          onClick={async () => {
+                                            try {
+                                              await updateRecord({
+                                                UID: revision.UID,
+                                                selectedVersion: false,
+                                                isPublished: false,
+                                              });
+                                              toast.success("Version unselected successfully!", successToastStyle);
+                                              readSchemas();
+                                            } catch (error) {
+                                              toast.error("Failed to unselect version.", errorToastStyle);
+                                            }
+                                          }}
+                                        >
+                                          Unselect Version
+                                        </Button>
+                                      </>
                                     ) : (
                                       !revision.IsDeleted && (
                                         <Button className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover" onClick={() => setShowPublishModal(revision)}>

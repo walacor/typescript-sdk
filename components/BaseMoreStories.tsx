@@ -37,6 +37,7 @@ const BaseMoreStories: React.FC<BaseMoreStoriesProps> = ({ currentBlogId }) => {
             UpdatedAt={0}
             isPublished={false}
             publishedDate={null}
+            selectedVersion={false}
           />
         ))}
       </div>

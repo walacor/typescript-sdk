@@ -18,7 +18,7 @@ export const getLatestBlogs = (filteredBlogs: BlogData[]) => {
 };
 
 export const getLiveBlogs = (filteredBlogs: BlogData[]) => {
-  return filteredBlogs.filter((blog: BlogData) => blog.liveVersion);
+  return filteredBlogs.filter((blog: BlogData) => blog.selectedVersion);
 };
 
 export const mergeLiveAndLatestBlogs = (latestBlogs: BlogData[], liveBlogs: BlogData[]) => {

@@ -68,4 +68,5 @@ export interface ProfileData {
   userRole?: string;
   isConfigured?: boolean;
   CreatedAt?: number;
+  selectedVersion?: boolean;
 }

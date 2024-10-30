@@ -46,4 +46,5 @@ export interface RoleData {
   id: string;
   roleName: string;
   scope: string;
+  selectedVersion?: boolean;
 }

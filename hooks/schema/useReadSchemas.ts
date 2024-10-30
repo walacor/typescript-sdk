@@ -2,10 +2,10 @@ import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 import { useRefetch } from "@/context/RefetchContext";
-import { MainData } from "@/types/schema";
+import { SchemaData } from "@/types/schema";
 
-export const useReadSchemas = (etid: number) => {
-  const [data, setData] = useState<MainData[] | null>(null);
+export function useReadSchemas<T extends SchemaData>(etid: number) {
+  const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,7 @@ export const useReadSchemas = (etid: number) => {
       );
 
       if (res.data && res.data.success && Array.isArray(res.data.data)) {
-        setData(res.data.data);
+        setData(res.data.data as T);
         setError(null);
       } else {
         setError(new Error("Unexpected response structure"));
@@ -55,4 +55,4 @@ export const useReadSchemas = (etid: number) => {
   }, [shouldRefetch, readSchemas, resetRefetch]);
 
   return { data, error, loading, readSchemas };
-};
+}

@@ -1,3 +1,35 @@
+export interface FileData {
+  fileInfo: {
+    file: {
+      UID: string | null;
+      size: number;
+      Status: string;
+      FH: string;
+    };
+    fileSignature: string;
+    fileHash: string;
+    totalEncryptedChunkFile: number;
+  };
+}
+
+export interface FileVerificationResponse {
+  success: boolean;
+  message: string;
+  data: {
+    fileInfo: {
+      file: {
+        UID: string | null;
+        size: number;
+        Status: string;
+        FH: string;
+      };
+      fileSignature: string;
+      fileHash: string;
+      totalEncryptedChunkFile: number;
+    };
+  };
+}
+
 type FieldType = {
   FieldName: string;
   DataType: string;
@@ -26,4 +58,5 @@ import { RoleData } from "@/schemas/roleSchema";
 import { ProfileData } from "@/schemas/profileSchema";
 import { BlogData } from "@/schemas/blogSchema";
 
-export type MainData = RoleData | ProfileData | BlogData | RoleData[] | ProfileData[] | BlogData[];
+export type MainData = BlogData | ProfileData | RoleData;
+export type SchemaData = BlogData[] | ProfileData[] | RoleData[];

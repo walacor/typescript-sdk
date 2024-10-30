@@ -80,7 +80,7 @@ export const blogSchema: SchemaType = {
       MaxLength: 2048,
       Required: false,
     },
-    { FieldName: "liveVersion", DataType: "BOOLEAN", Default: false },
+    { FieldName: "selectedVersion", DataType: "BOOLEAN", Default: false },
   ],
   Indexes: [
     {
@@ -90,8 +90,8 @@ export const blogSchema: SchemaType = {
       Delete: false,
     },
     {
-      Fields: ["liveVersion"],
-      IndexValue: "liveVersion",
+      Fields: ["selectedVersion"],
+      IndexValue: "selectedVersion",
       ForceUpdate: true,
       Delete: false,
     },
@@ -116,5 +116,5 @@ export interface BlogData {
   publishedDate: string | null;
   CreatedAt: number;
   UpdatedAt: number;
-  liveVersion?: boolean;
+  selectedVersion: boolean;
 }

@@ -77,7 +77,7 @@ const BlogPost = () => {
         UpdatedAt={0}
         isPublished={false}
         publishedDate={null}
-        liveVersion={false}
+        selectedVersion={false}
       />
       <BaseMoreStories currentBlogId={blogId} />
     </BlogLayout>

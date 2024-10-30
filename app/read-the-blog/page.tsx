@@ -7,12 +7,10 @@ import { BlogData } from "@/schemas/blogSchema";
 import { useEffect, useState } from "react";
 import { useReadSchemas } from "@/hooks/schema/useReadSchemas";
 import { toast } from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function ReadTheBlog() {
   const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const { data, error, loading, readSchemas } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
+  const { data, error, readSchemas } = useReadSchemas(Number(process.env.NEXT_PUBLIC_WALACOR_BLOG_ETID));
 
   useEffect(() => {
     readSchemas();
@@ -75,7 +73,7 @@ export default function ReadTheBlog() {
                   UpdatedAt={blog.UpdatedAt}
                   isPublished={blog.isPublished}
                   publishedDate={blog.publishedDate}
-                  liveVersion={false}
+                  selectedVersion={false}
                 />
               ))}
             </div>
