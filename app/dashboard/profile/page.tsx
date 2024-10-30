@@ -61,7 +61,6 @@ const Profile = () => {
       toast.success("Profile updated successfully!", successToastStyle);
       setIsUpdated(false);
 
-      // Refetch the latest user data after update
       await refetch();
     } catch (error) {
       toast.dismiss();

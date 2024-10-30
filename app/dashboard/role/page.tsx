@@ -29,6 +29,11 @@ const RoleList = () => {
   }, [userData, readSchemas]);
 
   const handleAddRole = async () => {
+    if (roleName === "Viewer" && scope !== "None") {
+      toast.error("Viewer role must have 'None' scope.", errorToastStyle);
+      return;
+    }
+
     toast.loading("Adding role...", loadingToastStyle);
 
     try {
@@ -62,7 +67,7 @@ const RoleList = () => {
       <SubDashboardLayout>
         <div className="w-full mx-auto p-8">
           <h1 className="text-3xl font-semibold mb-6 text-center">Roles</h1>
-          <p className="text-gray-600 mb-6 text-center">You can create auxiliary data structures such as roles to manage who&apos;s access to your application&apos;s functionality.</p>
+          <p className="text-gray-600 mb-6 text-center">Create roles with specific scopes to manage access within your application.</p>
 
           <div className="space-y-4">
             <div className="mt-6">
@@ -74,7 +79,7 @@ const RoleList = () => {
 
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700">Select Scope</label>
-                <Dropdown value={scope} onChange={handleScopeChange} options={["AdminAccess", "ReadWrite", "ReadOnly"]} className="mt-1 block w-full p-2 border border-gray-300" />
+                <Dropdown value={scope} onChange={handleScopeChange} options={["AdminAccess", "ReadWrite", "ReadOnly", "None"]} className="mt-1 block w-full p-2 border border-gray-300" />
               </div>
 
               <Button onClick={handleAddRole} disabled={loadingAddRole} className={`bg-primary text-white w-full mt-4 ${loadingAddRole ? "opacity-75 cursor-not-allowed" : ""}`}>
@@ -87,17 +92,17 @@ const RoleList = () => {
 
           <div className="mt-8">
             <h2 className="text-xl font-semibold">Current Roles</h2>
-            {Array.isArray(data) && data.length == 0 ? (
+            {loading ? (
               <div className="space-y-6 flex gap-2 items-center animate-pulse text-center w-full justify-center">
                 <span className="text-sm text-gray-600 flex items-center gap-2">
                   Fetching... <BaseLoader />
                 </span>
               </div>
-            ) : data && Array.isArray(data) && data.length > 0 ? (
-              (data as unknown as RoleData[]).map((role: RoleData) => (
+            ) : Array.isArray(data) && data.length > 0 ? (
+              (data as RoleData[]).map((role) => (
                 <div key={role.id} className="p-4 border-b">
                   <h3 className="font-medium">{role.roleName}</h3>
-                  <p className="text-xs opacity-50">{role.scope}</p>
+                  <p className="text-xs opacity-50">{role.scope === "None" ? "Viewer" : role.scope}</p>
                 </div>
               ))
             ) : (

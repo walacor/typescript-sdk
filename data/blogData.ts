@@ -5,8 +5,7 @@ export const blogData = [
     imageSrc: "/assets/blog-post-1.jpg",
     imageAlt: "Post 1",
     title: "Introducing the Ultimate Blog Starter Kit",
-    description:
-      "Discover the powerful features and customizable components that will take your blog to the next level.",
+    description: "Discover the powerful features and customizable components that will take your blog to the next level.",
     authorName: "Michael Johnson",
     authorImage: "/placeholder-user.jpg",
     authorFallback: "MJ",
@@ -20,8 +19,7 @@ export const blogData = [
     imageSrc: "/assets/blog-post-2.jpg",
     imageAlt: "Post 2",
     title: "The Art of Crafting Compelling Blog Titles",
-    description:
-      "Learn the secrets to writing irresistible blog titles that grab your readers' attention.",
+    description: "Learn the secrets to writing irresistible blog titles that grab your readers' attention.",
     authorName: "John Doe",
     authorImage: "/placeholder-user.jpg",
     authorFallback: "JD",
@@ -35,8 +33,7 @@ export const blogData = [
     imageSrc: "/assets/blog-post-3.jpg",
     imageAlt: "Post 3",
     title: "Unlocking the Power of SEO for Bloggers",
-    description:
-      "Discover proven strategies to optimize your blog content and drive more traffic.",
+    description: "Discover proven strategies to optimize your blog content and drive more traffic.",
     authorName: "Jane Smith",
     authorImage: "/placeholder-user.jpg",
     authorFallback: "JS",
@@ -50,8 +47,7 @@ export const blogData = [
     imageSrc: "/assets/blog-post-4.jpg",
     imageAlt: "Post 4",
     title: "Mastering the Art of Guest Blogging",
-    description:
-      "Learn how to leverage guest posting to expand your audience and build your authority.",
+    description: "Learn how to leverage guest posting to expand your audience and build your authority.",
     authorName: "Michael Johnson",
     authorImage: "/placeholder-user.jpg",
     authorFallback: "MJ",
@@ -79,8 +75,7 @@ export const blogData = [
     imageSrc: "/assets/blog-post-6.jpg",
     imageAlt: "Post 6",
     title: "A Guide to Modern CSS Layouts",
-    description:
-      "Explore the latest CSS techniques for creating modern layouts.",
+    description: "Explore the latest CSS techniques for creating modern layouts.",
     authorName: "Bob White",
     authorImage: "/placeholder-user.jpg",
     authorFallback: "BW",
