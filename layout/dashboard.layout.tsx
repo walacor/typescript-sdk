@@ -21,7 +21,6 @@ export default function DashboardLayout({ children }: { children?: ReactNode }) 
 
   return (
     <DefaultLayout>
-      <FileVerificationComponent />
       <LoadingOverlay isVisible={addUserLoading} />
       <div className="flex flex-col sm:flex-row">
         <Sidebar />

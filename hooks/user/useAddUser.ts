@@ -7,6 +7,7 @@ import axios from "axios";
 import { profileSchema, ProfileData } from "@/schemas/profileSchema";
 import { blogSchema } from "@/schemas/blogSchema";
 import { roleSchema } from "@/schemas/roleSchema";
+import useAuthenticatedToken from "../auth/useAuthenticatedToken";
 
 export const useAddUser = () => {
   const [error, setError] = useState<Error | null>(null);
@@ -16,6 +17,7 @@ export const useAddUser = () => {
   const { data: userData, isFetched } = useWalacorUser();
   const { postSchema, response: postResponse, error: postError } = usePostSchema(Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID));
   const { createSchema } = useCreateSchema();
+  const token = useAuthenticatedToken();
 
   const cooldownPeriod = 5000;
   const maxRetries = 3;
@@ -28,7 +30,7 @@ export const useAddUser = () => {
         {
           headers: {
             ETId: Number(process.env.NEXT_PUBLIC_WALACOR_PROFILE_ETID),
-            Authorization: `Bearer ${userId}`,
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -66,11 +68,12 @@ export const useAddUser = () => {
 
       await createAllSchemas();
 
-      const payload: Partial<ProfileData> = {
+      const payload: ProfileData = {
         userId: clerkUser.id,
         firstName: clerkUser.firstName || "First",
         lastName: clerkUser.lastName || "Last",
         userRole: "Viewer",
+        scope: "",
       };
 
       let attempt = 0;

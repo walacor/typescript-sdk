@@ -26,7 +26,7 @@ const LoadingOverlay: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
         <div className="flex items-center justify-center mb-4">
           <FontAwesomeIcon icon={faDatabase} className="w-8 h-8 text-primary mr-3" />
           <h4 className="text-2xl text-gray-800 animate-pulse">{titles[titleIndex]}</h4>
-          <svg className="animate-spin w-8 h-8 text-primary mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="animate-spin w-7 h-7 ml-1 text-primary mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 12h1.5M12 4v1.5M19.5 12H21M12 19.5V21M16.24 7.76l-1.06 1.06M7.76 16.24l1.06-1.06M16.24 16.24l-1.06-1.06M7.76 7.76l1.06 1.06" />
           </svg>
         </div>

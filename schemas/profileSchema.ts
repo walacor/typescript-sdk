@@ -59,6 +59,7 @@ export const profileSchema: SchemaType = {
 };
 
 export interface ProfileData {
+  scope: string;
   UID?: string;
   id?: string;
   userId?: string;

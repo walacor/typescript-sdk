@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaHome, FaPlus, FaBlog, FaUser, FaDatabase, FaFish, FaJava } from "react-icons/fa";
+import { FaHome, FaPlus, FaBlog, FaUser, FaDatabase, FaFish, FaJava, FaCheck } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -12,6 +12,7 @@ const sidebarItems = [
   { name: "Profile", href: "/dashboard/profile", icon: <FaUser />, description: "Edit your profile" },
   { name: "Roles", href: "/dashboard/role", icon: <FaJava />, description: "Edit your roles" },
   { name: "Hooks", href: "/dashboard/hooks", icon: <FaFish />, description: "View Hooks" },
+  { name: "Verification", href: "/dashboard/verification", icon: <FaCheck />, description: "Review Verification" },
 ];
 
 const Sidebar = () => {
