@@ -69,7 +69,7 @@ const RoleList = () => {
           <h1 className="text-3xl font-semibold mb-6 text-center">Roles</h1>
           <p className="text-gray-600 mb-6 text-center">Create roles with specific scopes to manage access within your application.</p>
 
-          <div className="space-y-4">
+          <div className="space-y-4 bg-white p-6 rounded-lg shadow-lg mb-6">
             <div className="mt-6">
               <h3 className="text-xl font-semibold mb-2">Add New Role</h3>
               <div>

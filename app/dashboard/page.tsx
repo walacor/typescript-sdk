@@ -11,7 +11,7 @@ const DashboardHome = () => {
           <h1 className="text-4xl font-semibold mb-4 text-center">Welcome to Walacor Dashboard</h1>
           <p className="text-gray-600 mb-6 text-center">Manage your data posts, profile, and settings all in one place.</p>
 
-          <div className="bg-white p-6">
+          <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
             <h2 className="text-2xl font-semibold mb-4">About Walacor</h2>
             <p className="text-gray-700 mb-4">
               Walacor is your ultimate data companion. Our platform provides powerful features and customizable schemas to enhance your data experience. Whether you are a beginner or experienced with data, Walacor offers the tools you need

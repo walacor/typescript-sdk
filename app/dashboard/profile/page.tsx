@@ -81,7 +81,7 @@ const Profile = () => {
         <div className="w-full mx-auto p-8">
           <h1 className="text-3xl font-semibold mb-6 text-center">Profile</h1>
           <p className="text-gray-600 mb-6 text-center">Walacor allows us to create profile data structures for our users. This is a simple example of how you can edit and update your profile data.</p>
-          <div className="space-y-4">
+          <div className="space-y-4 bg-white p-6 rounded-lg shadow-lg mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700">First Name</label>
               <Input

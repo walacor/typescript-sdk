@@ -53,7 +53,7 @@ const SchemasPage = () => {
           </div>
 
           {selectedTab === "about" ? (
-            <div className="bg-white p-6">
+            <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
               <h2 className="text-2xl font-semibold mb-4">Understanding Schemas</h2>
               <p className="text-gray-700 mb-4">
                 In Walacor, a <strong>schema</strong> defines the structure of your data. It includes fields that specify the data type, length, and whether the field is required. These schemas ensure consistency and integrity when saving

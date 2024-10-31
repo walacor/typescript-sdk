@@ -160,7 +160,7 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
       <h1 className={`${initialBlog ? "" : "mb-6"} text-3xl text-center font-semibold`}>{initialBlog ? "" : "Create Blog"}</h1>
       <p className="text-gray-600 mb-6 text-center">Here you can create and manage your blog content. Use the form below to create a new blog post or update an existing one.</p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-lg mb-6">
         <h2>Title of Blog</h2>
         <Input name="title" placeholder="Title" value={blog.title} onChange={handleChange} required />
         <h2>Brief Description of Blog</h2>

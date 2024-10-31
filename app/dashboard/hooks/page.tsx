@@ -417,7 +417,7 @@ const HooksPage = () => {
     const hook = hooks.find((hook) => hook.name === hookName);
     if (hook) {
       return (
-        <div className="bg-white p-6">
+        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
           <h2 className="text-2xl mb-4">{hook.name}</h2>
           <p className="text-gray-700 mb-4">{hook.description}</p>
           <p className="text-gray-700 mt-4">{hook.explanation}</p>
@@ -453,7 +453,7 @@ const HooksPage = () => {
           </div>
 
           {selectedHook === "about" ? (
-            <div className="bg-white p-6">
+            <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
               <h2 className="text-2xl mb-4">About Hooks</h2>
               <p className="text-gray-700">
                 Hooks in Walacor allow you to interact directly with the data platform without the need for traditional backend APIs. These hooks handle everything from fetching and posting data to managing authentication and token
