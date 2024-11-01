@@ -17,6 +17,7 @@ const usePostSchema = (etid: number) => {
       setLoading(true);
 
       try {
+        console.log("HERE");
         const res = await axios.post(
           `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/envelopes/submit`,
           { Data: [data] },
@@ -28,6 +29,8 @@ const usePostSchema = (etid: number) => {
             },
           }
         );
+        console.log("HERE");
+        console.log(res.data);
 
         setResponse(res.data);
         triggerRefetch();

@@ -3,14 +3,13 @@ import DefaultLayout from "./default.layout";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "@/components/Sidebar";
-import FileVerificationComponent from "@/components/FileVerificationComponent";
 import { useWalacorUser } from "@/hooks/user/useWalacorUser";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { useAddUser } from "@/hooks/user/useAddUser";
 
 export default function DashboardLayout({ children }: { children?: ReactNode }) {
   const params = useParams();
-  const { data, isFetched } = useWalacorUser();
+  const { data, loading, isFetched } = useWalacorUser();
   const { addUser, loading: addUserLoading } = useAddUser();
 
   useEffect(() => {

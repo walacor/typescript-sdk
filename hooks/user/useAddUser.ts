@@ -24,6 +24,7 @@ export const useAddUser = () => {
 
   const confirmUserInDB = async (userId: string): Promise<boolean> => {
     try {
+      console.log("HERE");
       const res = await axios.post(
         `${String(process.env.NEXT_PUBLIC_EC2_WALACOR)}/api/query/get`,
         {},
@@ -35,6 +36,9 @@ export const useAddUser = () => {
           },
         }
       );
+
+      console.log("HERE");
+      console.log(res.data?.data);
 
       return res.data?.data.some((user: ProfileData) => user.userId === userId) || false;
     } catch {
@@ -59,6 +63,8 @@ export const useAddUser = () => {
     isAdding.current = true;
     setLoading(true);
 
+    await createAllSchemas();
+
     try {
       const userExistsInDB = await confirmUserInDB(clerkUser.id);
       if (userExistsInDB) {
@@ -66,14 +72,11 @@ export const useAddUser = () => {
         return;
       }
 
-      await createAllSchemas();
-
       const payload: ProfileData = {
         userId: clerkUser.id,
         firstName: clerkUser.firstName || "First",
         lastName: clerkUser.lastName || "Last",
         userRole: "Viewer",
-        scope: "",
       };
 
       let attempt = 0;
@@ -83,7 +86,10 @@ export const useAddUser = () => {
         if (attempt > 0) {
           await new Promise((resolve) => setTimeout(resolve, cooldownPeriod));
         }
+
+        console.log("HERE");
         await postSchema(payload);
+        console.log("HERE");
 
         if (postError) {
           setError(postError);
@@ -95,9 +101,11 @@ export const useAddUser = () => {
         if (!userAdded) attempt++;
       }
 
+      console.log("HERE");
       if (!userAdded) {
         setError(new Error("Failed to add user after maximum retries"));
       }
+      console.log("HERE");
     } catch (err) {
       setError(err as Error);
     } finally {

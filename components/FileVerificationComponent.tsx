@@ -4,11 +4,19 @@ import { useStoreFile } from "@/hooks/file/useStoreFile";
 import { FileData } from "@/types/schema";
 import Button from "@/components/single/Button";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useDownloadFile } from "@/hooks/file/useDownloadFile";
 
 const FileVerificationComponent = () => {
   const [file, setFile] = useState<File | null>(null);
   const [fileData, setFileData] = useState<FileData | null>(null);
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const { downloadResult, downloadError, downloadLoading, downloadFile } = useDownloadFile();
+
+  const handleDownloadFile = () => {
+    if (fileData?.fileInfo?.file?.UID) {
+      downloadFile(fileData.fileInfo.file.UID);
+    }
+  };
 
   const { result: verificationResult, error: verificationError, loading: verificationLoading, verifyMetadata } = useVerifyFileMetadata();
   const { result: storageResult, error: storageError, loading: storageLoading, storeFile } = useStoreFile(fileData);
@@ -127,6 +135,17 @@ const FileVerificationComponent = () => {
               </div>
             </CopyToClipboard>
           )}
+        </div>
+      )}
+
+      {fileData && (
+        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Step 4: Download File</h2>
+          <p className="text-gray-700 mb-4">Click below to download the file to your device.</p>
+          <Button onClick={handleDownloadFile} disabled={downloadLoading} className="w-full mb-4 bg-primary text-white">
+            {downloadLoading ? "Downloading..." : "Download File"}
+          </Button>
+          {downloadError && <p style={{ color: "red" }}>Download Error: {(downloadError as Error)?.message}</p>}
         </div>
       )}
     </div>

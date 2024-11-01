@@ -33,9 +33,6 @@ const Profile = () => {
       setLastName(userData.lastName || "");
       setSelectedRole(userData.userRole || "");
     }
-    if (error) {
-      toast.error("Failed to load profile data", errorToastStyle);
-    }
     readSchemas();
   }, [isFetched, userData, error, readSchemas]);
 
