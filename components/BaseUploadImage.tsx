@@ -1,14 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState, ChangeEvent, useRef } from "react";
 import axios from "axios";
 import BaseLoader from "./BaseLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeftRotate,
-  faCheck,
-  faX,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeftRotate, faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { useVerifyFileMetadata } from "@/hooks/file/useVerifyFileMetadata";
 
 interface BaseUploadImageProps {
   onUpload: (url: string) => void;
@@ -23,6 +21,8 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
   const [isTimedOut, setIsTimedOut] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
+
+  const { result: verificationResult, error: verificationError, fileExists, loading: verificationLoading, verifyMetadata } = useVerifyFileMetadata();
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] ?? null;
@@ -41,6 +41,25 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
         setIsLoading(false);
         setMessage("Upload timed out. Please try again.");
       }, 10000);
+
+      await verifyMetadata(selectedFile);
+
+      if (fileExists) {
+        clearTimeout(timeoutId);
+        setMessage("This image has already been used. Please upload an original image.");
+        setErrorSolution("Consider using a different or modified image to ensure uniqueness.");
+        setIsError(true);
+        setIsLoading(false);
+        return;
+      }
+
+      if (verificationError) {
+        clearTimeout(timeoutId);
+        setMessage(verificationError);
+        setIsError(true);
+        setIsLoading(false);
+        return;
+      }
 
       const reader = new FileReader();
       reader.onloadend = async () => {
@@ -82,12 +101,10 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
               if (errorMessage.includes("Unsupported file type")) {
                 solutionMessage = "Please upload a JPEG, PNG, or GIF image.";
               } else if (errorMessage.includes("not a valid image")) {
-                solutionMessage =
-                  "The uploaded file is not a valid image. Please check the file and try again.";
+                solutionMessage = "The uploaded file is not a valid image. Please check the file and try again.";
               }
             } else {
-              solutionMessage =
-                "Please try again or contact support if the problem persists.";
+              solutionMessage = "Please try again or contact support if the problem persists.";
             }
           }
           setMessage(errorMessage);
@@ -115,13 +132,7 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
   return (
     <div>
       <h2>Upload Image to Blog</h2>
-      <input
-        id="file-upload"
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        ref={fileInputRef}
-      />
+      <input id="file-upload" type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} />
 
       {isLoading && (
         <p className="flex gap-1 items-center">
@@ -132,19 +143,9 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
       {message && !isLoading && (
         <div style={{ color: isError ? "red" : "green" }}>
           <p>
-            {isError ? (
-              <FontAwesomeIcon className="scale-75" icon={faX} />
-            ) : (
-              <FontAwesomeIcon icon={faCheck} />
-            )}{" "}
-            {message}
+            {isError ? <FontAwesomeIcon className="scale-75" icon={faX} /> : <FontAwesomeIcon icon={faCheck} />} {message}
           </p>
-          {isError && (
-            <div
-              dangerouslySetInnerHTML={{ __html: errorSolution }}
-              style={{ color: "black" }}
-            />
-          )}
+          {isError && <div dangerouslySetInnerHTML={{ __html: errorSolution }} style={{ color: "black" }} />}
           {isTimedOut && (
             <div>
               <button
@@ -170,11 +171,7 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
       )}
       {uploadedImageUrl && !isLoading && (
         <div>
-          <img
-            src={uploadedImageUrl}
-            alt="Uploaded Image"
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
+          <img src={uploadedImageUrl} alt="Uploaded Image" style={{ maxWidth: "100%", height: "auto" }} />
         </div>
       )}
     </div>

@@ -5,7 +5,8 @@ import { FileVerificationResponse } from "@/types/schema";
 
 export const useVerifyFileMetadata = () => {
   const [result, setResult] = useState<FileVerificationResponse | string | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [fileExists, setFileExists] = useState(false);
   const [loading, setLoading] = useState(false);
   const token = useAuthenticatedToken();
 
@@ -17,6 +18,7 @@ export const useVerifyFileMetadata = () => {
       formData.append("file", file);
 
       setLoading(true);
+      setFileExists(false);
       try {
         const res = await axios.post(`${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/v2/files/verify`, formData, {
           headers: {
@@ -29,10 +31,15 @@ export const useVerifyFileMetadata = () => {
           setResult(res.data);
           setError(null);
         } else {
-          setError(new Error("Unexpected response structure"));
+          setError("Unexpected response structure");
         }
       } catch (err) {
-        setError(err as Error);
+        if (axios.isAxiosError(err) && err.response?.status === 422) {
+          setFileExists(true);
+          setError("This file has already been used. Please upload a unique file.");
+        } else {
+          setError("An error occurred during verification. Please try again.");
+        }
       } finally {
         setLoading(false);
       }
@@ -40,5 +47,5 @@ export const useVerifyFileMetadata = () => {
     [token]
   );
 
-  return { result, error, loading, verifyMetadata };
+  return { result, error, fileExists, loading, verifyMetadata };
 };

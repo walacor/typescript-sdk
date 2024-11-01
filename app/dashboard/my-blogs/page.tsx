@@ -9,7 +9,7 @@ import { useUpdateSchema } from "@/hooks/schema/useUpdateSchema";
 import ContentManagement from "@/components/ContentManagement";
 import { formatTimestampToDateTime } from "@/lib/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare, faCheckCircle, faChevronDown, faChevronUp, faInfoCircle, faRedo, faTrash, faUndo } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faCheckCircle, faChevronDown, faChevronUp, faRedo, faTrash, faUndo } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-hot-toast";
 import { successToastStyle, errorToastStyle } from "@/styles/toastStyles";
 import { useGetUser } from "@/hooks/user/useGetUser";
@@ -296,315 +296,316 @@ const MyBlogs: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
-      <SubDashboardLayout>
-        <div className="container mx-auto py-12">
-          <h1 className="text-3xl font-semibold text-center mb-6">My Blogs</h1>
-          <p className="text-gray-600 mb-6 text-center">
-            This is an example of data fetched from the Walacor platform. This page is a simple blog management system that allows you to view, edit, delete, publish, and restore blogs and their revisions.
-          </p>
+    <>
+      <DashboardLayout>
+        <SubDashboardLayout>
+          <div className="container mx-auto py-12">
+            <h1 className="text-3xl font-semibold text-center mb-6">My Blogs</h1>
+            <p className="text-gray-600 mb-6 text-center">
+              This is an example of data fetched from the Walacor platform. This page is a simple blog management system that allows you to view, edit, delete, publish, and restore blogs and their revisions.
+            </p>
 
-          {blogs.length <= 0 ? (
-            <div className="space-y-6 flex gap-2 items-center animate-pulse text-center w-full justify-center">
-              <span className="text-sm text-gray-600 flex items-center gap-2">
-                Fetching... <BaseLoader />
-              </span>
-            </div>
-          ) : editBlog ? (
-            <ContentManagement initialBlog={editBlog} setEditBlog={setEditBlog} />
-          ) : (
-            <div className="space-y-6">
-              {blogs.map((blog) => (
-                <div key={blog.id} className="bg-white p-4 border rounded shadow">
-                  <h2 className="text-xl font-semibold mb-2">
-                    {blog.title.length > 30 ? (
-                      <>
-                        {showMoreTitle[blog.id] ? blog.title : truncateContent(blog.title, 30)}
-                        <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMoreTitle(blog.id)}>
-                          {showMoreTitle[blog.id] ? "See Less" : "See More"}
-                        </button>
-                      </>
-                    ) : (
-                      blog.title
-                    )}
-                  </h2>
-                  <Link target="_blank" href={`/blog/${blog.id}`} className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2">
-                    <span>Read Blog</span>
-                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                  </Link>
-                  <p className="text-gray-600 mb-4">
-                    {blog.description.length > 100 ? (
-                      <>
-                        {showMore[blog.id] ? blog.description : truncateContent(blog.description, 100)}
-                        <button className="text-blue-500 hover:underline text-sm mb-4" onClick={() => toggleShowMore(blog.id)}>
-                          {showMore[blog.id] ? "See Less" : "See More"}
-                        </button>
-                      </>
-                    ) : (
-                      blog.description
-                    )}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <div />
-                    {canPerformActions() && (
-                      <div className="flex space-x-2 items-center">
-                        {blog.IsDeleted ? (
-                          <Button className="bg-yellow-500 text-white" onClick={() => restoreBlogOrRevision(blog)}>
-                            Restore
-                            <FontAwesomeIcon className="ml-2" icon={faUndo} />
-                          </Button>
-                        ) : (
-                          <>
-                            <Button className="bg-red-500 text-white" onClick={() => handleDelete(blog)}>
-                              Delete
+            {blogs.length <= 0 ? (
+              <div className="space-y-6 flex gap-2 items-center animate-pulse text-center w-full justify-center">
+                <span className="text-sm text-gray-600 flex items-center gap-2">
+                  Fetching... <BaseLoader />
+                </span>
+              </div>
+            ) : editBlog ? (
+              <ContentManagement initialBlog={editBlog} setEditBlog={setEditBlog} />
+            ) : (
+              <div className="space-y-6">
+                {blogs.map((blog) => (
+                  <div key={blog.id} className="bg-white p-4 border rounded shadow">
+                    <h2 className="text-xl font-semibold mb-2">
+                      {blog.title.length > 30 ? (
+                        <>
+                          {showMoreTitle[blog.id] ? blog.title : truncateContent(blog.title, 30)}
+                          <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMoreTitle(blog.id)}>
+                            {showMoreTitle[blog.id] ? "See Less" : "See More"}
+                          </button>
+                        </>
+                      ) : (
+                        blog.title
+                      )}
+                    </h2>
+                    <Link target="_blank" href={`/blog/${blog.id}`} className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2">
+                      <span>Read Blog</span>
+                      <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                    </Link>
+                    <p className="text-gray-600 mb-4">
+                      {blog.description.length > 100 ? (
+                        <>
+                          {showMore[blog.id] ? blog.description : truncateContent(blog.description, 100)}
+                          <button className="text-blue-500 hover:underline text-sm mb-4" onClick={() => toggleShowMore(blog.id)}>
+                            {showMore[blog.id] ? "See Less" : "See More"}
+                          </button>
+                        </>
+                      ) : (
+                        blog.description
+                      )}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <div />
+                      {canPerformActions() && (
+                        <div className="flex space-x-2 items-center">
+                          {blog.IsDeleted ? (
+                            <Button className="bg-yellow-500 text-white" onClick={() => restoreBlogOrRevision(blog)}>
+                              Restore
+                              <FontAwesomeIcon className="ml-2" icon={faUndo} />
                             </Button>
-                            <Button className="bg-primary text-primary-foreground" onClick={() => handleEdit(blog)}>
-                              Edit
-                            </Button>
-                            <Button className={blog.isPublished ? "bg-gray-500 text-white" : "bg-green-500 text-white"} onClick={() => handleTogglePublish(blog)}>
-                              {blog.isPublished ? "Unpublish" : "Publish"}
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <button className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2 text-xs" onClick={() => toggleRevisions(blog.id)}>
-                      {openRevisions[blog.id] ? "Hide Revisions" : "See Revisions"}
-                      <FontAwesomeIcon icon={openRevisions[blog.id] ? faChevronUp : faChevronDown} />
-                    </button>
-                    <span className="opacity-50 text-xs mt-4">Created: {formatTimestampToDateTime(blog.CreatedAt)}</span>
-                  </div>
-                  {openRevisions[blog.id] && (
-                    <div className="mt-4 p-4">
-                      <div className="flex items-center mb-4">
-                        <label className="mr-2 text-sm font-semibold flex items-center">
-                          Show Changes:
-                          <Tooltip text="This feature is to show the changes between the current revision and the previous revision. This is useful for easily identifying what has changed between revisions." />
-                        </label>
-                        <input type="checkbox" checked={includePreviousRevision[blog.id] || false} onChange={() => toggleIncludePrevious(blog.id)} className="toggle-checkbox" />
-                      </div>
-                      <div className="flex items-center mb-4">
-                        <label className="mr-2 text-sm font-semibold flex items-center">
-                          Show Data in Walacor
-                          <Tooltip text="This feature is to show off Walacor's robust data platform in that we store ALL history and maintain an indefinite audit log -- particularly useful for compliance and regulatory purposes." />
-                        </label>
-                        <input type="checkbox" checked={showDeletedRevisions} onChange={(e) => setShowDeletedRevisions(e.target.checked)} className="toggle-checkbox" />
-                      </div>
-                      <h3 className="font-semibold mb-2">Revision History:</h3>
-                      <div className="space-y-4">
-                        {groupedRevisions[blog.id] &&
-                          groupedRevisions[blog.id]
-                            .reverse()
-                            .filter((revision: BlogData) => showDeletedRevisions || !revision.IsDeleted)
-                            .map((revision: BlogData, index: number) => {
-                              const previousRevision = groupedRevisions[blog.id][index + 1];
-                              const isLive = revision.selectedVersion;
+                          ) : (
+                            <>
+                              <Button className="bg-red-500 text-white" onClick={() => handleDelete(blog)}>
+                                Delete
+                              </Button>
+                              <Button className="bg-primary text-primary-foreground" onClick={() => handleEdit(blog)}>
+                                Edit
+                              </Button>
+                              <Button className={blog.isPublished ? "bg-gray-500 text-white" : "bg-green-500 text-white"} onClick={() => handleTogglePublish(blog)}>
+                                {blog.isPublished ? "Unpublish" : "Publish"}
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <button className="hover:underline transition-all mr-2 flex items-center gap-1 opacity-50 hover:opacity-100 mb-2 text-xs" onClick={() => toggleRevisions(blog.id)}>
+                        {openRevisions[blog.id] ? "Hide Revisions" : "See Revisions"}
+                        <FontAwesomeIcon icon={openRevisions[blog.id] ? faChevronUp : faChevronDown} />
+                      </button>
+                      <span className="opacity-50 text-xs mt-4">Created: {formatTimestampToDateTime(blog.CreatedAt)}</span>
+                    </div>
+                    {openRevisions[blog.id] && (
+                      <div className="mt-4 p-4">
+                        <div className="flex items-center mb-4">
+                          <label className="mr-2 text-sm font-semibold flex items-center">
+                            Show Changes:
+                            <Tooltip text="This feature is to show the changes between the current revision and the previous revision. This is useful for easily identifying what has changed between revisions." />
+                          </label>
+                          <input type="checkbox" checked={includePreviousRevision[blog.id] || false} onChange={() => toggleIncludePrevious(blog.id)} className="toggle-checkbox" />
+                        </div>
+                        <div className="flex items-center mb-4">
+                          <label className="mr-2 text-sm font-semibold flex items-center">
+                            Show Data in Walacor
+                            <Tooltip text="This feature is to show off Walacor's robust data platform in that we store ALL history and maintain an indefinite audit log -- particularly useful for compliance and regulatory purposes." />
+                          </label>
+                          <input type="checkbox" checked={showDeletedRevisions} onChange={(e) => setShowDeletedRevisions(e.target.checked)} className="toggle-checkbox" />
+                        </div>
+                        <h3 className="font-semibold mb-2">Revision History:</h3>
+                        <div className="space-y-4">
+                          {groupedRevisions[blog.id] &&
+                            groupedRevisions[blog.id]
+                              .reverse()
+                              .filter((revision: BlogData) => showDeletedRevisions || !revision.IsDeleted)
+                              .map((revision: BlogData, index: number) => {
+                                const previousRevision = groupedRevisions[blog.id][index + 1];
+                                const isLive = revision.selectedVersion;
 
-                              return (
-                                <div key={index} className={`border p-4 rounded shadow-sm ${isLive ? "border-green-500 bg-green-50" : "border-gray-300"} ${revision.IsDeleted ? "bg-gray-100" : ""}`}>
-                                  <div className="flex justify-between items-center mb-2">
-                                    <div className="text-sm text-gray-600">
-                                      <strong>Revision ID:</strong> {revision.id}
+                                return (
+                                  <div key={index} className={`border p-4 rounded shadow-sm ${isLive ? "border-green-500 bg-green-50" : "border-gray-300"} ${revision.IsDeleted ? "bg-gray-100" : ""}`}>
+                                    <div className="flex justify-between items-center mb-2">
+                                      <div className="text-sm text-gray-600">
+                                        <strong>Revision ID:</strong> {revision.id}
+                                      </div>
+                                      {isLive && <div className="text-xs text-green-600 font-semibold">Current Version</div>}
                                     </div>
-                                    {isLive && <div className="text-xs text-green-600 font-semibold">Current Version</div>}
-                                  </div>
-                                  <div className="text-sm text-gray-600 mb-2">
-                                    <strong>Author:</strong> {revision.authorName}
-                                  </div>
-                                  <div className="text-sm text-gray-600 mb-2">
-                                    <strong>Created At:</strong> {formatTimestampToDateTime(revision.CreatedAt)}
-                                  </div>
-                                  {includePreviousRevision[blog.id] && previousRevision ? (
-                                    <>
-                                      <div className="mb-2">
-                                        <strong>Title:</strong> {createHighlightedDiff(previousRevision.title, revision.title, includePreviousRevision[blog.id])}
-                                      </div>
-                                      <div className="mb-2">
-                                        <strong>Description:</strong> {createHighlightedDiff(previousRevision.description, revision.description, includePreviousRevision[blog.id])}
-                                      </div>
-                                      <div className="mb-2">
-                                        <strong>Content:</strong> {createHighlightedDiff(previousRevision.content, revision.content, includePreviousRevision[blog.id])}
-                                      </div>
-                                    </>
-                                  ) : (
-                                    <div className="mt-4">
-                                      <h4 className="font-semibold mb-1">Revision Content:</h4>
-                                      <div className="p-2 bg-gray-50 border rounded">
-                                        <div className="mb-2">
-                                          <strong>Title:</strong>{" "}
-                                          {revision.title.length > 30 ? (
-                                            <>
-                                              {showMoreTitle[revision.id] ? revision.title : truncateContent(revision.title, 30)}
-                                              <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMoreTitle(revision.id)}>
-                                                {showMoreTitle[revision.id] ? "See Less" : "See More"}
-                                              </button>
-                                            </>
-                                          ) : (
-                                            revision.title
-                                          )}
-                                        </div>
-                                        <div className="mb-2">
-                                          <strong>Description:</strong>{" "}
-                                          {revision.description.length > 50 ? (
-                                            <>
-                                              {showMoreDescription[revision.id] ? revision.description : truncateContent(revision.description, 50)}
-                                              <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMoreDescription(revision.id)}>
-                                                {showMoreDescription[revision.id] ? "See Less" : "See More"}
-                                              </button>
-                                            </>
-                                          ) : (
-                                            revision.description
-                                          )}
-                                        </div>
-                                        <div className="mb-2">
-                                          <strong>Content:</strong>{" "}
-                                          {revision.content.length > 50 ? (
-                                            <>
-                                              {showMore[revision.id] ? revision.content : truncateContent(revision.content, 50)}
-                                              <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMore(revision.id)}>
-                                                {showMore[revision.id] ? "See Less" : "See More"}
-                                              </button>
-                                            </>
-                                          ) : (
-                                            revision.content
-                                          )}
-                                        </div>
-                                      </div>
+                                    <div className="text-sm text-gray-600 mb-2">
+                                      <strong>Author:</strong> {revision.authorName}
                                     </div>
-                                  )}
-                                  <div className="mt-4 flex items-center space-x-2">
-                                    {isLive ? (
+                                    <div className="text-sm text-gray-600 mb-2">
+                                      <strong>Created At:</strong> {formatTimestampToDateTime(revision.CreatedAt)}
+                                    </div>
+                                    {includePreviousRevision[blog.id] && previousRevision ? (
                                       <>
-                                        <Button className="bg-green-500 text-white cursor-not-allowed" onClick={() => toast.success("This is the current version.", successToastStyle)}>
-                                          Current Version
-                                          <FontAwesomeIcon className="ml-2" icon={faCheckCircle} />
-                                        </Button>
-                                        <Button
-                                          className="bg-red-500 text-white"
-                                          onClick={async () => {
-                                            try {
-                                              await updateRecord({
-                                                UID: revision.UID,
-                                                selectedVersion: false,
-                                                isPublished: false,
-                                              });
-                                              toast.success("Version unselected successfully!", successToastStyle);
-                                              readSchemas();
-                                            } catch (error) {
-                                              toast.error("Failed to unselect version.", errorToastStyle);
-                                            }
-                                          }}
-                                        >
-                                          Unselect Version
-                                        </Button>
+                                        <div className="mb-2">
+                                          <strong>Title:</strong> {createHighlightedDiff(previousRevision.title, revision.title, includePreviousRevision[blog.id])}
+                                        </div>
+                                        <div className="mb-2">
+                                          <strong>Description:</strong> {createHighlightedDiff(previousRevision.description, revision.description, includePreviousRevision[blog.id])}
+                                        </div>
+                                        <div className="mb-2">
+                                          <strong>Content:</strong> {createHighlightedDiff(previousRevision.content, revision.content, includePreviousRevision[blog.id])}
+                                        </div>
                                       </>
                                     ) : (
-                                      !revision.IsDeleted && (
-                                        <Button className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover" onClick={() => setShowPublishModal(revision)}>
-                                          Select Version
-                                          <FontAwesomeIcon className="ml-2" icon={faRedo} />
-                                        </Button>
-                                      )
+                                      <div className="mt-4">
+                                        <h4 className="font-semibold mb-1">Revision Content:</h4>
+                                        <div className="p-2 bg-gray-50 border rounded">
+                                          <div className="mb-2">
+                                            <strong>Title:</strong>{" "}
+                                            {revision.title.length > 30 ? (
+                                              <>
+                                                {showMoreTitle[revision.id] ? revision.title : truncateContent(revision.title, 30)}
+                                                <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMoreTitle(revision.id)}>
+                                                  {showMoreTitle[revision.id] ? "See Less" : "See More"}
+                                                </button>
+                                              </>
+                                            ) : (
+                                              revision.title
+                                            )}
+                                          </div>
+                                          <div className="mb-2">
+                                            <strong>Description:</strong>{" "}
+                                            {revision.description.length > 50 ? (
+                                              <>
+                                                {showMoreDescription[revision.id] ? revision.description : truncateContent(revision.description, 50)}
+                                                <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMoreDescription(revision.id)}>
+                                                  {showMoreDescription[revision.id] ? "See Less" : "See More"}
+                                                </button>
+                                              </>
+                                            ) : (
+                                              revision.description
+                                            )}
+                                          </div>
+                                          <div className="mb-2">
+                                            <strong>Content:</strong>{" "}
+                                            {revision.content.length > 50 ? (
+                                              <>
+                                                {showMore[revision.id] ? revision.content : truncateContent(revision.content, 50)}
+                                                <button className="text-blue-500 hover:underline text-sm ml-2" onClick={() => toggleShowMore(revision.id)}>
+                                                  {showMore[revision.id] ? "See Less" : "See More"}
+                                                </button>
+                                              </>
+                                            ) : (
+                                              revision.content
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
                                     )}
-                                    {revision.IsDeleted ? (
-                                      <Button className="bg-yellow-500 text-white" onClick={() => restoreBlogOrRevision(revision)}>
-                                        Restore
-                                        <FontAwesomeIcon className="ml-2" icon={faUndo} />
-                                      </Button>
-                                    ) : (
-                                      !isLive && (
-                                        <Button className="bg-red-500 text-white hover:bg-red-600" onClick={() => handleDeleteRevision(revision)}>
-                                          Delete
-                                          <FontAwesomeIcon className="ml-2" icon={faTrash} />
+                                    <div className="mt-4 flex items-center space-x-2">
+                                      {isLive ? (
+                                        <>
+                                          <Button className="bg-green-500 text-white cursor-not-allowed" onClick={() => toast.success("This is the current version.", successToastStyle)}>
+                                            Current Version
+                                            <FontAwesomeIcon className="ml-2" icon={faCheckCircle} />
+                                          </Button>
+                                          <Button
+                                            className="bg-red-500 text-white"
+                                            onClick={async () => {
+                                              try {
+                                                await updateRecord({
+                                                  UID: revision.UID,
+                                                  selectedVersion: false,
+                                                  isPublished: false,
+                                                });
+                                                toast.success("Version unselected successfully!", successToastStyle);
+                                                readSchemas();
+                                              } catch (error) {
+                                                toast.error("Failed to unselect version.", errorToastStyle);
+                                              }
+                                            }}
+                                          >
+                                            Unselect Version
+                                          </Button>
+                                        </>
+                                      ) : (
+                                        !revision.IsDeleted && (
+                                          <Button className="bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-hover" onClick={() => setShowPublishModal(revision)}>
+                                            Select Version
+                                            <FontAwesomeIcon className="ml-2" icon={faRedo} />
+                                          </Button>
+                                        )
+                                      )}
+                                      {revision.IsDeleted ? (
+                                        <Button className="bg-yellow-500 text-white" onClick={() => restoreBlogOrRevision(revision)}>
+                                          Restore
+                                          <FontAwesomeIcon className="ml-2" icon={faUndo} />
                                         </Button>
-                                      )
-                                    )}
+                                      ) : (
+                                        !isLive && (
+                                          <Button className="bg-red-500 text-white hover:bg-red-600" onClick={() => handleDeleteRevision(revision)}>
+                                            Delete
+                                            <FontAwesomeIcon className="ml-2" icon={faTrash} />
+                                          </Button>
+                                        )
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                              );
-                            })}
+                                );
+                              })}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </SubDashboardLayout>
+      </DashboardLayout>
+      {showModal && (
+        <div onClick={() => setShowModal(false)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Are you sure?</h2>
+            <p className="mb-6">Do you really want to delete this blog?</p>
+            <div className="flex justify-end space-x-2">
+              <Button className="bg-gray-500 text-white" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+              <Button className="bg-red-500 text-white" onClick={confirmDelete}>
+                Delete
+              </Button>
             </div>
-          )}
+          </div>
         </div>
+      )}
 
-        {showModal && (
-          <div onClick={() => setShowModal(false)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Are you sure?</h2>
-              <p className="mb-6">Do you really want to delete this blog?</p>
-              <div className="flex justify-end space-x-2">
-                <Button className="bg-gray-500 text-white" onClick={() => setShowModal(false)}>
-                  Cancel
-                </Button>
-                <Button className="bg-red-500 text-white" onClick={confirmDelete}>
-                  Delete
-                </Button>
-              </div>
+      {revisionToDelete && (
+        <div onClick={() => setRevisionToDelete(null)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Are you sure?</h2>
+            <p className="mb-6">Do you really want to delete this revision?</p>
+            <div className="flex justify-end space-x-2">
+              <Button className="bg-gray-500 text-white" onClick={() => setRevisionToDelete(null)}>
+                Cancel
+              </Button>
+              <Button className="bg-red-500 text-white" onClick={confirmDeleteRevision}>
+                Delete
+              </Button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {revisionToDelete && (
-          <div onClick={() => setRevisionToDelete(null)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Are you sure?</h2>
-              <p className="mb-6">Do you really want to delete this revision?</p>
-              <div className="flex justify-end space-x-2">
-                <Button className="bg-gray-500 text-white" onClick={() => setRevisionToDelete(null)}>
-                  Cancel
-                </Button>
-                <Button className="bg-red-500 text-white" onClick={confirmDeleteRevision}>
-                  Delete
-                </Button>
-              </div>
+      {showPublishModal && (
+        <div onClick={() => setShowPublishModal(null)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Confirm Version Selection</h2>
+            <p className="mb-6">Do you want to select this revision as the live version?</p>
+            <div className="flex justify-end space-x-2">
+              <Button className="bg-gray-500 text-white" onClick={() => setShowPublishModal(null)}>
+                Cancel
+              </Button>
+              <Button
+                className="bg-green-500 text-white"
+                onClick={() => {
+                  if (showPublishModal) {
+                    promoteToLive(showPublishModal.id, showPublishModal);
+                    setShowPublishModal(null);
+                  }
+                }}
+              >
+                Select Version & Publish
+              </Button>
+              <Button
+                className="bg-primary text-white"
+                onClick={() => {
+                  if (showPublishModal) {
+                    promoteWithoutPublishing(showPublishModal.id, showPublishModal);
+                    setShowPublishModal(null);
+                  }
+                }}
+              >
+                Select Version & Do Not Publish
+              </Button>
             </div>
           </div>
-        )}
-
-        {showPublishModal && (
-          <div onClick={() => setShowPublishModal(null)} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Confirm Version Selection</h2>
-              <p className="mb-6">Do you want to select this revision as the live version?</p>
-              <div className="flex justify-end space-x-2">
-                <Button className="bg-gray-500 text-white" onClick={() => setShowPublishModal(null)}>
-                  Cancel
-                </Button>
-                <Button
-                  className="bg-green-500 text-white"
-                  onClick={() => {
-                    if (showPublishModal) {
-                      promoteToLive(showPublishModal.id, showPublishModal);
-                      setShowPublishModal(null);
-                    }
-                  }}
-                >
-                  Select Version & Publish
-                </Button>
-                <Button
-                  className="bg-primary text-white"
-                  onClick={() => {
-                    if (showPublishModal) {
-                      promoteWithoutPublishing(showPublishModal.id, showPublishModal);
-                      setShowPublishModal(null);
-                    }
-                  }}
-                >
-                  Select Version & Do Not Publish
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </SubDashboardLayout>
-    </DashboardLayout>
+        </div>
+      )}
+    </>
   );
 };
 

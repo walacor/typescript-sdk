@@ -128,7 +128,6 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
     };
 
     try {
-      // Find any current live version and unselect it
       const currentLiveVersion = Array.isArray(blogs) ? blogs.find((blogItem) => blogItem.selectedVersion) : null;
       if (currentLiveVersion && initialBlog?.id !== currentLiveVersion.id) {
         await updateRecord({
@@ -137,10 +136,8 @@ const ContentManagement: React.FC<ContentManagementProps> = ({ initialBlog = nul
         });
       }
 
-      // Publish the selected revision
       await (blog.UID ? updateRecord(updatedBlog) : postSchema(updatedBlog));
 
-      // Trigger refresh and navigate to ensure state consistency
       if (setEditBlog) setEditBlog(null);
       toast.success("Blog published successfully!", successToastStyle);
       triggerRefetch();
