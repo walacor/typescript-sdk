@@ -16,8 +16,6 @@ export const useStoreFile = (fileData: FileData | null) => {
     setLoading(true);
 
     try {
-      console.log("Storing file with data:", fileData);
-
       const res = await axios.post(`${process.env.NEXT_PUBLIC_EC2_WALACOR}/api/v2/files/store`, fileData, {
         headers: {
           Authorization: `${token}`,

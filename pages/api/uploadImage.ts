@@ -13,10 +13,7 @@ const s3 = new AWS.S3();
 
 const rateLimiter = rateLimit(100);
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await new Promise((resolve) => rateLimiter(req, res, resolve));
 
   if (res.headersSent) {
@@ -43,9 +40,7 @@ export default async function handler(
   const imageBuffer = Buffer.from(image.split(",")[1], "base64");
 
   try {
-    const resizedImageBuffer = await sharp(imageBuffer)
-      .resize({ width: 1024 })
-      .toBuffer();
+    const resizedImageBuffer = await sharp(imageBuffer).resize({ width: 1024 }).toBuffer();
 
     const key = `${imageName}-${Date.now()}`;
 
@@ -65,19 +60,14 @@ export default async function handler(
     console.error("Error uploading image:", error);
 
     if (error.code === "EntityTooLarge") {
-      return res
-        .status(413)
-        .json({ error: "The image is too large to upload." });
+      return res.status(413).json({ error: "The image is too large to upload." });
     }
 
     let errorMessage = "Failed to upload image.";
     if (error.message && error.message.includes("unsupported image format")) {
       errorMessage = "The image format is not supported.";
       return res.status(400).json({ error: errorMessage });
-    } else if (
-      error.message &&
-      error.message.includes("Input buffer contains unsupported image format")
-    ) {
+    } else if (error.message && error.message.includes("Input buffer contains unsupported image format")) {
       errorMessage = "The input buffer contains an unsupported image format.";
       return res.status(400).json({ error: errorMessage });
     } else if (error.message && error.message.includes("not a valid image")) {

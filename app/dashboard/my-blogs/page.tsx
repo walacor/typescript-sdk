@@ -295,8 +295,6 @@ const MyBlogs: React.FC = () => {
     }
   };
 
-  console.log(mainData, "BLOGS");
-
   return (
     <DashboardLayout>
       <SubDashboardLayout>

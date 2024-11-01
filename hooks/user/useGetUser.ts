@@ -26,8 +26,6 @@ export const useGetUser = () => {
           }
         );
 
-        console.log(res.data);
-
         if (res.data && res.data.success && Array.isArray(res.data.data)) {
           const filteredUser = res.data.data.find((user: ProfileData) => user.userId === filter.userId);
 
