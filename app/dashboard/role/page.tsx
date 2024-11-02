@@ -13,6 +13,7 @@ import { RoleData } from "@/schemas/roleSchema";
 import BaseLoader from "@/components/BaseLoader";
 import SubDashboardLayout from "@/layout/subdashboard.layout";
 import { useWalacorUser } from "@/hooks/user/useWalacorUser";
+import Link from "next/link";
 
 const RoleList = () => {
   const { data: userData } = useWalacorUser();
@@ -80,6 +81,9 @@ const RoleList = () => {
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700">Select Scope</label>
                 <Dropdown value={scope} onChange={handleScopeChange} options={["AdminAccess", "ReadWrite", "ReadOnly", "None"]} className="mt-1 block w-full p-2 border border-gray-300" />
+                <Link href="/dashboard/profile" className="mt-4 text-xs text-gray-500 cursor-pointer hover:underline">
+                  Want to assign a role?
+                </Link>
               </div>
 
               <Button onClick={handleAddRole} disabled={loadingAddRole} className={`bg-primary text-white w-full mt-4 ${loadingAddRole ? "opacity-75 cursor-not-allowed" : ""}`}>
