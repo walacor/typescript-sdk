@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { FaHome, FaPlus, FaBlog, FaUser, FaDatabase, FaFish, FaJava, FaCheck, FaBars, FaTimes } from "react-icons/fa";
-import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const sidebarItems = [
@@ -16,6 +16,7 @@ const sidebarItems = [
 ];
 
 const Sidebar = () => {
+  const router = useRouter();
   const pathname = usePathname();
   const [loadingItem, setLoadingItem] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -24,6 +25,13 @@ const Sidebar = () => {
   const handleClick = (href: string) => {
     if (pathname === href) return;
     setLoadingItem(href);
+    setIsSidebarVisible(false); // Trigger sidebar hide animation
+
+    // Delay navigation to allow sidebar to slide out
+    setTimeout(() => {
+      router.push(href);
+      setLoadingItem(null);
+    }, 300); // Adjust duration to match animation timing
   };
 
   return (
@@ -50,16 +58,15 @@ const Sidebar = () => {
               const isHovered = hoveredItem === item.href;
 
               return (
-                <Link
+                <div
                   key={index}
-                  href={item.href}
+                  onClick={() => handleClick(item.href)}
                   className={`flex items-center justify-start p-4 cursor-pointer transition-all`}
                   style={{
                     transition: "background-color 0.3s ease, color 0.3s ease",
                   }}
                   onMouseEnter={() => setHoveredItem(item.href)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  onClick={() => handleClick(item.href)}
                 >
                   <div className={`w-10 h-10 flex justify-center items-center rounded-full ${isActive ? "bg-[#0f172a] text-white" : ""}`}>
                     {isLoading ? (
@@ -76,7 +83,7 @@ const Sidebar = () => {
                     <span className="font-semibold">{item.name}</span>
                     <span className="text-sm text-gray-500">{item.description}</span>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </motion.div>
