@@ -316,7 +316,7 @@ const MyBlogs: React.FC = () => {
             ) : (
               <div className="space-y-6">
                 {blogs.map((blog) => (
-                  <div key={blog.id} className="bg-white p-4 border rounded shadow">
+                  <div key={blog.id} className="bg-white p-4 border rounded shadow-lg">
                     <h2 className="text-xl font-semibold mb-2">
                       {blog.title.length > 30 ? (
                         <>
@@ -404,7 +404,7 @@ const MyBlogs: React.FC = () => {
                                 const isLive = revision.selectedVersion;
 
                                 return (
-                                  <div key={index} className={`border p-4 rounded shadow-sm ${isLive ? "border-green-500 bg-green-50" : "border-gray-300"} ${revision.IsDeleted ? "bg-gray-100" : ""}`}>
+                                  <div key={index} className={`border p-4 rounded shadow-lg ${isLive ? "border-green-500 bg-green-50" : "border-gray-300"} ${revision.IsDeleted ? "bg-gray-100" : ""}`}>
                                     <div className="flex justify-between items-center mb-2">
                                       <div className="text-sm text-gray-600">
                                         <strong>Revision ID:</strong> {revision.id}

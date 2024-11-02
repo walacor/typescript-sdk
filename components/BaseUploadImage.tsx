@@ -154,11 +154,12 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
       <input id="file-upload" type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} />
 
       {isLoading && (
-        <p className="flex gap-1 items-center">
+        <div className="flex gap-1 items-center">
           <span>Loading...</span>
           <BaseLoader />
-        </p>
+        </div>
       )}
+
       {message && !isLoading && (
         <div style={{ color: isError ? "red" : "green" }}>
           <p>

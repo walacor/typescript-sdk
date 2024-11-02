@@ -112,3 +112,10 @@
     left: unset;
   }
 }
+
+.container-max {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem; /* Adjust padding as necessary */
+}

@@ -37,62 +37,60 @@ const SchemasPage = () => {
   return (
     <DashboardLayout>
       <SubDashboardLayout>
-        <div className="container mx-auto py-12">
-          <h1 className="text-4xl font-semibold mb-6 text-center">Schemas</h1>
-          <p className="text-gray-600 mb-6 text-center">Schemas define the structure of your data and ensure consistency.</p>
+        <div className="container mx-auto py-6 md:py-12 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl md:text-4xl font-semibold mb-4 md:mb-6 text-center">Schemas</h1>
+          <p className="text-gray-600 mb-4 md:mb-6 text-center text-sm md:text-base">Schemas define the structure of your data and ensure consistency.</p>
 
-          <div className="flex justify-center items-center mb-8">
-            <Button onClick={() => setSelectedTab("about")} className={`px-4 py-2 mx-1 text-white ${selectedTab === "about" ? "bg-primary" : "bg-gray-400 hover:bg-gray-500"}`}>
+          <div className="flex flex-wrap justify-center items-center mb-6 md:mb-8 gap-2 md:gap-4">
+            <Button onClick={() => setSelectedTab("about")} className={`px-3 py-1 md:px-4 md:py-2 text-white text-sm md:text-base ${selectedTab === "about" ? "bg-primary" : "bg-gray-400 hover:bg-gray-500"}`}>
               About
             </Button>
             {schemas.map((schemaObj, index) => (
-              <Button key={index} onClick={() => setSelectedTab(schemaObj.name)} className={`px-4 m-1 py-2 text-white ${selectedTab === schemaObj.name ? "bg-primary" : "bg-gray-400 hover:bg-gray-500"}`}>
+              <Button key={index} onClick={() => setSelectedTab(schemaObj.name)} className={`px-3 py-1 md:px-4 md:py-2 text-white text-sm md:text-base ${selectedTab === schemaObj.name ? "bg-primary" : "bg-gray-400 hover:bg-gray-500"}`}>
                 {schemaObj.name}
               </Button>
             ))}
           </div>
 
           {selectedTab === "about" ? (
-            <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-              <h2 className="text-2xl font-semibold mb-4">Understanding Schemas</h2>
-              <p className="text-gray-700 mb-4">
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg mb-6 max-w-full md:max-w-2xl mx-auto">
+              <h2 className="text-xl md:text-2xl font-semibold mb-4">Understanding Schemas</h2>
+              <p className="text-gray-700 mb-4 text-sm md:text-base">
                 In Walacor, a <strong>schema</strong> defines the structure of your data. It includes fields that specify the data type, length, and whether the field is required. These schemas ensure consistency and integrity when saving
                 your data.
               </p>
-              <p className="text-gray-700 mb-4">
+              <p className="text-gray-700 mb-4 text-sm md:text-base">
                 For example, when you submit a blog or profile, the schema validates the data before saving it to the Walacor platform. This process guarantees that the data is structured correctly and maintains a high level of integrity.
               </p>
 
-              <div className="flex flex-col w-full items-center justify-center mb-4">
-                <div className="flex w-full justify-between">
-                  <div className="text-center flex flex-col items-center w-full mt-4">
-                    <strong>Data Flow in Walacor:</strong>
-                    <div className="flex items-center gap-1 flex-row my-2">
-                      <FontAwesomeIcon icon={faUser} className="mr-1" /> <strong>Payload</strong> →
-                      <FontAwesomeIcon icon={faCode} className="mx-1" /> <strong>Schemas</strong> →
-                      <FontAwesomeIcon icon={faDatabase} className="mx-1" /> <strong>Walacor</strong>
-                    </div>
+              <div className="flex flex-col items-center justify-center mb-4">
+                <div className="flex flex-col md:flex-row items-center w-full justify-between text-sm md:text-base text-center md:text-left">
+                  <strong>Data Flow in Walacor:</strong>
+                  <div className="flex items-center gap-1 my-2">
+                    <FontAwesomeIcon icon={faUser} className="mr-1" /> <strong>Payload</strong> →
+                    <FontAwesomeIcon icon={faCode} className="mx-1" /> <strong>Schemas</strong> →
+                    <FontAwesomeIcon icon={faDatabase} className="mx-1" /> <strong>Walacor</strong>
                   </div>
                 </div>
               </div>
 
-              <p className="text-gray-700 mb-4">
+              <p className="text-gray-700 mb-4 text-sm md:text-base">
                 A <strong>payload</strong> is the actual data sent to the server, such as user input or form data. Before this data is stored, it&apos;s validated against the defined schema to ensure that it meets all the requirements.
               </p>
 
-              <h3 className="text-xl font-semibold mt-6 mb-4">To-Do Schema Example</h3>
-              <p className="text-gray-700 mb-4">A simple example of a schema for a &quot;To Do&quot; item might look like this:</p>
-              <pre className="bg-gray-100 p-4 rounded mb-6 text-sm text-left">
+              <h3 className="text-lg md:text-xl font-semibold mt-6 mb-4">To-Do Schema Example</h3>
+              <p className="text-gray-700 mb-4 text-sm md:text-base">A simple example of a schema for a &quot;To Do&quot; item might look like this:</p>
+              <pre className="bg-gray-100 p-3 md:p-4 rounded mb-6 text-xs md:text-sm text-left overflow-x-auto whitespace-pre-wrap">
                 {`{
-  id: "text",         
-  text: "string",     
-  isCompleted: "boolean" 
+  id: "text",
+  text: "string",
+  isCompleted: "boolean"
 }`}
               </pre>
 
-              <h3 className="text-xl font-semibold mt-6 mb-4">To-Do Payload Examples</h3>
-              <p className="text-gray-700 mb-4">Here are a few example payloads for the above &quot;To Do&quot; schema:</p>
-              <pre className="bg-gray-100 p-4 rounded mb-6 text-sm text-left">
+              <h3 className="text-lg md:text-xl font-semibold mt-6 mb-4">To-Do Payload Examples</h3>
+              <p className="text-gray-700 mb-4 text-sm md:text-base">Here are a few example payloads for the above &quot;To Do&quot; schema:</p>
+              <pre className="bg-gray-100 p-3 md:p-4 rounded mb-6 text-xs md:text-sm text-left overflow-x-auto whitespace-pre-wrap">
                 {`[
   { id: "1", text: "Buy groceries", isCompleted: false },
   { id: "2", text: "Walk the dog", isCompleted: true },
@@ -100,30 +98,28 @@ const SchemasPage = () => {
 ]`}
               </pre>
 
-              <p className="text-gray-700 mb-4">
+              <p className="text-gray-700 mb-4 text-sm md:text-base">
                 As you can see, the payloads must match the schema. Each to-do item has an <strong>id</strong>, <strong>text</strong> to describe the task, and a <strong>isCompleted</strong> field to track if it&apos;s done.
               </p>
 
-              <h3 className="text-xl font-semibold mt-6 mb-4">Your Experience After Schemas Are Generated</h3>
-              <p className="text-gray-700 mb-4">
+              <h3 className="text-lg md:text-xl font-semibold mt-6 mb-4">Your Experience After Schemas Are Generated</h3>
+              <p className="text-gray-700 mb-4 text-sm md:text-base">
                 Once schemas are generated, the user experience becomes seamless. Every time you submit data, like a &quot;To Do&quot; item, the platform automatically checks the payload against the schema to ensure that your data is
                 structured correctly. This process ensures that your data remains high-quality and consistent across all interactions.
               </p>
 
-              <div className="flex flex-col w-full items-center justify-center mb-4">
-                <div className="flex w-full justify-between">
-                  <div className="text-center flex flex-col items-center w-full mt-4">
-                    <strong>Your experience after schemas are generated follows:</strong>
-                    <div className="flex items-center gap-1 flex-row my-2">
-                      <FontAwesomeIcon icon={faUser} className="mr-1" /> <strong>Payload</strong> →
-                      <FontAwesomeIcon icon={faDatabase} className="mx-1" /> <strong>Walacor</strong>
-                    </div>
+              <div className="flex flex-col items-center justify-center mb-4">
+                <div className="flex flex-col md:flex-row items-center w-full justify-between text-sm md:text-base text-center md:text-left">
+                  <strong>Your experience after schemas are generated follows:</strong>
+                  <div className="flex items-center gap-1 my-2">
+                    <FontAwesomeIcon icon={faUser} className="mr-1" /> <strong>Payload</strong> →
+                    <FontAwesomeIcon icon={faDatabase} className="mx-1" /> <strong>Walacor</strong>
                   </div>
                 </div>
               </div>
 
-              <h3 className="text-xl font-semibold mt-6 mb-4">The Value of Validated and Quality Data</h3>
-              <p className="text-gray-700 mb-4">
+              <h3 className="text-lg md:text-xl font-semibold mt-6 mb-4">The Value of Validated and Quality Data</h3>
+              <p className="text-gray-700 mb-4 text-sm md:text-base">
                 On the other side of the equation, the company or individual using the Walacor platform benefits from validated and consistent data. Since all payloads must conform to the predefined schemas, this ensures that the data being
                 stored is of high quality. For companies, this results in more reliable data insights, fewer errors, and easier data management.
               </p>

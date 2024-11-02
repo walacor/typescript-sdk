@@ -13,7 +13,6 @@ export default function DefaultLayout({ children }: { children?: ReactNode }) {
       <HelpDropdown />
       <main className="flex-1 z-10">{children}</main>
       <BottomPopup />
-      <BaseFooter />
     </div>
   );
 }

@@ -103,8 +103,8 @@ const RoleList = () => {
                 </span>
               </div>
             ) : Array.isArray(data) && data.length > 0 ? (
-              (data as RoleData[]).map((role) => (
-                <div key={role.id} className="p-4 border-b">
+              (data as RoleData[]).map((role, index) => (
+                <div key={role.id || `role-${index}`} className="p-4 border-b">
                   <h3 className="font-medium">{role.roleName}</h3>
                   <p className="text-xs opacity-50">{role.scope === "None" ? "Viewer" : role.scope}</p>
                 </div>
