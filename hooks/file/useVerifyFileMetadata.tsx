@@ -38,7 +38,7 @@ export const useVerifyFileMetadata = () => {
           setFileExists(true);
           setError("This file has already been used. Please upload a unique file.");
         } else {
-          setError("An error occurred during verification. Please try again.");
+          setError("An error occurred during verification. It is likely you have already verified this file, please try again with a new file.");
         }
       } finally {
         setLoading(false);

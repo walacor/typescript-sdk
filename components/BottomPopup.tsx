@@ -7,8 +7,7 @@ import { usePathname } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { bottomPopupVisibleState } from "@/recoil/atoms";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQ, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
-import { title } from "process";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 
 const BottomPopup: React.FC = () => {
   const pathname = usePathname();
@@ -71,6 +70,12 @@ const BottomPopup: React.FC = () => {
       actionLabel: "",
       actionUrl: "/read-the-blog",
     },
+    "/dashboard/verification": {
+      title: "Verify File Uniqueness",
+      description: "Use the file verification feature to ensure that the files you upload are unique. This helps maintain data integrity by avoiding duplicate entries.",
+      actionLabel: "Learn More",
+      actionUrl: "/dashboard/verify-help",
+    },
   };
 
   const currentInfo = infoTabs[pathname as keyof typeof infoTabs];
@@ -86,7 +91,9 @@ const BottomPopup: React.FC = () => {
   }, [currentInfo, showPopup]);
 
   const handleAction = () => {
-    window.location.href = currentInfo?.actionUrl;
+    if (currentInfo?.actionUrl) {
+      window.location.href = currentInfo.actionUrl;
+    }
   };
 
   const onDismiss = () => {

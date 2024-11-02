@@ -66,6 +66,18 @@ const HelpDropdown: React.FC = () => {
         </div>
       ),
     },
+    "/dashboard/verification": {
+      title: "File Verification",
+      description: "Use this feature to verify file metadata against existing records in the Walacor system. This helps ensure the file's uniqueness and prevents duplicate uploads.",
+      additionalInfo: (
+        <div className="text-blue-800 mt-2">
+          <p>If a file is already in the system, you’ll receive a message indicating the duplicate. Try uploading a different or modified file to continue.</p>
+          <p className="mt-2">
+            <FontAwesomeIcon icon={faInfoCircle} className="mr-1" /> Tip: Only upload unique files to maintain data integrity and avoid redundancy.
+          </p>
+        </div>
+      ),
+    },
   };
 
   const currentPathInfo = infoTabs[pathname as string];

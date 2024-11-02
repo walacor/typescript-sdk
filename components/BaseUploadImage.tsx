@@ -5,14 +5,16 @@ import React, { useState, ChangeEvent, useRef } from "react";
 import axios from "axios";
 import BaseLoader from "./BaseLoader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftRotate, faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeftRotate, faCheck, faX, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { useVerifyFileMetadata } from "@/hooks/file/useVerifyFileMetadata";
+import { Tooltip } from "./single/Tooltip";
 
 interface BaseUploadImageProps {
   onUpload: (url: string) => void;
 }
 
 const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
+  const [useVerification, setUseVerification] = useState<boolean>(false); // Toggle for verification
   const [message, setMessage] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
   const [errorSolution, setErrorSolution] = useState<string>("");
@@ -42,25 +44,29 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
         setMessage("Upload timed out. Please try again.");
       }, 10000);
 
-      await verifyMetadata(selectedFile);
+      // Step 1: Verification check if toggle is enabled
+      if (useVerification) {
+        await verifyMetadata(selectedFile);
 
-      if (fileExists) {
-        clearTimeout(timeoutId);
-        setMessage("This image has already been used. Please upload an original image.");
-        setErrorSolution("Consider using a different or modified image to ensure uniqueness.");
-        setIsError(true);
-        setIsLoading(false);
-        return;
+        if (fileExists) {
+          clearTimeout(timeoutId);
+          setMessage("This image has already been used. Please upload an original image.");
+          setErrorSolution("Consider using a different or modified image to ensure uniqueness.");
+          setIsError(true);
+          setIsLoading(false);
+          return;
+        }
+
+        if (verificationError) {
+          clearTimeout(timeoutId);
+          setMessage(verificationError);
+          setIsError(true);
+          setIsLoading(false);
+          return;
+        }
       }
 
-      if (verificationError) {
-        clearTimeout(timeoutId);
-        setMessage(verificationError);
-        setIsError(true);
-        setIsLoading(false);
-        return;
-      }
-
+      // Step 2: Proceed with uploading if verification passes or is disabled
       const reader = new FileReader();
       reader.onloadend = async () => {
         const image = reader.result as string;
@@ -132,6 +138,22 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
   return (
     <div>
       <h2>Upload Image to Blog</h2>
+
+      {/* Toggle for Using Verification System */}
+      <div className="flex items-center mb-4">
+        <label className="mr-2 text-sm font-semibold flex items-center">
+          Use Verification System
+          <span className="ml-2 text-gray-500">
+            <Tooltip
+              text="
+              Enable this to check if the file has already been uploaded. Useful for maintaining data integrity in the Walacor platform.
+              This feature checks the metadata of the file to see if it has been uploaded before. If the file has been uploaded, you will be notified to upload a new image. Note: This feature may take longer to upload images as it performs additional checks."
+            />
+          </span>
+        </label>
+        <input type="checkbox" checked={useVerification} onChange={(e) => setUseVerification(e.target.checked)} className="toggle-checkbox" />
+      </div>
+
       <input id="file-upload" type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef} />
 
       {isLoading && (
