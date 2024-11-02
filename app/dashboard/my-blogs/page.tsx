@@ -381,7 +381,7 @@ const MyBlogs: React.FC = () => {
                       <div className="mt-4 p-4">
                         <div className="flex items-center mb-4">
                           <label className="mr-2 text-sm font-semibold flex items-center">
-                            Show Changes:
+                            Show Changes
                             <Tooltip text="This feature is to show the changes between the current revision and the previous revision. This is useful for easily identifying what has changed between revisions." />
                           </label>
                           <input type="checkbox" checked={includePreviousRevision[blog.id] || false} onChange={() => toggleIncludePrevious(blog.id)} className="toggle-checkbox" />

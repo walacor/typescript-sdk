@@ -140,7 +140,7 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
       <div className="flex items-center mb-4">
         <label className="mr-2 text-sm font-semibold flex items-center">
           Use Verification System
-          <span className="ml-2 text-gray-500">
+          <span className="text-gray-500">
             <Tooltip
               text="
               Enable this to check if the file has already been uploaded. Useful for maintaining data integrity in the Walacor platform.
