@@ -14,7 +14,7 @@ interface BaseUploadImageProps {
 }
 
 const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
-  const [useVerification, setUseVerification] = useState<boolean>(false); // Toggle for verification
+  const [useVerification, setUseVerification] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
   const [errorSolution, setErrorSolution] = useState<string>("");
@@ -44,7 +44,6 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
         setMessage("Upload timed out. Please try again.");
       }, 10000);
 
-      // Step 1: Verification check if toggle is enabled
       if (useVerification) {
         await verifyMetadata(selectedFile);
 
@@ -66,7 +65,6 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
         }
       }
 
-      // Step 2: Proceed with uploading if verification passes or is disabled
       const reader = new FileReader();
       reader.onloadend = async () => {
         const image = reader.result as string;
@@ -139,7 +137,6 @@ const BaseUploadImage: React.FC<BaseUploadImageProps> = ({ onUpload }) => {
     <div>
       <h2>Upload Image to Blog</h2>
 
-      {/* Toggle for Using Verification System */}
       <div className="flex items-center mb-4">
         <label className="mr-2 text-sm font-semibold flex items-center">
           Use Verification System
