@@ -1,5 +1,9 @@
 # typescript-sdk
 
+### What We Are Building
+
+[Official Youtube Video Series](https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW)
+
 # Walacor Template
 
 This template is designed to embellish the process of integrating with the Walacor data platform.
@@ -13,10 +17,6 @@ An Enterprise level secure data platform with a database look and feel while int
 The primary design goal of the document is to assist users with their knowledge of the Platform application.
 
 However, there is a lot going on under the hood and it is important to gain some knowledge to make best use of The Platform.
-
-### What We Are Building
-
-[Official Youtube Video Series](https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW)
 
 ### Immutability
 
