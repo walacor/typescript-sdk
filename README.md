@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 # typescript-sdk
-=======
+
 # Walacor Template
 
 This template is designed to embellish the process of integrating with the Walacor data platform.
@@ -72,4 +71,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
->>>>>>> template-repo/main
+
+> > > > > > > template-repo/main
