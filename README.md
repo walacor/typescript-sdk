@@ -14,6 +14,10 @@ The primary design goal of the document is to assist users with their knowledge 
 
 However, there is a lot going on under the hood and it is important to gain some knowledge to make best use of The Platform.
 
+### What We Are Building
+
+[Official Youtube Video Series](https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW)
+
 ### Immutability
 
 Because the platform integrates blockchain, an important difference that one must be aware of is immutability. EVERYTHING (Data, Schema, Users, etc.) submitted to the platform is part of a never changing audit log that can never be deleted.
