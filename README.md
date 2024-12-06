@@ -2,9 +2,7 @@
 
 ### What We Are Building
 
-[Official Youtube Video Series](https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW)
 <a href="https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW" target="_blank">Official Youtube Video Series</a>
-<a href="https://apidoc.walacor.com/#intro" target="_blank">Official Walacor Documentation</a>
 
 # Walacor Template
 
@@ -26,7 +24,7 @@ Because the platform integrates blockchain, an important difference that one mus
 
 The Platform handles the heavy lifting of this for the user and, in general, allows the user to interact with it as one does with most databases. However, it is best to keep this in mind when doing things like Schema design.
 
-[Official Walacor Documentation](https://apidoc.walacor.com/#intro)
+<a href="https://apidoc.walacor.com/#intro" target="_blank">Official Walacor Documentation</a>
 
 # Important
 
