@@ -3,6 +3,8 @@
 ### What We Are Building
 
 [Official Youtube Video Series](https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW)
+<a href="https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW" target="_blank">Official Youtube Video Series</a>
+<a href="https://apidoc.walacor.com/#intro" target="_blank">Official Walacor Documentation</a>
 
 # Walacor Template
 
