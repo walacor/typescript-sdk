@@ -1,7 +1,5 @@
 # typescript-sdk
 
-<img src="https://api.surveyjs.io/private/Surveys/files?name=3aa2c82a-85dd-4c4b-9dc8-3238187270c7" alt="Walacor Logo" width="125">
-
 ### What We Are Building
 
 <a href="https://www.youtube.com/playlist?list=PLSJRPsv_pgiY745Ki1bL9MYBuNaiApwdW" target="_blank">Official Youtube Video Series</a>
