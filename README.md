@@ -24,7 +24,7 @@ Because the platform integrates blockchain, an important difference that one mus
 
 The Platform handles the heavy lifting of this for the user and, in general, allows the user to interact with it as one does with most databases. However, it is best to keep this in mind when doing things like Schema design.
 
-[Official Walacor Documentation](https://admindoc.walacor.com/admin-documentation/latest/the-platform-application-an-introduction)
+[Official Walacor Documentation](https://apidoc.walacor.com/#intro)
 
 # Important
 
